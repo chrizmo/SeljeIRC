@@ -1,10 +1,7 @@
-import javax.swing.grøtjonas;
+import javax.swing.*;
 
 /**
+ * Tulltull!
  * @author Hallvard Westman
  */
 
-
-
-
-jokke
