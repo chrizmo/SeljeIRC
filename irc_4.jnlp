@@ -1,0 +1,26 @@
+<!--
+########################################################################
+# @(#)template.jnlp 1.3 01/04/04
+# JNLP File for IRC demo
+########################################################################
+-->
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="http://www.kolloen.net/apps" href="irc_4.jnlp">
+	<information>
+	<title>IRC demo 4</title>
+	<vendor>Oivind Kolloen</vendor>
+	<homepage href="http://www.kolloen.net/apps/IRCdemo4.html"/>
+	<description>Demo4 of the IRC client</description>
+	<icon href="data.gif"/>
+	<offline-allowed/>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+		<j2se version="1.6+"/>
+		<jar href="sIRC_4.jar" main="true" download="eager"/>
+		<jar href="sjerklib.jar" main="true" download="eager"/>
+	</resources>
+	<application-desc main-class="no.hig.okolloen.irc.IRC"/>
+</jnlp>

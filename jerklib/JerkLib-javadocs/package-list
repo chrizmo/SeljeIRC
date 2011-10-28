@@ -1,0 +1,11 @@
+jerklib
+jerklib.events
+jerklib.events.dcc
+jerklib.events.impl
+jerklib.events.impl.dcc
+jerklib.events.modes
+jerklib.examples
+jerklib.listeners
+jerklib.parsers
+jerklib.tasks
+jerklib.util
