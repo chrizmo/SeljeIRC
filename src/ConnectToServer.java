@@ -1,6 +1,12 @@
 import java.io.*;
 import java.net.*;
 
+/**
+ * 
+ * @author Jon Arne Westgaard
+ */
+
+
 public class IRCConnection {
 
     public static void main(String[] args) throws Exception {
@@ -33,7 +39,7 @@ public class IRCConnection {
                 break;
             }
             else if (line.indexOf("433") >= 0) {
-                System.out.println("Nickname is already in use.");
+                System.out.println("Nickname already in use.");
                 return;
             }
         }
