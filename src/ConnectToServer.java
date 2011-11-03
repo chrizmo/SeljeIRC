@@ -7,7 +7,7 @@ import java.net.*;
  */
 
 
-public class IRCConnection {
+public class ConnectToServer {
 
     public static void main(String[] args) throws Exception {
 
