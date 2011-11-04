@@ -1,6 +1,10 @@
 package SeljeIRC;
 
  
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import jerklib.ConnectionManager;
 import jerklib.Profile;
 import jerklib.Session;
@@ -9,7 +13,7 @@ import jerklib.events.IRCEvent.Type;
 import jerklib.listeners.IRCEventListener;
  
 /**
- * @author mohadib A simple example that demonsrates how to use JerkLib
+ * @author mohadib A simple example that demonstrates how to use JerkLib
  */
 public class ConnectToServer implements IRCEventListener
 {
@@ -60,9 +64,23 @@ public class ConnectToServer implements IRCEventListener
 		{
 			JoinCompleteEvent jce = (JoinCompleteEvent) e;
  
-			/* say hello and version number */
-			jce.getChannel().say("Hei!! Denne IRC-klienten er laget ved hjelp av JerkLib!!! :D ");
-			jce.getChannel().say("Woooooop!");
+			/* Lets say something to the channel! */
+				/* Prepare to read text from keyboard*/
+			InputStreamReader istream = new InputStreamReader(System.in) ;
+	        BufferedReader bufRead = new BufferedReader(istream) ;
+	        String kommando = null;
+			do {
+	        try {
+				kommando = bufRead.readLine();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			/* Say something nice: */
+	        jce.getChannel().say(kommando);
+			}
+			/* For now we'll just loop forever, just to see that we are able to write a bunch of text... */
+			while (true);
 		}
 		else
 		{
