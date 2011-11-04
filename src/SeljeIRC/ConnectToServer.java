@@ -1,15 +1,18 @@
 package SeljeIRC;
  
- 
 import java.io.BufferedReader; 	  // Will be used later. I guess...
 import java.io.IOException;		  // Will be used later. I guess...
 import java.io.InputStreamReader; // Will be used later. I guess...
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import jerklib.ConnectionManager;
 import jerklib.Profile;
 import jerklib.Session;
 import jerklib.events.*;
 import jerklib.events.IRCEvent.Type;
 import jerklib.listeners.IRCEventListener;
+
 
 /**
  * 
@@ -36,22 +39,26 @@ public class ConnectToServer implements IRCEventListener {
 			e.getSession().join("#SeljeIRC");
 		}
 		 
+
 		else if (e.getType() == Type.CHANNEL_MESSAGE)
 		{
+            JoinCompleteEvent jce = (JoinCompleteEvent) e;
 			MessageEvent me = (MessageEvent) e;
 			System.out.println("<" + me.getNick() + ">"+ ":" + me.getMessage());
 		}
+
 		
 		else if (e.getType() == Type.JOIN_COMPLETE)
 		{
 			JoinCompleteEvent jce = (JoinCompleteEvent) e;
 			jce.getChannel().say("Let's say something nice now that we have joined the channel");
 		}
-			
+
 		else
 		{
 			System.out.println(e.getType() + " " + e.getRawEventData());
 		}
+
 		
 	}  // End of public void receiveEvent
 	
@@ -61,3 +68,4 @@ public class ConnectToServer implements IRCEventListener {
 	
 	
 } // End of public class ConnectToServer	
+
