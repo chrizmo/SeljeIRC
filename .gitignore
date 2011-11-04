@@ -5,3 +5,4 @@ manifest.mf
 build.xml
 nbproject/*
 .DS_Store
+build/*
