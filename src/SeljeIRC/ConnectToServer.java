@@ -1,5 +1,5 @@
 package SeljeIRC;
-
+ 
  
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,35 +11,21 @@ import jerklib.Session;
 import jerklib.events.*;
 import jerklib.events.IRCEvent.Type;
 import jerklib.listeners.IRCEventListener;
- 
-/**
- * @author mohadib A simple example that demonstrates how to use JerkLib
- */
-public class ConnectToServer implements IRCEventListener
-{
+
+public class ConnectToServer implements IRCEventListener {
 	private ConnectionManager manager;
  
-	public ConnectToServer()
-	{
-		/*
-		 * ConnectionManager takes a Profile to use for new connections.
-		 */
-		manager = new ConnectionManager(new Profile("JADDA"));
- 
-		/*
-		 * One instance of ConnectionManager can connect to many IRC networks.
-		 * ConnectionManager#requestConnection(String) will return a Session object.
+	public ConnectToServer() {
+		/* ConnectionManager takes a Profile to use for new connections. */
+	manager = new ConnectionManager(new Profile("JADDA"));
+		/* ConnectionManager#requestConnection(String) will return a Session object.
 		 * The Session is the main way users will interact with this library and IRC
-		 * networks
-		 */
-		Session session = manager.requestConnection("irc.homelien.no");
+		 * networks */
+	Session session = manager.requestConnection("irc.homelien.no");
  
-		/*
-		 * JerkLib fires IRCEvents to notify users of the lib of incoming events
-		 * from a connected IRC server.
-		 */
+		/* JerkLib fires IRCEvents to notify users of the lib of incoming events
+		 * from a connected IRC server. */
 		session.addIRCEventListener(this);
- 
 	}
  
 	/*
@@ -48,11 +34,10 @@ public class ConnectToServer implements IRCEventListener
 	 * All events are sent as IRCEvents. You can check its actual type and cast it
 	 * to a more specific type.
 	 */
-	public void receiveEvent(IRCEvent e)
-	{
+	public void receiveEvent(IRCEvent e) {
 		if (e.getType() == Type.CONNECT_COMPLETE)
 		{
-			e.getSession().join("#lindir");
+			e.getSession().join("#SeljeIRC");
  
 		}
 		else if (e.getType() == Type.CHANNEL_MESSAGE)
@@ -64,7 +49,6 @@ public class ConnectToServer implements IRCEventListener
 		{
 			JoinCompleteEvent jce = (JoinCompleteEvent) e;
  
-			/* Lets say something to the channel! */
 				/* Prepare to read text from keyboard*/
 			InputStreamReader istream = new InputStreamReader(System.in) ;
 	        BufferedReader bufRead = new BufferedReader(istream) ;
@@ -73,7 +57,6 @@ public class ConnectToServer implements IRCEventListener
 	        try {
 				kommando = bufRead.readLine();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			/* Say something nice: */
@@ -88,8 +71,7 @@ public class ConnectToServer implements IRCEventListener
 		}
 	}
  
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		new ConnectToServer();
 	}
 }
