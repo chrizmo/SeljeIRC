@@ -15,6 +15,7 @@ public class SeljeIRC extends JFrame{
     
     public SeljeIRC(){
        
+        
        
         BorderLayout totalLayout = new BorderLayout();
         setLayout(totalLayout);
