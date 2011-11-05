@@ -4,10 +4,16 @@
  */
 package SeljeIRC;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 /**
  *
@@ -32,6 +38,18 @@ public class InputField extends JPanel {
         
         add(channelName);
         
+        /* Jon Arne be testing
+        Border blackline = BorderFactory.createLineBorder(Color.black, 1);
+        
+        JTextArea u = new JTextArea("Her kan vi skrive masse tekst   ");
+        u.setEditable(true);
+        u.setBorder(blackline);
+        add(u);
+        
+        JButton button = new JButton("Send");
+        add(button);
+        
+        */
         
     }
     

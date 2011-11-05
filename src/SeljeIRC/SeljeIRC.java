@@ -12,10 +12,11 @@ import javax.swing.*;
  */
 
 public class SeljeIRC extends JFrame{
-    
-    public SeljeIRC(){
-       
-        
+  
+   
+	private static final long serialVersionUID = 1L;
+
+	public SeljeIRC(){
        
         BorderLayout totalLayout = new BorderLayout();
         setLayout(totalLayout);
