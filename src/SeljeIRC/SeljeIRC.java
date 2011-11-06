@@ -15,23 +15,27 @@ public class SeljeIRC extends JFrame{
   
    
 	private static final long serialVersionUID = 1L;
+        
+        ChannelTab channelTabs;
+        MainMenu m;
+        BorderLayout totalLayout;
+        InputField inputField;
 
 	public SeljeIRC(){
        
-        BorderLayout totalLayout = new BorderLayout();
-        setLayout(totalLayout);
+        totalLayout = new BorderLayout();
+            setLayout(totalLayout);
+            
+        channelTabs = new ChannelTab();
+            add(channelTabs,BorderLayout.CENTER);    
         
-        MainMenu m = new MainMenu();
-        setJMenuBar(m);
+        m= new MainMenu(channelTabs);
+            setJMenuBar(m);
         
-        ChannelTab channelTabs = new ChannelTab();
-            channelTabs.setSize(new Dimension(200,200));
-            channelTabs.setBackground(Color.yellow);
-       
-        add(channelTabs,BorderLayout.CENTER);
         
-        InputField inputField = new InputField();
-        add(inputField,BorderLayout.SOUTH);
+        
+        inputField = new InputField();
+            add(inputField,BorderLayout.SOUTH);
         
         setVisible(true);
         pack();

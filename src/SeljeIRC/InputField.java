@@ -4,14 +4,13 @@
  */
 package SeljeIRC;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
@@ -26,17 +25,23 @@ public class InputField extends JPanel {
     public InputField(){
         super();
         
-        FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
-        
+        //FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
+        BorderLayout layout = new BorderLayout();
         setLayout(layout);
         
-        label = new JLabel("thechannelname"); 
-        add(label);
+        
+        
+        label = new JLabel("thechannelname");
+            
+        add(label,BorderLayout.WEST);
         
         channelName = new JTextField();
         
         
-        add(channelName);
+        add(channelName,BorderLayout.CENTER);
+        JButton button = new JButton("Send");
+        add(button,BorderLayout.EAST);
+        
         
         /* Jon Arne be testing
         Border blackline = BorderFactory.createLineBorder(Color.black, 1);
