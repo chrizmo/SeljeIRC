@@ -12,24 +12,30 @@ import javax.swing.*;
  */
 
 public class SeljeIRC extends JFrame{
-    
-    public SeljeIRC(){
-       
-       
-        BorderLayout totalLayout = new BorderLayout();
-        setLayout(totalLayout);
+  
+   
+	private static final long serialVersionUID = 1L;
         
-        MainMenu m = new MainMenu();
-        setJMenuBar(m);
-        
-        ChannelTab channelTabs = new ChannelTab();
-            channelTabs.setSize(new Dimension(200,200));
-            channelTabs.setBackground(Color.yellow);
+        ChannelTab channelTabs;
+        MainMenu m;
+        BorderLayout totalLayout;
+        InputField inputField;
+
+	public SeljeIRC(){
        
-        add(channelTabs,BorderLayout.CENTER);
+        totalLayout = new BorderLayout();
+            setLayout(totalLayout);
+            
+        channelTabs = new ChannelTab();
+            add(channelTabs,BorderLayout.CENTER);    
         
-        InputField inputField = new InputField();
-        add(inputField,BorderLayout.SOUTH);
+        m= new MainMenu(channelTabs);
+            setJMenuBar(m);
+        
+        
+        
+        inputField = new InputField();
+            add(inputField,BorderLayout.SOUTH);
         
         setVisible(true);
         pack();

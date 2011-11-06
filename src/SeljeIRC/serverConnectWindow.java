@@ -13,21 +13,16 @@ import javax.swing.*;
  * @author hallvardwestman
  */
 //
-public class NewIRCConnection extends JInternalFrame{
+public class serverConnectWindow extends JInternalFrame{
     
     static int openFrameCount = 0;
-    static final int xOffset = 30, yOffset = 30;
     
-    public NewIRCConnection(){
-      
-    
-    createLayout();
-    
-    setVisible(true);
-        
-    }
-    
-    public void createLayout(){
+    public serverConnectWindow(){
+        super("Document #" + (++openFrameCount),
+          true, //resizable
+          true, //closable
+          true, //maximizable
+          true);//iconifiable
         
         //Strings
         String networkName[] = {"1","2","3","4"};
@@ -254,4 +249,5 @@ public class NewIRCConnection extends JInternalFrame{
         
     }
 
+    
 }
