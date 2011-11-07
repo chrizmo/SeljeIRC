@@ -6,10 +6,16 @@ package SeljeIRC;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -26,6 +32,7 @@ public class ListOfUsers extends JPanel{
     UserListModel lm;
     JList list;
     Channel chan;
+    JPopupMenu popup;
     
     
     public ListOfUsers(){
@@ -93,12 +100,19 @@ public class ListOfUsers extends JPanel{
         this.add(list); 
     }
     
+    /**
+     * Creates the user list from the channel parameter
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     * @param c The Channel to fetch users from
+     */
     public ListOfUsers(Channel c)   {
         chan = c;
         lm = new UserListModel();
         list = new JList(lm);
         list.setLayoutOrientation(JList.VERTICAL);
         SwingUtilities.invokeLater(new Init());
+        createPopup();
         Dimension d = list.getPreferredSize();
         int height =(int)d.getHeight();
         list.setPreferredSize(new Dimension(200,height));
@@ -106,6 +120,112 @@ public class ListOfUsers extends JPanel{
         
         this.add(list);
         
+    }
+
+    /**
+     * Creates the right click popup menu in the user list
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
+    private void createPopup() {
+        popup = new JPopupMenu();
+        
+        //Main menu items
+        JMenuItem whois = new JMenuItem("Whois");
+        JMenuItem query = new JMenuItem("Query");
+        JMenu control = new JMenu("Control");
+        JMenu ctcp = new JMenu("CTCP");
+        //JMenu dcc = new JMenu("DCC");
+        JMenuItem slap = new JMenuItem("Slap!");
+        
+        //Items for Control sub menu
+        JMenuItem op = new JMenuItem("Op");
+        JMenuItem deop = new JMenuItem("Deop");
+        JMenuItem voice = new JMenuItem("Voice");
+        JMenuItem devoice = new JMenuItem("Devoice");
+        JMenuItem kick = new JMenuItem("Kick");
+        JMenuItem ban = new JMenuItem("Ban");
+        JMenuItem kickban = new JMenuItem("Kick, ban");
+        
+        //Items for CTCP sub menu
+        JMenuItem ping = new JMenuItem("Ping");
+        JMenuItem version = new JMenuItem("Version");
+        
+        control.add(op);
+        control.add(deop);
+        control.add(voice);
+        control.add(devoice);
+        control.add(kick);
+        control.add(ban);
+        control.add(kickban);
+        
+        ctcp.add(ping);
+        ctcp.add(version);
+        
+        popup.add(whois);
+        popup.add(query);
+        popup.addSeparator();
+        popup.add(control);
+        popup.add(ctcp);
+        //popup.add(dcc);
+        popup.addSeparator();
+        popup.add(slap);
+        list.addMouseListener(new PopupListener());
+    }
+    
+    /**
+     * Gets the selected item in the user list
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     * @param p The selected point on screen
+     * @return Index of the selected item
+     */
+    private int getItem(Point p)   {
+        return list.locationToIndex(p);
+    }
+    
+    /**
+     * Inner class. Listens for mouse events in the user list
+     * @author Lars Erik Pedersen
+     * @version 0.1
+     * @since 0.1
+     */
+    class PopupListener extends MouseAdapter   {
+        
+        /**
+        * Listens for mouse pressed
+        * @author Lars Erik Pedersen
+        * @since 0.1
+        * @param me event that triggered this function
+        */
+        @Override
+        public void mousePressed(MouseEvent me)   {
+            Popup(me);
+        }
+        
+        /**
+        * Listens for mouse released
+        * @author Lars Erik Pedersen
+        * @since 0.1
+        * @param me event that triggered this function
+        */
+        @Override
+        public void mouseReleased(MouseEvent me)   {
+            Popup(me);
+        }
+        
+        /**
+        * Shows popup menu when right clicking in the user list.
+        * @author Lars Erik Pedersen
+        * @since 0.1
+        * @param me event that triggered this function
+        */
+        private void Popup(MouseEvent me)   {
+            if(me.isPopupTrigger())   {
+                ((JList)me.getComponent()).setSelectedIndex(getItem(me.getPoint()));
+                popup.show(me.getComponent(), me.getX(), me.getY());
+            }
+        }   
     }
     
     /**
