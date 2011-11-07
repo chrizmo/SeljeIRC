@@ -16,9 +16,9 @@ import javax.swing.JOptionPane;
  * @author wbserver
  */
 public class MainMenu extends JMenuBar {
-    private JMenu file = new JMenu("File");
-    private JMenu edit = new JMenu("Edit");
-    private JMenu help = new JMenu("Help");
+    private JMenu file = new JMenu(I18N.get("mainmenu.file"));
+    private JMenu edit = new JMenu(I18N.get("mainmenu.edit"));
+    private JMenu help = new JMenu(I18N.get("mainmenu.help"));
     
     ChannelTab tabObject;
     
@@ -34,9 +34,9 @@ public class MainMenu extends JMenuBar {
     public void createFileMenu(){
         
     
-    JMenuItem newServer = new JMenuItem("New Server");
+    JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"));
         file.add(newServer);
-    JMenuItem newChannel = new JMenuItem("New Channel");
+    JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
         file.add(newChannel);
         
         //--------------Action listeners-----------------------------
@@ -54,7 +54,7 @@ public class MainMenu extends JMenuBar {
            public void actionPerformed (ActionEvent ae)   {
                
                tabObject.createNewTab();
-               String channel = JOptionPane.showInputDialog("Hvilken kanal?");
+               String channel = JOptionPane.showInputDialog(I18N.get("mainmenu.whichchannel"));
                // TODO     serverConnectWindow.joinChannel(String channel) -
                // send channel to connectToServer-object
            } 

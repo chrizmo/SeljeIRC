@@ -67,7 +67,7 @@ public class ChannelTab extends JTabbedPane {
        panel.add(textAreaScroller,BorderLayout.CENTER );
        
       
-       this.addTab("Status", null, panel,"Does nothing");
+       this.addTab(I18N.get("channeltab.status"), null, panel,"Does nothing");
     }
     
     /**
@@ -121,7 +121,7 @@ public class ChannelTab extends JTabbedPane {
         
         tabs++;
         
-        this.addTab("Tab "+tabs, null, panel,"Does nothing");
+        this.addTab(I18N.get("channeltab.tab")+tabs, null, panel,"Does nothing");
 
         
         

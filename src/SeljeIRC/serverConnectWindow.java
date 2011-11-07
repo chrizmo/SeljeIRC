@@ -55,7 +55,7 @@ public class serverConnectWindow extends JInternalFrame{
             
         
         //Labels
-        JLabel topLabel = new JLabel("IRC Network");
+        JLabel topLabel = new JLabel(I18N.get("serverconnectwindow.ircnetwork"));
         
         
         
@@ -80,7 +80,7 @@ public class serverConnectWindow extends JInternalFrame{
         GridBagLayout rightLayout = new GridBagLayout();
             rightPanel.setLayout(rightLayout);
             //addbutton
-            JButton addSomething = new JButton("Add");
+            JButton addSomething = new JButton(I18N.get("serverconnectwindow.add"));
             gbc.fill=GridBagConstraints.NONE;
             gbc.gridx=0;
             gbc.gridy=0;
@@ -91,17 +91,17 @@ public class serverConnectWindow extends JInternalFrame{
             rightPanel.add(addSomething);
             
             //changbutton
-            JButton changeSomething = new JButton("Change");
+            JButton changeSomething = new JButton(I18N.get("serverconnectwindow.change"));
             gbc.gridy=1;
             rightLayout.setConstraints(changeSomething,gbc);
             rightPanel.add(changeSomething);
             
-            JButton deleteSomething = new JButton("Delete");
+            JButton deleteSomething = new JButton(I18N.get("serverconnectwindow.delete"));
             gbc.gridy=2;
             rightLayout.setConstraints(deleteSomething,gbc);
             rightPanel.add(deleteSomething);
             
-            JButton sortSomething = new JButton("Sort");
+            JButton sortSomething = new JButton(I18N.get("serverconnectwindow.sort"));
             gbc.gridy=3;
             rightLayout.setConstraints(sortSomething,gbc);
             rightPanel.add(sortSomething);
@@ -136,7 +136,7 @@ public class serverConnectWindow extends JInternalFrame{
          */
         
         //Connect button
-        JButton connect = new JButton("Connect to IRC server");
+        JButton connect = new JButton(I18N.get(("serverconnectwindow.connect")));
         gbc.fill=GridBagConstraints.NONE;
         gbc.insets=new Insets(2,2,2,2);
         gbc.gridy=2;
@@ -159,10 +159,10 @@ public class serverConnectWindow extends JInternalFrame{
         
         //left coloumn
         
-        JLabel name = new JLabel("Name");
-        JLabel email = new JLabel("email");
-        JLabel nicName = new JLabel("nickname");
-        JLabel alias = new JLabel("alias");
+        JLabel name = new JLabel(I18N.get("serverconnectwindow.name"));
+        JLabel email = new JLabel(I18N.get("serverconnectwindow.email"));
+        JLabel nicName = new JLabel(I18N.get("serverconnectwindow.nickname"));
+        JLabel alias = new JLabel(I18N.get("serverconnectwindow.alias"));
         
         /* TextLabels
          * 
@@ -210,7 +210,7 @@ public class serverConnectWindow extends JInternalFrame{
         
         
         JCheckBox invisibleBox = new JCheckBox();
-        JLabel invisibleLabel = new JLabel("Invisible Mode");
+        JLabel invisibleLabel = new JLabel(I18N.get("serverconnectwindow.invisible"));
         invisiblePanel.add(invisibleBox);
         invisiblePanel.add(invisibleLabel);
         
@@ -228,9 +228,9 @@ public class serverConnectWindow extends JInternalFrame{
         bottomButtons.setLayout(bottomLayout);
         
             
-            JButton okButton = new JButton("Ok");
-            JButton abortButton = new JButton("Abort");
-            JButton helpButton = new JButton("Help");
+            JButton okButton = new JButton(I18N.get("serverconnectwindow.ok"));
+            JButton abortButton = new JButton(I18N.get("serverconnectwindow.abort"));
+            JButton helpButton = new JButton(I18N.get("serverconnectwindow.help"));
         
             gbc.fill=GridBagConstraints.NONE;
             gbc.gridx=0;
