@@ -121,6 +121,8 @@ public class ChannelTab extends JTabbedPane {
         tabs++;
         
         this.addTab("Tab "+tabs, null, panel,"Does nothing");
+
+        
         
         
         

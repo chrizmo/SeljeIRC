@@ -19,7 +19,8 @@ import java.awt.event.ActionEvent;
 public class serverConnectWindow extends JInternalFrame{
     
     static int openFrameCount = 0;
-    
+    ConnectToServer connectToServer;
+
     public serverConnectWindow(){
         super("Document #" + (++openFrameCount),
           true, //resizable
@@ -28,7 +29,7 @@ public class serverConnectWindow extends JInternalFrame{
           true);//iconifiable
         
         //Strings
-        String networkName[] = {"1","2","3","4"};
+        String networkName[] = {"irc.homelien.no","2","3","4"};
         String subNetworkName[] = {"a","b","c","d"};
         
         //Layouts
@@ -48,7 +49,7 @@ public class serverConnectWindow extends JInternalFrame{
         
         
         //Drop downs
-        JComboBox topDropDown = new JComboBox(networkName);
+        final JComboBox topDropDown = new JComboBox(networkName);
         JComboBox subDropDown = new JComboBox(subNetworkName);
         
             
@@ -124,7 +125,15 @@ public class serverConnectWindow extends JInternalFrame{
         gbc.gridheight = 1;
         totalLayout.setConstraints(subDropDown,gbc);
         add(subDropDown);    
-        
+       
+        JTextField nameField = new JTextField();
+        JTextField emailField = new JTextField();
+        final JTextField nicNameField = new JTextField(10);
+        JTextField aliasField = new JTextField(10);
+
+        /* Textfields
+         *
+         */
         
         //Connect button
         JButton connect = new JButton("Connect to IRC server");
@@ -136,8 +145,13 @@ public class serverConnectWindow extends JInternalFrame{
         add(connect);
         connect.addActionListener(new ActionListener() {
          public void actionPerformed( ActionEvent e)
-            {
-                ConnectToServer connectToServer = new ConnectToServer("irc.homelien.no", "SeljeIRC");
+            { // Get server and nick, and run the connection
+             String s = topDropDown.getSelectedItem().toString();
+             String n = nicNameField.getText();
+
+                connectToServer = new ConnectToServer(
+                s, n);
+
 
             }
 
@@ -172,15 +186,7 @@ public class serverConnectWindow extends JInternalFrame{
         gbc.gridy=7;
         totalLayout.setConstraints(alias,gbc);
         add(alias);
-        
-        JTextField nameField = new JTextField();
-        JTextField emailField = new JTextField();
-        JTextField nicNameField = new JTextField(10);
-        JTextField aliasField = new JTextField(10);
-        
-        /* Textfields
-         * 
-         */
+
         
         gbc.fill=GridBagConstraints.HORIZONTAL;
         gbc.gridx=1;
@@ -258,6 +264,12 @@ public class serverConnectWindow extends JInternalFrame{
         totalLayout.setConstraints(bottomButtons,gbc);
         add(bottomButtons);
         
+    }
+
+    public void joinChannel(String channel) {
+
+
+       connectToServer.joinChannel(null, channel);
     }
 
     

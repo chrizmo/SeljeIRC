@@ -47,9 +47,10 @@ public class ConnectToServer implements IRCEventListener {
 		
 	}  // End of public void receiveEvent
 	
-	//public static void main(String [] args) {
-	//	new ConnectToServer("irc.homelien.no", "SeljeIRC");
-	//}
+        public void joinChannel (IRCEvent e, String channel) {
+
+            e.getSession().join(channel);
+        }
 	
 	
 } // End of public class ConnectToServer	
