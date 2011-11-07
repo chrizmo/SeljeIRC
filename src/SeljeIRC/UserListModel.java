@@ -23,7 +23,6 @@ public class UserListModel extends DefaultListModel {
         else   {
             insert(newUser);                                // Insert user
         }
-        super.addElement(newUser);                          // Add User
     }
     
     /**
@@ -50,7 +49,6 @@ public class UserListModel extends DefaultListModel {
             tmp.setOp(o);                                   // Set the op mode
             removeElement(tmp);                             // Delete it from list
             insert(tmp);                                    // Insert it on its new place
-            super.addElement(tmp);                          // Add User
         }
         else System.out.println("User not in list");
         
@@ -69,7 +67,6 @@ public class UserListModel extends DefaultListModel {
             tmp.setVoice(v);
             removeElement(tmp);
             insert(tmp);
-            super.addElement(tmp);
         }
         else System.out.println("User not in list");
     }
@@ -83,11 +80,13 @@ public class UserListModel extends DefaultListModel {
     private void insert(User n)   {
         for (int i = 0; i < size(); i++)   {            // Iterate through all users
             User userInList = (User)elementAt(i);       // Pick user
-            if (n.compareTo(userInList) < 0)   {        // New user shall be sorted BEFORE the current user
-                insertElementAt(n, i);                  // InserT the new user where the current user was
-                return;
-            } 
+            if (userInList.compareTo(n) <= 0)   {       // Continue until current user is "bigger" than the new user
+                continue;
+            }
+            insertElementAt(n, i);                      // InserT the new user where the current user was
+            return;                                     // No need for more searching after user is added
         }
+        super.addElement(n);                            // New user was the "biggest" insert at the bottom
     }
     
     /**
@@ -170,13 +169,13 @@ public class UserListModel extends DefaultListModel {
         @Override
         public int compareTo(User u) {
             if (op && !u.op)
-                return 1;
+                return -1;
             if (!op && u.op)
-                return -1;
-            if (voice && !u.voice)
                 return 1;
-            if (!voice && voice)
+            if (voice && !u.voice)
                 return -1;
+            if (!voice && voice)
+                return 1;
             return nick.compareToIgnoreCase(u.nick);
         }
         
