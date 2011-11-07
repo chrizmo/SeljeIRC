@@ -23,48 +23,33 @@ import jerklib.listeners.IRCEventListener;
 public class ConnectToServer implements IRCEventListener {
 	private ConnectionManager manager;
 	
-	public ConnectToServer() {
-	// TODO Should be <options.get("Username", "")> etc for username, nick, alternate
-	manager = new ConnectionManager(new Profile("SeljeIRC"));
-	// TODO Should be <options.get("server");> for server and port
-	Session session = manager.requestConnection("irc.homelien.no");
+	public ConnectToServer(String server, String nicName) {
+	
+	manager = new ConnectionManager(new Profile(nicName));
+	
+	Session session = manager.requestConnection(server);
 	session.addIRCEventListener(this);
 	}
 	
 	public void receiveEvent(IRCEvent e) {
 		if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
-			/* When connected, join the specified channel
-			 * TODO  Should be <options.get(#Channel#);>   */
-			e.getSession().join("#SeljeIRC");
-		}
-		 
-
-		else if (e.getType() == Type.CHANNEL_MESSAGE)
-		{
-            JoinCompleteEvent jce = (JoinCompleteEvent) e;
-			MessageEvent me = (MessageEvent) e;
-			System.out.println("<" + me.getNick() + ">"+ ":" + me.getMessage());
-		}
-
-		
-		else if (e.getType() == Type.JOIN_COMPLETE)
-		{
-			JoinCompleteEvent jce = (JoinCompleteEvent) e;
-			jce.getChannel().say("Let's say something nice now that we have joined the channel");
+			System.out.println("*** Successfully connected to server ***");
+			
+			//e.getSession().join("#SeljeIRC");
 		}
 
 		else
-		{
+		{       // Prints data received from server
 			System.out.println(e.getType() + " " + e.getRawEventData());
 		}
 
 		
 	}  // End of public void receiveEvent
 	
-	public static void main(String [] args) {
-		new ConnectToServer();
-	}
+	//public static void main(String [] args) {
+	//	new ConnectToServer("irc.homelien.no", "SeljeIRC");
+	//}
 	
 	
 } // End of public class ConnectToServer	

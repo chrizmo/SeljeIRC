@@ -6,6 +6,9 @@ package SeljeIRC;
 
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 
 
 /**
@@ -130,7 +133,15 @@ public class serverConnectWindow extends JInternalFrame{
         gbc.gridy=2;
         gbc.gridheight = 2;
         totalLayout.setConstraints(connect,gbc);
-        add(connect);     
+        add(connect);
+        connect.addActionListener(new ActionListener() {
+         public void actionPerformed( ActionEvent e)
+            {
+                ConnectToServer connectToServer = new ConnectToServer("irc.homelien.no", "SeljeIRC");
+
+            }
+
+        });
         
         //left coloumn
         
