@@ -181,6 +181,7 @@ public class UserListModel extends DefaultListModel {
         
         /**
          * Checks if to Users are equal. Uses the nickname, because that will be uniqe for every User.
+         * @author Lars Erik Pedersen
          * @param o Either a User or a String.
          * @return True if the Users are equal, false if they're not.
          * @since 0.1
