@@ -55,7 +55,8 @@ public class MainMenu extends JMenuBar {
                
                tabObject.createNewTab();
                String channel = JOptionPane.showInputDialog("Hvilken kanal?");
-               // TODO     serverConnectWindow.joinChannel(String channel)
+               // TODO     serverConnectWindow.joinChannel(String channel) -
+               // send channel to connectToServer-object
            } 
         });
     }

@@ -54,10 +54,11 @@ public class ChannelTab extends JTabbedPane {
          * Textarea containing status
          */
          //TODO set up public object of this that can be reached
-        JTextArea t = new JTextArea("textfieldTest");
+        JTextArea t = new JTextArea("Status textfieldTest");
             t.setEditable(false);
             
             t.setBackground(Color.lightGray);
+
        
        /*
         * Layout functionality related to statustab
