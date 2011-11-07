@@ -6,6 +6,9 @@ package SeljeIRC;
 
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 
 
 /**
@@ -13,21 +16,16 @@ import javax.swing.*;
  * @author hallvardwestman
  */
 //
-public class NewIRCConnection extends JInternalFrame{
+public class serverConnectWindow extends JInternalFrame{
     
     static int openFrameCount = 0;
-    static final int xOffset = 30, yOffset = 30;
     
-    public NewIRCConnection(){
-      
-    
-    createLayout();
-    
-    setVisible(true);
-        
-    }
-    
-    public void createLayout(){
+    public serverConnectWindow(){
+        super("Document #" + (++openFrameCount),
+          true, //resizable
+          true, //closable
+          true, //maximizable
+          true);//iconifiable
         
         //Strings
         String networkName[] = {"1","2","3","4"};
@@ -135,7 +133,15 @@ public class NewIRCConnection extends JInternalFrame{
         gbc.gridy=2;
         gbc.gridheight = 2;
         totalLayout.setConstraints(connect,gbc);
-        add(connect);     
+        add(connect);
+        connect.addActionListener(new ActionListener() {
+         public void actionPerformed( ActionEvent e)
+            {
+                ConnectToServer connectToServer = new ConnectToServer("irc.homelien.no", "SeljeIRC");
+
+            }
+
+        });
         
         //left coloumn
         
@@ -254,4 +260,5 @@ public class NewIRCConnection extends JInternalFrame{
         
     }
 
+    
 }

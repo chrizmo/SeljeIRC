@@ -6,3 +6,5 @@ build.xml
 nbproject/*
 .DS_Store
 *.graffle
+build/*
+.metadata/*

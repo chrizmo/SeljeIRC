@@ -1,77 +1,56 @@
 package SeljeIRC;
-
  
+import java.io.BufferedReader; 	  // Will be used later. I guess...
+import java.io.IOException;		  // Will be used later. I guess...
+import java.io.InputStreamReader; // Will be used later. I guess...
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import jerklib.ConnectionManager;
 import jerklib.Profile;
 import jerklib.Session;
 import jerklib.events.*;
 import jerklib.events.IRCEvent.Type;
 import jerklib.listeners.IRCEventListener;
- 
+
+
 /**
- * @author mohadib A simple example that demonsrates how to use JerkLib
+ * 
+ * @author Jon Arne Westgaard
  */
-public class ConnectToServer implements IRCEventListener
-{
+
+
+public class ConnectToServer implements IRCEventListener {
 	private ConnectionManager manager;
- 
-	public ConnectToServer()
-	{
-		/*
-		 * ConnectionManager takes a Profile to use for new connections.
-		 */
-		manager = new ConnectionManager(new Profile("JADDA"));
- 
-		/*
-		 * One instance of ConnectionManager can connect to many IRC networks.
-		 * ConnectionManager#requestConnection(String) will return a Session object.
-		 * The Session is the main way users will interact with this library and IRC
-		 * networks
-		 */
-		Session session = manager.requestConnection("irc.homelien.no");
- 
-		/*
-		 * JerkLib fires IRCEvents to notify users of the lib of incoming events
-		 * from a connected IRC server.
-		 */
-		session.addIRCEventListener(this);
- 
+	
+	public ConnectToServer(String server, String nicName) {
+	
+	manager = new ConnectionManager(new Profile(nicName));
+	
+	Session session = manager.requestConnection(server);
+	session.addIRCEventListener(this);
 	}
- 
-	/*
-	 * This method is for implementing an IRCEventListener. This method will be
-	 * called anytime Jerklib parses an event from the Session its attached to.
-	 * All events are sent as IRCEvents. You can check its actual type and cast it
-	 * to a more specific type.
-	 */
-	public void receiveEvent(IRCEvent e)
-	{
+	
+	public void receiveEvent(IRCEvent e) {
 		if (e.getType() == Type.CONNECT_COMPLETE)
-		{
-			e.getSession().join("#lindir");
- 
+		{   
+			System.out.println("*** Successfully connected to server ***");
+			
+			//e.getSession().join("#SeljeIRC");
 		}
-		else if (e.getType() == Type.CHANNEL_MESSAGE)
-		{
-			MessageEvent me = (MessageEvent) e;
-			System.out.println("<" + me.getNick() + ">"+ ":" + me.getMessage());
-		}
-		else if (e.getType() == Type.JOIN_COMPLETE)
-		{
-			JoinCompleteEvent jce = (JoinCompleteEvent) e;
- 
-			/* say hello and version number */
-			jce.getChannel().say("Hei!! Denne IRC-klienten er laget ved hjelp av JerkLib!!! :D ");
-			jce.getChannel().say("Woooooop!");
-		}
+
 		else
-		{
+		{       // Prints data received from server
 			System.out.println(e.getType() + " " + e.getRawEventData());
 		}
-	}
- 
-	public static void main(String[] args)
-	{
-		new ConnectToServer();
-	}
-}
+
+		
+	}  // End of public void receiveEvent
+	
+	//public static void main(String [] args) {
+	//	new ConnectToServer("irc.homelien.no", "SeljeIRC");
+	//}
+	
+	
+} // End of public class ConnectToServer	
+

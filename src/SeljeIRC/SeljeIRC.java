@@ -9,28 +9,54 @@ import javax.swing.*;
 /**
  * 
  * @author Hallvard Westman
+ * 
  */
 
 public class SeljeIRC extends JFrame{
-    
-    public SeljeIRC(){
-       
-       
-        BorderLayout totalLayout = new BorderLayout();
-        setLayout(totalLayout);
+  
+   
+	private static final long serialVersionUID = 1L; //Serializeing
         
-        MainMenu m = new MainMenu();
-        setJMenuBar(m);
+        MainMenu mainMenu;      //Standard Menu
         
-        ChannelTab channelTabs = new ChannelTab();
-            channelTabs.setSize(new Dimension(200,200));
-            channelTabs.setBackground(Color.yellow);
-       
-        add(channelTabs,BorderLayout.CENTER);
+        ChannelTab channelTabs; //JTabbedPane containing all tabs
+        InputField inputField;  //Standard Input field for each tab
         
-        InputField inputField = new InputField();
-        add(inputField,BorderLayout.SOUTH);
+        BorderLayout totalLayout; //TotalLayouts
+
+	public SeljeIRC(){
+            
+            /*
+             * Layout of main contentPane
+             */
+            totalLayout = new BorderLayout();
+                setLayout(totalLayout);
+            
+            /*
+             * JTabbedPane containging all tabs
+             */
+            channelTabs = new ChannelTab();
+                add(channelTabs,BorderLayout.CENTER);    
+            
+            /*
+             * Setting up the main contentPane menu
+             * Passing channelTab-object for creation of new tabs
+             */
+            mainMenu= new MainMenu(channelTabs);
+                setJMenuBar(mainMenu);
+            
+            /*
+             * Inputfield that should be taking all input
+             */
+            //TODO pass channelTab-object
+                
+            inputField = new InputField();
+                add(inputField,BorderLayout.SOUTH);
         
+                
+        /*
+         * Basic operations on main contentPane
+         */
         setVisible(true);
         pack();
        
@@ -40,7 +66,10 @@ public class SeljeIRC extends JFrame{
 
 public static void main(String[] args) {
     
-    
+        /*
+         * Setting up the mainframe, add only functionality related to .this
+         */
+        
         SeljeIRC mainFrame = new SeljeIRC();    
             mainFrame.setSize(new Dimension(1200, 800));
             mainFrame.setVisible(true);
