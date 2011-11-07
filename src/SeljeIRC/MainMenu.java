@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -53,7 +54,8 @@ public class MainMenu extends JMenuBar {
            public void actionPerformed (ActionEvent ae)   {
                
                tabObject.createNewTab();
-               
+               String channel = JOptionPane.showInputDialog("Hvilken kanal?");
+               // TODO     serverConnectWindow.joinChannel(String channel)
            } 
         });
     }

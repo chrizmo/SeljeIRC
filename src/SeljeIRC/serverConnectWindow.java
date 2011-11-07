@@ -19,7 +19,8 @@ import java.awt.event.ActionEvent;
 public class serverConnectWindow extends JInternalFrame{
     
     static int openFrameCount = 0;
-    
+    ConnectToServer connectToServer;
+
     public serverConnectWindow(){
         super("Document #" + (++openFrameCount),
           true, //resizable
@@ -148,7 +149,7 @@ public class serverConnectWindow extends JInternalFrame{
              String s = topDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
 
-                ConnectToServer connectToServer = new ConnectToServer(
+                connectToServer = new ConnectToServer(
                 s, n);
 
 
@@ -263,6 +264,12 @@ public class serverConnectWindow extends JInternalFrame{
         totalLayout.setConstraints(bottomButtons,gbc);
         add(bottomButtons);
         
+    }
+
+    public void joinChannel(String channel) {
+
+
+       connectToServer.joinChannel(null, channel);
     }
 
     
