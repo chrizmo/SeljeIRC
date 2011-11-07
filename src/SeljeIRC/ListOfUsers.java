@@ -131,12 +131,12 @@ public class ListOfUsers extends JPanel{
         popup = new JPopupMenu();
         
         //Main menu items
-        JMenuItem whois = new JMenuItem("Whois");
-        JMenuItem query = new JMenuItem("Query");
-        JMenu control = new JMenu("Control");
+        JMenuItem whois = new JMenuItem(I18N.get("user.wois"));
+        JMenuItem query = new JMenuItem(I18N.get("user.query"));
+        JMenu control = new JMenu(I18N.get("user.control"));
         JMenu ctcp = new JMenu("CTCP");
         //JMenu dcc = new JMenu("DCC");
-        JMenuItem slap = new JMenuItem("Slap!");
+        JMenuItem slap = new JMenuItem(I18N.get("user.slap"));
         
         //Items for Control sub menu
         JMenuItem op = new JMenuItem("Op");
@@ -149,7 +149,7 @@ public class ListOfUsers extends JPanel{
         
         //Items for CTCP sub menu
         JMenuItem ping = new JMenuItem("Ping");
-        JMenuItem version = new JMenuItem("Version");
+        JMenuItem version = new JMenuItem(I18N.get("user.version"));
         
         control.add(op);
         control.add(deop);
@@ -260,7 +260,8 @@ public class ListOfUsers extends JPanel{
                     lm.voice((String)i.next(), true);                   // Voice those users
                 } 
             }
-            catch (Exception e)   {                                     // Some exception...
+            catch (Exception e)   {             // Some exception...
+                e.printStackTrace();
                 SwingUtilities.invokeLater(new Init());                 // Try againg later
             }
         }
