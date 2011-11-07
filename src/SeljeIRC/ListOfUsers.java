@@ -131,7 +131,7 @@ public class ListOfUsers extends JPanel{
         popup = new JPopupMenu();
         
         //Main menu items
-        JMenuItem whois = new JMenuItem(I18N.get("user.wois"));
+        JMenuItem whois = new JMenuItem(I18N.get("user.whois"));
         JMenuItem query = new JMenuItem(I18N.get("user.query"));
         JMenu control = new JMenu(I18N.get("user.control"));
         JMenu ctcp = new JMenu("CTCP");
@@ -143,9 +143,9 @@ public class ListOfUsers extends JPanel{
         JMenuItem deop = new JMenuItem("Deop");
         JMenuItem voice = new JMenuItem("Voice");
         JMenuItem devoice = new JMenuItem("Devoice");
-        JMenuItem kick = new JMenuItem("Kick");
-        JMenuItem ban = new JMenuItem("Ban");
-        JMenuItem kickban = new JMenuItem("Kick, ban");
+        JMenuItem kick = new JMenuItem(I18N.get("user.kick"));
+        JMenuItem ban = new JMenuItem(I18N.get("user.ban"));
+        JMenuItem kickban = new JMenuItem(I18N.get("user.kickban"));
         
         //Items for CTCP sub menu
         JMenuItem ping = new JMenuItem("Ping");
@@ -238,7 +238,7 @@ public class ListOfUsers extends JPanel{
     class Init implements Runnable   {
         
         /**
-         * Fetches regular users, ops and voices from channe
+         * Fetches regular users, ops and voices from channel
          * @author Lars Erik Pedersen
          * @since 0.1
          */
