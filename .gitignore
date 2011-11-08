@@ -8,3 +8,4 @@ nbproject/*
 *.graffle
 build/*
 .metadata/*
+src/jerklib/examples/*

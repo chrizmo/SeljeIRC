@@ -30,6 +30,7 @@ public class ConnectToServer implements IRCEventListener {
 	Session session = manager.requestConnection(server);
 	session.addIRCEventListener(this);
 	}
+
 	
 	public void receiveEvent(IRCEvent e) {
 		if (e.getType() == Type.CONNECT_COMPLETE)
@@ -43,10 +44,9 @@ public class ConnectToServer implements IRCEventListener {
 		{       // Prints data received from server
 			System.out.println(e.getType() + " " + e.getRawEventData());
 		}
+		e.getRawEventData();
 
-		
 	}  // End of public void receiveEvent
-	
         public void joinChannel (IRCEvent e, String channel) {
 
             e.getSession().join(channel);
