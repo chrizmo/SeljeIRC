@@ -6,8 +6,8 @@ package SeljeIRC;
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
+import java.awt.event.*;
 
 
 
@@ -16,21 +16,16 @@ import java.awt.event.ActionEvent;
  * @author hallvardwestman
  */
 //
-public class serverConnectWindow extends JInternalFrame{
+public class serverConnectWindow extends JFrame{
     
     static int openFrameCount = 0;
     ConnectToServer connectToServer;
-
+    
     public serverConnectWindow(){
-        super("Document #" + (++openFrameCount),
-          true, //resizable
-          true, //closable
-          true, //maximizable
-          true);//iconifiable
-        
+        super(I18N.get("serverconnectwindow.connect"));
         //Strings
-        String networkName[] = {"irc.homelien.no","2","3","4"};
-        String subNetworkName[] = {"a","b","c","d"};
+        String networkName[] = {"Efnet","DALnet","Undernet","Gakk Gakk"};
+        String subNetworkName[] = {"irc.homelien.no","irc.freenode.net","localhost","irc.du.se"};
         
         //Layouts
         GridBagLayout totalLayout = new GridBagLayout();
@@ -50,14 +45,12 @@ public class serverConnectWindow extends JInternalFrame{
         
         //Drop downs
         final JComboBox topDropDown = new JComboBox(networkName);
-        JComboBox subDropDown = new JComboBox(subNetworkName);
+        final JComboBox subDropDown = new JComboBox(subNetworkName);
         
             
         
         //Labels
         JLabel topLabel = new JLabel(I18N.get("serverconnectwindow.ircnetwork"));
-        
-        
         
         //adding toplayout to gridbag
         topPanel.add(topLabel);
@@ -80,6 +73,7 @@ public class serverConnectWindow extends JInternalFrame{
         GridBagLayout rightLayout = new GridBagLayout();
             rightPanel.setLayout(rightLayout);
             //addbutton
+            
             JButton addSomething = new JButton(I18N.get("serverconnectwindow.add"));
             gbc.fill=GridBagConstraints.NONE;
             gbc.gridx=0;
@@ -146,11 +140,13 @@ public class serverConnectWindow extends JInternalFrame{
         connect.addActionListener(new ActionListener() {
          public void actionPerformed( ActionEvent e)
             { // Get server and nick, and run the connection
-             String s = topDropDown.getSelectedItem().toString();
+             String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
-
+             	
                 connectToServer = new ConnectToServer(
                 s, n);
+                
+                serverConnectWindow.this.setVisible(false);	
 
 
             }
@@ -159,10 +155,11 @@ public class serverConnectWindow extends JInternalFrame{
         
         //left coloumn
         
-        JLabel name = new JLabel(I18N.get("serverconnectwindow.name"));
-        JLabel email = new JLabel(I18N.get("serverconnectwindow.email"));
-        JLabel nicName = new JLabel(I18N.get("serverconnectwindow.nickname"));
-        JLabel alias = new JLabel(I18N.get("serverconnectwindow.alias"));
+        JLabel name = new JLabel(I18N.get("std.Name"));
+        JLabel email = new JLabel(I18N.get("std.Email"));
+        JLabel nicName = new JLabel(I18N.get("std.Nickname"));
+        JLabel alias = new JLabel(I18N.get("std.Alias"));
+
         
         /* TextLabels
          * 
@@ -227,11 +224,29 @@ public class serverConnectWindow extends JInternalFrame{
         
         bottomButtons.setLayout(bottomLayout);
         
-            
-            JButton okButton = new JButton(I18N.get("serverconnectwindow.ok"));
-            JButton abortButton = new JButton(I18N.get("serverconnectwindow.abort"));
-            JButton helpButton = new JButton(I18N.get("serverconnectwindow.help"));
+            JButton okButton = new JButton(I18N.get("std.OK"));
+            JButton abortButton = new JButton(I18N.get("std.Abort"));
+            JButton helpButton = new JButton(I18N.get("std.Help"));
         
+            /* --- Bottom Actionlisteners --- */
+                        
+            okButton.addActionListener(new ActionListener(){
+            	public void actionPerformed(ActionEvent actEvt){
+            		JOptionPane.showMessageDialog(serverConnectWindow.this, "The buttons, they do NOTHING!");
+            	}
+            });
+            
+            helpButton.addActionListener(new ActionListener(){
+            	public void actionPerformed(ActionEvent actEvt){
+            		JOptionPane.showMessageDialog(serverConnectWindow.this, "The buttons, they do NOTHING!");
+            	}
+            });
+            
+            abortButton.addActionListener(new ActionListener(){
+            	public void actionPerformed(ActionEvent actEvent){
+            		serverConnectWindow.this.setVisible(false);		// Hides box
+            	}
+            });
             gbc.fill=GridBagConstraints.NONE;
             gbc.gridx=0;
             gbc.gridy=0;
@@ -250,7 +265,6 @@ public class serverConnectWindow extends JInternalFrame{
             gbc.gridx=2;
             bottomLayout.setConstraints(helpButton,gbc);
             bottomButtons.add(helpButton);
-            
           
         
         
@@ -271,6 +285,4 @@ public class serverConnectWindow extends JInternalFrame{
 
        //connectToServer.joinChannel(null, channel);
     }
-
-    
 }

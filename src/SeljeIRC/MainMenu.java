@@ -4,6 +4,7 @@
  */
 package SeljeIRC;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
@@ -43,9 +44,13 @@ public class MainMenu extends JMenuBar {
         
         newServer.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
-               
+             // Create and position connection window
                serverConnectWindow scw = new serverConnectWindow();
-               tabObject.add(scw);
+               scw.setSize(new Dimension(400,300));
+               scw.setLocationRelativeTo(null);
+               scw.pack();
+               scw.setVisible(true);
+                
                
            } 
         });

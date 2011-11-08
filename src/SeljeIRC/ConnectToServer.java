@@ -33,6 +33,7 @@ public class ConnectToServer implements IRCEventListener {
 	Session session = manager.requestConnection(server);
 	session.addIRCEventListener(this);
 	}
+
 	
 	public void receiveEvent(IRCEvent e) {
 		
@@ -50,11 +51,7 @@ public class ConnectToServer implements IRCEventListener {
 			System.out.println(e.getType() + " " + e.getRawEventData());
                         // TODO Send this to Status-window...
 		}
-             
-		
-	}  // End of public void receiveEvent
-	
-        
+        }
         
         public void joinChannel (String channel) {
             
