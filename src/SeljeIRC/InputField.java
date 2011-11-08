@@ -31,7 +31,7 @@ public class InputField extends JPanel {
         
         
         
-        label = new JLabel("thechannelname");
+        label = new JLabel(I18N.get("inputfield.thechannelname"));
             
         add(label,BorderLayout.WEST);
         
@@ -39,7 +39,7 @@ public class InputField extends JPanel {
         
         
         add(channelName,BorderLayout.CENTER);
-        JButton button = new JButton("Send");
+        JButton button = new JButton(I18N.get("inputfield.send"));
         add(button,BorderLayout.EAST);
         
         

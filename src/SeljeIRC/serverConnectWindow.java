@@ -20,12 +20,12 @@ public class serverConnectWindow extends JFrame{
     
     static int openFrameCount = 0;
     ConnectToServer connectToServer;
-
+    
     public serverConnectWindow(){
-        super(I18N.get("ServerConnectWindow.Title"));
+        super(I18N.get("serverconnectwindow.connect"));
         //Strings
         String networkName[] = {"Efnet","DALnet","Undernet","Gakk Gakk"};
-        String subNetworkName[] = {"irc.homelien.no","efnet.xs4all.nl","localhost","irc.du.se"};
+        String subNetworkName[] = {"irc.homelien.no","irc.freenode.net","localhost","irc.du.se"};
         
         //Layouts
         GridBagLayout totalLayout = new GridBagLayout();
@@ -50,8 +50,7 @@ public class serverConnectWindow extends JFrame{
             
         
         //Labels
-        JLabel topLabel = new JLabel(I18N.get("ServerConnectWindow.IRCNetworkLabel"));
-        
+        JLabel topLabel = new JLabel(I18N.get("serverconnectwindow.ircnetwork"));
         
         //adding toplayout to gridbag
         topPanel.add(topLabel);
@@ -74,7 +73,8 @@ public class serverConnectWindow extends JFrame{
         GridBagLayout rightLayout = new GridBagLayout();
             rightPanel.setLayout(rightLayout);
             //addbutton
-            JButton addSomething = new JButton(I18N.get("ServerConnectWindow.Add"));
+            
+            JButton addSomething = new JButton(I18N.get("serverconnectwindow.add"));
             gbc.fill=GridBagConstraints.NONE;
             gbc.gridx=0;
             gbc.gridy=0;
@@ -85,17 +85,17 @@ public class serverConnectWindow extends JFrame{
             rightPanel.add(addSomething);
             
             //changbutton
-            JButton changeSomething = new JButton(I18N.get("ServerConnectWindow.Edit"));
+            JButton changeSomething = new JButton(I18N.get("serverconnectwindow.change"));
             gbc.gridy=1;
             rightLayout.setConstraints(changeSomething,gbc);
             rightPanel.add(changeSomething);
             
-            JButton deleteSomething = new JButton(I18N.get("ServerConnectWindow.Delete"));
+            JButton deleteSomething = new JButton(I18N.get("serverconnectwindow.delete"));
             gbc.gridy=2;
             rightLayout.setConstraints(deleteSomething,gbc);
             rightPanel.add(deleteSomething);
             
-            JButton sortSomething = new JButton(I18N.get("ServerConnectWindow.Sort"));
+            JButton sortSomething = new JButton(I18N.get("serverconnectwindow.sort"));
             gbc.gridy=3;
             rightLayout.setConstraints(sortSomething,gbc);
             rightPanel.add(sortSomething);
@@ -130,7 +130,7 @@ public class serverConnectWindow extends JFrame{
          */
         
         //Connect button
-        JButton connect = new JButton(I18N.get("ServerConnectWindow.ConnectButton"));
+        JButton connect = new JButton(I18N.get(("serverconnectwindow.connect")));
         gbc.fill=GridBagConstraints.NONE;
         gbc.insets=new Insets(2,2,2,2);
         gbc.gridy=2;
@@ -142,8 +142,6 @@ public class serverConnectWindow extends JFrame{
             { // Get server and nick, and run the connection
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
-             
-             System.out.println( s + " - " + n);
              	
                 connectToServer = new ConnectToServer(
                 s, n);
@@ -161,6 +159,7 @@ public class serverConnectWindow extends JFrame{
         JLabel email = new JLabel(I18N.get("std.Email"));
         JLabel nicName = new JLabel(I18N.get("std.Nickname"));
         JLabel alias = new JLabel(I18N.get("std.Alias"));
+
         
         /* TextLabels
          * 
@@ -208,7 +207,7 @@ public class serverConnectWindow extends JFrame{
         
         
         JCheckBox invisibleBox = new JCheckBox();
-        JLabel invisibleLabel = new JLabel(I18N.get("ServerConnectWindow.InvisibleModeLabel"));
+        JLabel invisibleLabel = new JLabel(I18N.get("serverconnectwindow.invisible"));
         invisiblePanel.add(invisibleBox);
         invisiblePanel.add(invisibleLabel);
         
@@ -225,7 +224,6 @@ public class serverConnectWindow extends JFrame{
         
         bottomButtons.setLayout(bottomLayout);
         
-            
             JButton okButton = new JButton(I18N.get("std.OK"));
             JButton abortButton = new JButton(I18N.get("std.Abort"));
             JButton helpButton = new JButton(I18N.get("std.Help"));
@@ -249,8 +247,6 @@ public class serverConnectWindow extends JFrame{
             		serverConnectWindow.this.setVisible(false);		// Hides box
             	}
             });
-            
-            
             gbc.fill=GridBagConstraints.NONE;
             gbc.gridx=0;
             gbc.gridy=0;

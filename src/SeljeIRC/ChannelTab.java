@@ -54,10 +54,11 @@ public class ChannelTab extends JTabbedPane {
          * Textarea containing status
          */
          //TODO set up public object of this that can be reached
-        JTextArea t = new JTextArea("textfieldTest");
+        JTextArea t = new JTextArea("Status textfieldTest");
             t.setEditable(false);
             
             t.setBackground(Color.lightGray);
+
        
        /*
         * Layout functionality related to statustab
@@ -66,7 +67,7 @@ public class ChannelTab extends JTabbedPane {
        panel.add(textAreaScroller,BorderLayout.CENTER );
        
       
-       this.addTab("Status", null, panel,"Does nothing");
+       this.addTab(I18N.get("channeltab.status"), null, panel,"Does nothing");
     }
     
     /**
@@ -120,7 +121,7 @@ public class ChannelTab extends JTabbedPane {
         
         tabs++;
         
-        this.addTab("Tab "+tabs, null, panel,"Does nothing");
+        this.addTab(I18N.get("channeltab.tab")+tabs, null, panel,"Does nothing");
 
         
         

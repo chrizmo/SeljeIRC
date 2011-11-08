@@ -35,20 +35,21 @@ public class ConnectToServer implements IRCEventListener {
 	public void receiveEvent(IRCEvent e) {
 		if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
-			System.out.println("*** Successfully connected to server ***");
+			System.out.println(I18N.get("connect.success"));
 			
-			//e.getSession().join("#SeljeIRC");
+
 		}
 
 		else
 		{       // Prints data received from server
 			System.out.println(e.getType() + " " + e.getRawEventData());
+                        // TODO Send this to Status-window...
 		}
 		e.getRawEventData();
 
 	}  // End of public void receiveEvent
         public void joinChannel (IRCEvent e, String channel) {
-
+        
             e.getSession().join(channel);
         }
 	

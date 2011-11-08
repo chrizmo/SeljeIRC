@@ -131,25 +131,25 @@ public class ListOfUsers extends JPanel{
         popup = new JPopupMenu();
         
         //Main menu items
-        JMenuItem whois = new JMenuItem("Whois");
-        JMenuItem query = new JMenuItem("Query");
-        JMenu control = new JMenu("Control");
+        JMenuItem whois = new JMenuItem(I18N.get("user.whois"));
+        JMenuItem query = new JMenuItem(I18N.get("user.query"));
+        JMenu control = new JMenu(I18N.get("user.control"));
         JMenu ctcp = new JMenu("CTCP");
         //JMenu dcc = new JMenu("DCC");
-        JMenuItem slap = new JMenuItem("Slap!");
+        JMenuItem slap = new JMenuItem(I18N.get("user.slap"));
         
         //Items for Control sub menu
         JMenuItem op = new JMenuItem("Op");
         JMenuItem deop = new JMenuItem("Deop");
         JMenuItem voice = new JMenuItem("Voice");
         JMenuItem devoice = new JMenuItem("Devoice");
-        JMenuItem kick = new JMenuItem("Kick");
-        JMenuItem ban = new JMenuItem("Ban");
-        JMenuItem kickban = new JMenuItem("Kick, ban");
+        JMenuItem kick = new JMenuItem(I18N.get("user.kick"));
+        JMenuItem ban = new JMenuItem(I18N.get("user.ban"));
+        JMenuItem kickban = new JMenuItem(I18N.get("user.kickban"));
         
         //Items for CTCP sub menu
         JMenuItem ping = new JMenuItem("Ping");
-        JMenuItem version = new JMenuItem("Version");
+        JMenuItem version = new JMenuItem(I18N.get("user.version"));
         
         control.add(op);
         control.add(deop);
@@ -238,7 +238,7 @@ public class ListOfUsers extends JPanel{
     class Init implements Runnable   {
         
         /**
-         * Fetches regular users, ops and voices from channe
+         * Fetches regular users, ops and voices from channel
          * @author Lars Erik Pedersen
          * @since 0.1
          */
@@ -260,7 +260,8 @@ public class ListOfUsers extends JPanel{
                     lm.voice((String)i.next(), true);                   // Voice those users
                 } 
             }
-            catch (Exception e)   {                                     // Some exception...
+            catch (Exception e)   {             // Some exception...
+                e.printStackTrace();
                 SwingUtilities.invokeLater(new Init());                 // Try againg later
             }
         }
