@@ -269,7 +269,7 @@ public class serverConnectWindow extends JInternalFrame{
     public void joinChannel(String channel) {
 
 
-       connectToServer.joinChannel(null, channel);
+       //connectToServer.joinChannel(null, channel);
     }
 
     

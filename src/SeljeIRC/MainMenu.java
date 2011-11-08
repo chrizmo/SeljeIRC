@@ -53,8 +53,16 @@ public class MainMenu extends JMenuBar {
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
                
+               
+               ConnectToServer connectToServer = new ConnectToServer("irc.freenode.net","jonas");
+               
                tabObject.createNewTab();
                String channel = JOptionPane.showInputDialog(I18N.get("mainmenu.whichchannel"));
+               
+               connectToServer.joinChannel(channel);
+             
+                   
+               
                // TODO     serverConnectWindow.joinChannel(String channel) -
                // send channel to connectToServer-object
            } 
