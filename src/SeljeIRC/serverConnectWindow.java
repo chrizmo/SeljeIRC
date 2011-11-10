@@ -7,7 +7,6 @@ package SeljeIRC;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.awt.event.*;
 
 
 
@@ -137,16 +136,27 @@ public class serverConnectWindow extends JFrame{
         gbc.gridheight = 2;
         totalLayout.setConstraints(connect,gbc);
         add(connect);
+        
+        
+        
         connect.addActionListener(new ActionListener() {
          public void actionPerformed( ActionEvent e)
             { // Get server and nick, and run the connection
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
-             	
+             
+             
+             JFrame loading = new JFrame();
+             
                 connectToServer = new ConnectToServer(
                 s, n);
                 
-                serverConnectWindow.this.setVisible(false);	
+                
+                
+                while(connectToServer.connectedToServer() != true){
+                    JOptionPane.showInputDialog("jonas");
+                    
+                }
 
 
             }

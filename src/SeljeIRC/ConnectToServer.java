@@ -45,12 +45,26 @@ public class ConnectToServer implements IRCEventListener {
 			hasConnected = true;
 
 		}
-
-		else
+                else if(e.getType() == Type.CHANNEL_MESSAGE){
+                   
+                    MessageEvent me = (MessageEvent) e;
+                    String chan = me.getChannel().toString();
+                    String DoneString;
+                    chan = chan.substring(15);
+                    chan = chan.substring(0,chan.length()-1);
+                    
+                    
+	            System.out.println(me.getNick() + ":" + me.getMessage() + " : " + chan);
+                    
+	            //me.getChannel().say("Modes :" + me.getChannel().getUsersModes(me.getNick()).toString());
+                    //System.out.println()
+                }
+                else
 		{       // Prints data received from server
 			System.out.println(e.getType() + " " + e.getRawEventData());
                         // TODO Send this to Status-window...
 		}
+            
         }
         
         public void joinChannel (String channel) {

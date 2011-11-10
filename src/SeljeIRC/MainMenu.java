@@ -59,10 +59,14 @@ public class MainMenu extends JMenuBar {
            public void actionPerformed (ActionEvent ae)   {
                
                
-               ConnectToServer connectToServer = new ConnectToServer("irc.freenode.net","jonas");
+               ConnectToServer connectToServer = new ConnectToServer("irc.freenode.net","halliheisann");
                
                tabObject.createNewTab();
                String channel = JOptionPane.showInputDialog(I18N.get("mainmenu.whichchannel"));
+               
+               while(connectToServer.connectedToServer()!= true){
+                   System.out.print("not connected yet");
+               }
                
                connectToServer.joinChannel(channel);
              
