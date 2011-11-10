@@ -31,23 +31,21 @@ public class ConnectToServer implements IRCEventListener {
 	
 	public void receiveEvent(IRCEvent e) {
 		
-            //event = e;
+            event = e;
             
             if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
 			System.out.println(I18N.get("connect.success"));
 			hasConnected = true;
-                        e.getSession().join("#SeljeIRC");
-                        e.getSession().join("#WCCMN");
 
-
+                        
 		}
 
             else if (e.getType() == Type.CHANNEL_MESSAGE)
 	        {
 	        MessageEvent me = (MessageEvent) e;
                 System.out.println(me.getNick() + ":" + me.getMessage());
-                me.getChannel().say("Modes :" + me.getChannel().getUsersModes(me.getNick()).toString());
+                //me.getChannel().say("Modes :" + me.getChannel().getUsersModes(me.getNick()).toString());
 
                 
 	        }
@@ -64,7 +62,7 @@ public class ConnectToServer implements IRCEventListener {
             if(connectedToServer())
                 event.getSession().join(channel);
             else
-                System.out.println("not connected to server yet");
+                System.out.println("Not connected to server yet");
         }
 	
         public boolean connectedToServer(){
