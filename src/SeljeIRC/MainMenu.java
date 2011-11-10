@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package SeljeIRC;
 
 import java.awt.Dimension;
@@ -59,17 +56,20 @@ public class MainMenu extends JMenuBar {
            public void actionPerformed (ActionEvent ae)   {
                
                
-               ConnectToServer connectToServer = new ConnectToServer("irc.freenode.net","jonas");
+               ConnectToServer connectToServer = new ConnectToServer("irc.homelien.no","jonasuuuuuu");
                
                tabObject.createNewTab();
                String channel = JOptionPane.showInputDialog(I18N.get("mainmenu.whichchannel"));
                
+               while (connectToServer.connectedToServer() != true)
+               {
+                   
+               }
                connectToServer.joinChannel(channel);
              
                    
                
-               // TODO     serverConnectWindow.joinChannel(String channel) -
-               // send channel to connectToServer-object
+
            } 
         });
     }

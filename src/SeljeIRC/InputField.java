@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package SeljeIRC;
 
 
@@ -42,19 +39,7 @@ public class InputField extends JPanel {
         JButton button = new JButton(I18N.get("inputfield.send"));
         add(button,BorderLayout.EAST);
         
-        
-        /* Jon Arne be testing
-        Border blackline = BorderFactory.createLineBorder(Color.black, 1);
-        
-        JTextArea u = new JTextArea("Her kan vi skrive masse tekst   ");
-        u.setEditable(true);
-        u.setBorder(blackline);
-        add(u);
-        
-        JButton button = new JButton("Send");
-        add(button);
-        
-        */
+
         
     }
     
