@@ -4,7 +4,7 @@ import javax.swing.DefaultListModel;
 
 /**
  * Model for the Channel's user list
- * @author Lars Erik Pederseb
+ * @author Lars Erik Pedersen
  * @version 0.1
  * @since 0.1
  */

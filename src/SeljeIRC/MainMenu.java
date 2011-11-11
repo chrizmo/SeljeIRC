@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package SeljeIRC;
 
 import java.awt.Dimension;
@@ -22,10 +19,12 @@ public class MainMenu extends JMenuBar {
     private JMenu help = new JMenu(I18N.get("mainmenu.help"));
     
     ChannelTab tabObject;
+    ConnectionHandler connection;
     
-    public MainMenu(ChannelTab tab){
+    public MainMenu(ChannelTab tab, ConnectionHandler con){
         super();
         tabObject = tab;
+        connection = con;
         createFileMenu();
         add(file);
         add(edit);
@@ -45,7 +44,7 @@ public class MainMenu extends JMenuBar {
         newServer.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
              // Create and position connection window
-               serverConnectWindow scw = new serverConnectWindow();
+               serverConnectWindow scw = new serverConnectWindow(connection);
                scw.setSize(new Dimension(400,300));
                scw.setLocationRelativeTo(null);
                scw.pack();
@@ -59,21 +58,12 @@ public class MainMenu extends JMenuBar {
            public void actionPerformed (ActionEvent ae)   {
                
                
-               ConnectToServer connectToServer = new ConnectToServer("irc.freenode.net","halliheisann");
                
-               tabObject.createNewTab();
                String channel = JOptionPane.showInputDialog(I18N.get("mainmenu.whichchannel"));
                
-               while(connectToServer.connectedToServer()!= true){
-                   System.out.print("not connected yet");
-               }
-               
-               connectToServer.joinChannel(channel);
-             
-                   
-               
-               // TODO     serverConnectWindow.joinChannel(String channel) -
-               // send channel to connectToServer-object
+              //ChannelTab.setConnection(connection)
+               tabObject.createNewTab(channel);
+
            } 
         });
     }

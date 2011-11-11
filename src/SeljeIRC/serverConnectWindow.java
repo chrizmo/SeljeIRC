@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package SeljeIRC;
 
 import java.awt.*;
@@ -18,10 +15,12 @@ import java.awt.event.*;
 public class serverConnectWindow extends JFrame{
     
     static int openFrameCount = 0;
-    ConnectToServer connectToServer;
+    ConnectionHandler connection;
     
-    public serverConnectWindow(){
+    public serverConnectWindow(ConnectionHandler con){
         super(I18N.get("serverconnectwindow.connect"));
+      
+        connection = con;
         //Strings
         String networkName[] = {"Efnet","DALnet","Undernet","Gakk Gakk"};
         String subNetworkName[] = {"irc.homelien.no","irc.freenode.net","localhost","irc.du.se"};
@@ -144,21 +143,12 @@ public class serverConnectWindow extends JFrame{
             { // Get server and nick, and run the connection
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
+          
              
-             
-             JFrame loading = new JFrame();
-             
-                connectToServer = new ConnectToServer(
-                s, n);
+                connection.connectIt(s, n);
                 
+                serverConnectWindow.this.setVisible(false);
                 
-                
-                while(connectToServer.connectedToServer() != true){
-                    JOptionPane.showInputDialog("jonas");
-                    
-                }
-
-
             }
 
         });
@@ -290,9 +280,4 @@ public class serverConnectWindow extends JFrame{
         
     }
 
-    public void joinChannel(String channel) {
-
-
-       //connectToServer.joinChannel(null, channel);
-    }
 }

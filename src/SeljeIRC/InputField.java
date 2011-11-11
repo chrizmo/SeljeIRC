@@ -1,18 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package SeljeIRC;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import javax.swing.BorderFactory;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 /**
  *
@@ -20,11 +16,14 @@ import javax.swing.border.Border;
  */
 public class InputField extends JPanel {
     private JLabel label;
-    private JTextField channelName;
+    private JTextField inputField;
+    private String channel;
+    ConnectionHandler connection;
         
-    public InputField(){
+    public InputField(ConnectionHandler con,String cha){
         super();
-        
+        channel = cha;
+        connection = con;
         //FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
@@ -35,27 +34,31 @@ public class InputField extends JPanel {
             
         add(label,BorderLayout.WEST);
         
-        channelName = new JTextField();
+        inputField = new JTextField();
         
         
-        add(channelName,BorderLayout.CENTER);
+        add(inputField,BorderLayout.CENTER);
         JButton button = new JButton(I18N.get("inputfield.send"));
         add(button,BorderLayout.EAST);
         
         
-        /* Jon Arne be testing
-        Border blackline = BorderFactory.createLineBorder(Color.black, 1);
+        button.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                
+                /*
+                 * sending input to approporiate screen
+                 */
+                if(channel == null)
+                    connection.sayToServer(inputField.getText());       
+                else
+                    connection.sayToChannel(inputField.getText(),channel);
+                
+            }
+        });
         
-        JTextArea u = new JTextArea("Her kan vi skrive masse tekst   ");
-        u.setEditable(true);
-        u.setBorder(blackline);
-        add(u);
-        
-        JButton button = new JButton("Send");
-        add(button);
-        
-        */
+
         
     }
+    
     
 }

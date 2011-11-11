@@ -1,8 +1,9 @@
 package SeljeIRC;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 
@@ -23,8 +24,20 @@ public class SeljeIRC extends JFrame{
         InputField inputField;  //Standard Input field for each tab
         
         BorderLayout totalLayout; //TotalLayouts
+        
+        static ConnectionHandler connection;
+        StatusTab statusTab;
+        
+        boolean isConnected;
 
 	public SeljeIRC(){
+            
+            /*
+             * Connection to server
+             */
+            
+            channelTabs = new ChannelTab();
+            connection = new ConnectionHandler(channelTabs);
             
             /*
              * Layout of main contentPane
@@ -35,14 +48,14 @@ public class SeljeIRC extends JFrame{
             /*
              * JTabbedPane containging all tabs
              */
-            channelTabs = new ChannelTab();
+            
                 add(channelTabs,BorderLayout.CENTER);    
             
             /*
              * Setting up the main contentPane menu
              * Passing channelTab-object for creation of new tabs
              */
-            mainMenu= new MainMenu(channelTabs);
+            mainMenu= new MainMenu(channelTabs,connection);
                 setJMenuBar(mainMenu);
             
             /*
@@ -50,8 +63,7 @@ public class SeljeIRC extends JFrame{
              */
             //TODO pass channelTab-object
                 
-            inputField = new InputField();
-                add(inputField,BorderLayout.SOUTH);
+            
         
                 
         /*
@@ -60,16 +72,70 @@ public class SeljeIRC extends JFrame{
         setVisible(true);
         pack();
        
-        setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
         
-    }   
+        
+        this.addWindowListener(new WindowAdapter()
+        {
+        public void windowClosing(WindowEvent e)
+        {
+        // your stuf here
+           try{ 
+           connection.closeConnection(); 
+           }catch(Exception ex){
+               System.out.printf("exception onclose");
+           }
+            
+        //System.exit(0);
+        }
+        });
+        
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+    }
+        public static ConnectionHandler returnConnection(){
+            return connection;
+        }
 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 public static void main(String[] args) {
     
         /*
          * Setting up the mainframe, add only functionality related to .this
          */
         
+    SplashScreen splashScreen = new SplashScreen("logo2.jpg");
+    splashScreen.splash();
+    try {
+      Thread.sleep(10000);
+    }
+    catch(InterruptedException ex) {
+      System.out.println(ex);
+    }
+    splashScreen.setVisible(false);
+    
+    
+    
         SeljeIRC mainFrame = new SeljeIRC();    
             mainFrame.setSize(new Dimension(1200, 800));
             mainFrame.setVisible(true);

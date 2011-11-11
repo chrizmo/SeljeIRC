@@ -1,16 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package SeljeIRC;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import java.util.Vector;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
+import jerklib.Channel;
+import jerklib.events.MessageEvent;
 
 /**
  *  This object is containing all tabs, they are modelled as panels added
@@ -23,110 +17,65 @@ public class ChannelTab extends JTabbedPane {
     /*
      * indexing all tabs 
      */
-    private int tabs = 0;
+    private static ConnectionHandler connection;
+    StatusTab statusTab;
     
+     
     public ChannelTab(){
-        
+        super();
         /*
-         * Could move this functionality to constructor
+         * what im doing?
          */
-        createStatusTab();
+        
+        
         
     }
     /**
      * only the statustab is created here, containing just jtextarea
      */
-    public void createStatusTab(){
-        
-        /*
-         * Borderlayout containing textarea
-         */
-        BorderLayout bl = new BorderLayout();
-        
-        /*
-         * addTab takes panel, so this panel is modeled as the "tab-object"
-         */
-        JPanel panel = new JPanel();
-            panel.setLayout(bl);
-            panel.setBackground(Color.darkGray);
-        
-        /*
-         * Textarea containing status
-         */
-         //TODO set up public object of this that can be reached
-        JTextArea t = new JTextArea("Status textfieldTest");
-            t.setEditable(false);
-            
-            t.setBackground(Color.lightGray);
-
-       
-       /*
-        * Layout functionality related to statustab
-        */
-       JScrollPane textAreaScroller = new JScrollPane(t);
-       panel.add(textAreaScroller,BorderLayout.CENTER );
-       
-      
-       this.addTab(I18N.get("channeltab.status"), null, panel,"Does nothing");
-    }
+  
     
     /**
      * add tabs for each channel
      */
-    public void createNewTab(){
+    
+    public void createStatusTab(){
+        statusTab = new StatusTab(connection);
         
-        /*
-         * Borderlayout containing textarea and userlist
-         * 
-         */
-        BorderLayout bl = new BorderLayout();
-        
-        /*
-         * addTab takes panel, so this panel is modeled as the "tab-object"
-         * 
-         */
-        JPanel panel = new JPanel();
-            panel.setLayout(bl);
-            panel.setBackground(Color.darkGray);
-            
-        /*
-         * Textarea
-         */
-        JTextArea t = new JTextArea("textfieldTest");
-            t.setEditable(false);
-            
-            t.setBackground(Color.lightGray);
-            
-        JScrollPane textAreaScroller = new JScrollPane(t);
+        this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
+    }
+    public void createNewTab(String Channel){
         
         
-        /*
-         * userlist
-         */
-        //TODO set up the userlist model
-        ListOfUsers listPanel = new ListOfUsers();
-            listPanel.setBackground(Color.GRAY);
+        SingleTab st = new SingleTab(connection,Channel);
         
-            
-        /*
-         * layout functionality for tabs
-         */
-        JScrollPane listScroller = new JScrollPane(listPanel,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        this.addTab(Channel, null, st,"Does nothing");
         
-        panel.add(textAreaScroller,BorderLayout.CENTER );
-        panel.add(listScroller,BorderLayout.EAST);
-        
-        
-        tabs++;
-        
-        this.addTab(I18N.get("channeltab.tab")+tabs, null, panel,"Does nothing");
-
-        
-        
+        connection.joinChannel(Channel);
         
         
         
     }
+    public void updateTabScreen(String ch, String message){
+        
+       
+        int tabIndex = this.indexOfTab(ch);
+        
+        
+        SingleTab st = (SingleTab) this.getComponent(tabIndex);
+        
+        st.updateScreen(message);
+        
+    }
+    public void updateStatusScreen(String ch){
+        statusTab.updateScreen(ch);
+    }
+    
+    public static void setConnection(ConnectionHandler ch){
+        connection = ch;
+    }
+    
+    
+    
+    
 }
