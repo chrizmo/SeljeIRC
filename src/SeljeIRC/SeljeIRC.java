@@ -127,7 +127,7 @@ public static void main(String[] args) {
     SplashScreen splashScreen = new SplashScreen("logo2.jpg");
     splashScreen.splash();
     try {
-      Thread.sleep(10000);
+      Thread.sleep(3000);
     }
     catch(InterruptedException ex) {
       System.out.println(ex);
