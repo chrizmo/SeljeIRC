@@ -1,15 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package SeljeIRC;
 
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,17 +20,18 @@ import java.util.regex.Pattern;
  */
 //
 public class serverConnectWindow extends JFrame{
-	
-	private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
+    
     static int openFrameCount = 0;
-    ConnectToServer connectToServer;
+    ConnectionHandler connection;
+    private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     Vector<String> networkNames = new Vector<String>();			// List of networks in list
     
-    public serverConnectWindow(){
+    public serverConnectWindow(ConnectionHandler con){
         super(I18N.get("serverconnectwindow.connect"));
-        //Strings 
+      
+        connection = con;
+        //Strings
         networkNames = (Vector<String>)readNetworks();
-        
         String subNetworkName[] = {"irc.homelien.no","irc.freenode.net","localhost","irc.du.se"};
         
         //Layouts
@@ -145,18 +144,20 @@ public class serverConnectWindow extends JFrame{
         gbc.gridheight = 2;
         totalLayout.setConstraints(connect,gbc);
         add(connect);
+        
+        
+        
         connect.addActionListener(new ActionListener() {
          public void actionPerformed( ActionEvent e)
             { // Get server and nick, and run the connection
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
-             	
-                connectToServer = new ConnectToServer(
-                s, n);
+          
+             
+                connection.connectIt(s, n);
                 
-                serverConnectWindow.this.setVisible(false);	
-
-
+                serverConnectWindow.this.setVisible(false);
+                
             }
 
         });
@@ -287,8 +288,8 @@ public class serverConnectWindow extends JFrame{
         add(bottomButtons);
         
     }
+    final JComboBox topDropDown = new JComboBox(networkNames);
 
-    
     public void joinChannel(String channel) {
 
 
@@ -344,5 +345,5 @@ public class serverConnectWindow extends JFrame{
     		}
     	
     	}
-    }
 
+}
