@@ -25,6 +25,8 @@ public class serverConnectWindow extends JFrame{
     ConnectionHandler connection;
     private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     Vector<String> networkNames = new Vector<String>();			// List of networks in list
+    Vector<String> serverNames = new Vector<String>();			// List of networks in list
+    
     
     public serverConnectWindow(ConnectionHandler con){
         super(I18N.get("serverconnectwindow.connect"));
@@ -32,7 +34,7 @@ public class serverConnectWindow extends JFrame{
         connection = con;
         //Strings
         networkNames = (Vector<String>)readNetworks();
-        String subNetworkName[] = {"irc.homelien.no","irc.freenode.net","localhost","irc.du.se"};
+        serverNames = (Vector<String>)readServers(networkNames.firstElement());
         
         //Layouts
         GridBagLayout totalLayout = new GridBagLayout();
@@ -52,8 +54,15 @@ public class serverConnectWindow extends JFrame{
         
         //Drop downs
         final JComboBox topDropDown = new JComboBox(networkNames);
-        final JComboBox subDropDown = new JComboBox(subNetworkName);
+        final JComboBox subDropDown = new JComboBox(new DefaultComboBoxModel(serverNames));
         
+        topDropDown.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent evt){
+        		serverNames.clear();
+        		serverNames = (Vector<String>)readServers(topDropDown.getSelectedItem().toString());
+        		subDropDown.setModel(new DefaultComboBoxModel(serverNames));
+        	}
+        });
             
         
         //Labels
@@ -288,7 +297,7 @@ public class serverConnectWindow extends JFrame{
         add(bottomButtons);
         
     }
-    final JComboBox topDropDown = new JComboBox(networkNames);
+    //final JComboBox topDropDown = new JComboBox(networkNames);
 
     public void joinChannel(String channel) {
 
@@ -326,6 +335,34 @@ public class serverConnectWindow extends JFrame{
 		}
 		
 	}	
+   	/**
+   	 * 
+   	 * @param networkName
+   	 * @return
+   	 */
+   	public Vector<String> readServers(String networkName){
+		BufferedReader brReader;
+		Vector<String> serverList = new Vector<String>();
+		String readFileLine = null;
+		try{
+			brReader = this.openIniFile(this.SERVERFILE);
+			
+			while((readFileLine = brReader.readLine()) != null && !readFileLine.equals("[servers]")){} // Read down to line 
+	
+			while((readFileLine = brReader.readLine()) != null){
+					if(readFileLine.endsWith(networkName)){
+						serverList.add(readFileLine.split(":")[1]);
+					}
+				}	
+
+			brReader.close();
+			return serverList;
+		}catch(IOException ioe){
+			System.err.println("Error while reading network: " + ioe.getMessage());
+			return null;
+		}
+		
+	}
     	
     	/**
     	 * 
