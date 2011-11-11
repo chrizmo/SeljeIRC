@@ -155,6 +155,10 @@ public class ConnectionHandler implements IRCEventListener {
             System.out.printf("Closing manager");
         }
         
+        public void disconnectFromChannel(String channel){
+            
+        }
+        
 	
 } // End of public class ConnectionHandler	
 
