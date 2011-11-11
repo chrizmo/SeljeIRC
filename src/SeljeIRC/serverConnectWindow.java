@@ -1,9 +1,18 @@
-
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package SeljeIRC;
 
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 
@@ -13,16 +22,17 @@ import java.awt.event.*;
  */
 //
 public class serverConnectWindow extends JFrame{
-    
+	
+	private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     static int openFrameCount = 0;
-    ConnectionHandler connection;
+    ConnectToServer connectToServer;
+    Vector<String> networkNames = new Vector<String>();			// List of networks in list
     
-    public serverConnectWindow(ConnectionHandler con){
+    public serverConnectWindow(){
         super(I18N.get("serverconnectwindow.connect"));
-      
-        connection = con;
-        //Strings
-        String networkName[] = {"Efnet","DALnet","Undernet","Gakk Gakk"};
+        //Strings 
+        networkNames = (Vector<String>)readNetworks();
+        
         String subNetworkName[] = {"irc.homelien.no","irc.freenode.net","localhost","irc.du.se"};
         
         //Layouts
@@ -42,7 +52,7 @@ public class serverConnectWindow extends JFrame{
         
         
         //Drop downs
-        final JComboBox topDropDown = new JComboBox(networkName);
+        final JComboBox topDropDown = new JComboBox(networkNames);
         final JComboBox subDropDown = new JComboBox(subNetworkName);
         
             
@@ -135,20 +145,18 @@ public class serverConnectWindow extends JFrame{
         gbc.gridheight = 2;
         totalLayout.setConstraints(connect,gbc);
         add(connect);
-        
-        
-        
         connect.addActionListener(new ActionListener() {
          public void actionPerformed( ActionEvent e)
             { // Get server and nick, and run the connection
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
-          
-             
-                connection.connectIt(s, n);
+             	
+                connectToServer = new ConnectToServer(
+                s, n);
                 
-                serverConnectWindow.this.setVisible(false);
-                
+                serverConnectWindow.this.setVisible(false);	
+
+
             }
 
         });
@@ -280,4 +288,61 @@ public class serverConnectWindow extends JFrame{
         
     }
 
-}
+    
+    public void joinChannel(String channel) {
+
+
+       //connectToServer.joinChannel(null, channel);
+    }
+ 	
+    	 /**
+    	  * 
+    	  * @return
+    	  */
+   	public Vector<String> readNetworks(){
+		BufferedReader brReader;
+		Vector<String> networkList = new Vector<String>();
+		String readFileLine = null;
+		Pattern networkExpression = Pattern.compile("(?!^n[0-9]+=)[A-z]*$");
+		Matcher networkMatcher = null;
+		try{
+			brReader = this.openIniFile(this.SERVERFILE);
+			
+			while((readFileLine = brReader.readLine()) != null && !readFileLine.equals("[networks]")){} // Read down to line 
+			
+			while(!(readFileLine = brReader.readLine()).isEmpty()){
+					networkMatcher = networkExpression.matcher(readFileLine);
+
+					if(networkMatcher.find()){
+						networkList.add(networkMatcher.group().toString());
+					}
+				}	
+			brReader.close();
+			return networkList;
+		}catch(IOException ioe){
+			System.err.println("Error while reading network: " + ioe.getMessage());
+			return null;
+		}
+		
+	}	
+    	
+    	/**
+    	 * 
+    	 * @param filename FileName of file to open
+    	 * @return A Buffered reader object to the file
+    	 * 
+    	 * Basically opens a file for the user.
+    	 */ 
+    	private BufferedReader openIniFile(String filename){
+    		
+    		try{
+    			BufferedReader brReader = new BufferedReader(new FileReader(filename));
+    			return brReader;
+    		}catch(FileNotFoundException fileException){
+    			System.err.println("Error opening file: " + fileException.getMessage());
+    			return null;
+    		}
+    	
+    	}
+    }
+
