@@ -49,7 +49,7 @@ public class ConnectionHandler implements IRCEventListener {
 		
             event = e;
             
-            channelTab.updateStatusScreen("Event :"+e.getType().toString());
+            //channelTab.updateStatusScreen("Event :"+e.getType().toString());
             
             if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
@@ -70,12 +70,6 @@ public class ConnectionHandler implements IRCEventListener {
                     
                     channelTab.updateTabScreen(ch,message);
                     
-                    
-	           // System.out.println(me.getNick() + ":" + me.getMessage() + " : " + chan);
-                   
-                    
-	            //me.getChannel().say("Modes :" + me.getChannel().getUsersModes(me.getNick()).toString());
-                    //System.out.println()
                 }
                 else if(e.getType() == Type.NOTICE){
                         NoticeEvent no = (NoticeEvent) e;
@@ -94,8 +88,8 @@ public class ConnectionHandler implements IRCEventListener {
                     
                 else    
 		{       // Prints data received from server
-			System.out.println(e.getType() + " " + e.getRawEventData());
-                        // TODO Send this to Status-window...
+                        channelTab.updateStatusScreen(e.getType() + " " + e.getRawEventData());
+			// TODO Send this to Status-window...
 		}
             
         }
@@ -109,7 +103,7 @@ public class ConnectionHandler implements IRCEventListener {
                 channelTab.updateStatusScreen("You have joined :"+channel);
             }
             else
-                channelTab.updateStatusScreen("You have to connect tot server first");
+                channelTab.updateStatusScreen("You have to connect to server first");
         }
 	
         public boolean connectedToServer(){
@@ -158,7 +152,7 @@ public class ConnectionHandler implements IRCEventListener {
         
         public void closeConnection(){
             manager.quit();
-            System.out.printf("closing manager");
+            System.out.printf("Closing manager");
         }
         
 	

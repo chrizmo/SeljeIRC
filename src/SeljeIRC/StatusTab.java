@@ -6,6 +6,8 @@ package SeljeIRC;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -57,9 +59,14 @@ public class StatusTab extends JPanel{
        
        InputField inputField = new InputField(connection,null);
        add(inputField,BorderLayout.SOUTH);
+
+       
+
     }
     
     public void updateScreen(String update){
         screen.append("\n"+update);
+        // Auto-scroll
+       screen.setCaretPosition(screen.getDocument().getLength());
     }
 }
