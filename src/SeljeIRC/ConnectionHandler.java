@@ -152,6 +152,7 @@ public class ConnectionHandler implements IRCEventListener {
         
         public void closeConnection(){
             manager.quit();
+            channelTab.removeAll();
             System.out.printf("Closing manager");
         }
         
