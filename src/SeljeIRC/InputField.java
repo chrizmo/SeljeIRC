@@ -53,9 +53,26 @@ public class InputField extends JPanel {
                 else
                     connection.sayToChannel(inputField.getText(),channel);
                 
+                inputField.setText("");
+                
             }
         });
         
+        inputField.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae){
+                
+                /*
+                 * sending input to approporiate screen
+                 */
+                if(channel == null)
+                    connection.sayToServer(inputField.getText());       
+                else
+                    connection.sayToChannel(inputField.getText(),channel);
+                
+                inputField.setText("");
+                
+            }
+        });
 
         
     }
