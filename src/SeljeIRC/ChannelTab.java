@@ -44,12 +44,18 @@ public class ChannelTab extends JTabbedPane {
         
         this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
     }
+    /*
+     * 
+     */
     public void createNewTab(String Channel){
+        
         
         
         SingleTab st = new SingleTab(connection,Channel);
         
         this.addTab(Channel, null, st,"Does nothing");
+        
+        this.setSelectedIndex(this.indexOfTab(Channel));
         
         connection.joinChannel(Channel);
         
@@ -73,6 +79,10 @@ public class ChannelTab extends JTabbedPane {
     
     public static void setConnection(ConnectionHandler ch){
         connection = ch;
+    }
+    
+    public void removeAllTabs(){
+        this.removeAll();
     }
     
     

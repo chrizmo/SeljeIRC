@@ -63,7 +63,7 @@ public class MainMenu extends JMenuBar {
                
               //ChannelTab.setConnection(connection)
                tabObject.createNewTab(channel);
-
+               
            } 
         });
     }
