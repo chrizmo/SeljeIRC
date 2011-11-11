@@ -156,9 +156,9 @@ public class serverConnectWindow extends JFrame{
         
         
         
-        connect.addActionListener(new ActionListener() {
-         public void actionPerformed( ActionEvent e)
-            { // Get server and nick, and run the connection
+        connect.addActionListener(new ActionListener() {//TODO: Legg til connectionsjekk (Christer)
+         public void actionPerformed( ActionEvent e)// TODO: Legg til bekreftelse om reconnect -"
+            { // Get server and nick, and run the connection // HUSK Å SLETTE ALLE TABS
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
           
