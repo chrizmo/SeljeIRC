@@ -3,12 +3,16 @@ package SeljeIRC;
 
 import java.awt.*;
 import javax.swing.*;
+
+//import com.sun.tools.hat.internal.model.Root;  The fuck is this?
+
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +27,7 @@ public class serverConnectWindow extends JFrame{
     
     static int openFrameCount = 0;
     ConnectionHandler connection;
+    private Preferences connectionPreferences;
     private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     Vector<String> networkNames = new Vector<String>();			// List of networks in list
     Vector<String> serverNames = new Vector<String>();			// List of networks in list
@@ -32,9 +37,13 @@ public class serverConnectWindow extends JFrame{
         super(I18N.get("serverconnectwindow.connect"));
       
         connection = con;
-        //Strings
-        networkNames = (Vector<String>)readNetworks();
-        serverNames = (Vector<String>)readServers(networkNames.firstElement());
+        // Preferences
+        try{
+        	connectionPreferences = Preferences.userNodeForPackage(getClass());
+        }catch(NullPointerException e){
+        	System.err.println("Error in preferences: " + e.getCause());
+        }
+        
         
         //Layouts
         GridBagLayout totalLayout = new GridBagLayout();
@@ -52,11 +61,21 @@ public class serverConnectWindow extends JFrame{
         JPanel invisiblePanel = new JPanel(new FlowLayout());
         
         
-        //Drop downs
+        //Drop Down menus
+        
+        // The network menus
+        networkNames = (Vector<String>)readNetworks(); // Read all the networks from file
         final JComboBox topDropDown = new JComboBox(networkNames);
+        
+        // The server menus
+        topDropDown.setSelectedItem(new String(connectionPreferences.get("lastnetwork", "")));
+        serverNames = (Vector<String>)readServers(topDropDown.getSelectedItem().toString()); // Getting servers for element one
         final JComboBox subDropDown = new JComboBox(new DefaultComboBoxModel(serverNames));
         
-        topDropDown.addActionListener(new ActionListener(){
+        
+
+        
+        topDropDown.addActionListener (new ActionListener(){
         	public void actionPerformed(ActionEvent evt){
         		serverNames.clear();
         		serverNames = (Vector<String>)readServers(topDropDown.getSelectedItem().toString());
@@ -64,7 +83,7 @@ public class serverConnectWindow extends JFrame{
         	}
         });
             
-        
+
         //Labels
         JLabel topLabel = new JLabel(I18N.get("serverconnectwindow.ircnetwork"));
         
@@ -136,10 +155,12 @@ public class serverConnectWindow extends JFrame{
         totalLayout.setConstraints(subDropDown,gbc);
         add(subDropDown);    
        
-        JTextField nameField = new JTextField();
-        JTextField emailField = new JTextField();
-        final JTextField nicNameField = new JTextField(10);
-        JTextField aliasField = new JTextField(10);
+        
+
+        final JTextField nameField = new JTextField(connectionPreferences.get("name", ""));
+        final JTextField emailField = new JTextField(connectionPreferences.get("email",""));
+        final JTextField nicNameField = new JTextField(connectionPreferences.get("nickname",""),10);
+        final JTextField aliasField = new JTextField(connectionPreferences.get("alias",""),10);
 
         /* Textfields
          *
@@ -162,10 +183,29 @@ public class serverConnectWindow extends JFrame{
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
           
-             
-                connection.connectIt(s, n);
+             	if(connection.connectedToServer()){		// Check if client is connected
+             		if((JOptionPane.showConfirmDialog(serverConnectWindow.this, I18N.get("serverconnectwindow.reconnect") ,I18N.get("serverconnectwindow.connect"),JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)) == JOptionPane.YES_OPTION){
+             			connection.closeConnection();
+             			connection.connectIt(s, n);
+                        connectionPreferences.put("lastnetwork", topDropDown.getSelectedItem().toString());
+                        connectionPreferences.put("lastserver", s);
+             		}
+             			
+             	}else{
+             		connection.connectIt(s, n);
+                    connectionPreferences.put("lastnetwork", topDropDown.getSelectedItem().toString());
+                    connectionPreferences.put("lastserver", s);
+            		connectionPreferences.put("nickname",nicNameField.getText());
+            		connectionPreferences.put("email",nicNameField.getText());
+            		connectionPreferences.put("alias",aliasField.getText());
+            		connectionPreferences.put("name",nameField.getText());
+                   
+             	}
                 
-                serverConnectWindow.this.setVisible(false);
+                // Save all the configuration
+                
+
+        		serverConnectWindow.this.setVisible(false);
                 
             }
 
@@ -248,9 +288,13 @@ public class serverConnectWindow extends JFrame{
         
             /* --- Bottom Actionlisteners --- */
                         
-            okButton.addActionListener(new ActionListener(){
-            	public void actionPerformed(ActionEvent actEvt){
-            		JOptionPane.showMessageDialog(serverConnectWindow.this, "The buttons, they do NOTHING!");
+            okButton.addActionListener(new ActionListener(){ //TODO: Legg til brukernavnsjekk (CHRISTER)
+            	public void actionPerformed(ActionEvent actEvt){ // Saves configuration to file
+            		connectionPreferences.put("nickname",nicNameField.getText());
+            		connectionPreferences.put("email",nicNameField.getText());
+            		connectionPreferences.put("alias",aliasField.getText());
+            		connectionPreferences.put("name",nameField.getText());
+            		serverConnectWindow.this.setVisible(false);
             	}
             });
             
@@ -297,7 +341,6 @@ public class serverConnectWindow extends JFrame{
         add(bottomButtons);
         
     }
-    //final JComboBox topDropDown = new JComboBox(networkNames);
 
     public void joinChannel(String channel) {
 
