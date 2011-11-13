@@ -1,6 +1,8 @@
 
 package SeljeIRC;
 
+import java.awt.Color;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.JTabbedPane;
 import jerklib.Channel;
@@ -83,6 +85,13 @@ public class ChannelTab extends JTabbedPane {
     
     public void removeAllTabs(){
         this.removeAll();
+    }
+
+    void updateTabScreen(String ch, List<String> message) {
+        int tabIndex = this.indexOfTab(ch);
+        SingleTab st = (SingleTab) this.getComponent(tabIndex);
+        st.updateScreen(message);
+
     }
     
     

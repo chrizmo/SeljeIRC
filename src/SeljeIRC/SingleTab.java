@@ -6,6 +6,10 @@ package SeljeIRC;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -75,7 +79,16 @@ public class SingleTab extends JPanel {
         
     }
     public void updateScreen(String update){
-        screen.append("\n"+update);
+      DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+      Date date = new Date();
+      screen.append("\n"+dateFormat.format(date) +" " +update);
+    }
+
+    void updateScreen(List<String> update) {
+      DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+      Date date = new Date();
+      screen.append("\n"+dateFormat.format(date) +" " +update);
+
     }
    
 }
