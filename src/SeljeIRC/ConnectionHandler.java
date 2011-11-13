@@ -85,6 +85,13 @@ public class ConnectionHandler implements IRCEventListener {
                         String update = no.getErrorType().toString();
                         channelTab.updateStatusScreen(update);
                 }
+            
+                else if(e.getType() == Type.NICK_CHANGE){
+                	ErrorEvent no = (ErrorEvent) e;
+                	String update = no.getErrorType().toString();
+                	channelTab.updateStatusScreen("NickInUseBuddy");
+                    channelTab.updateStatusScreen(update);
+                }
                     
                 else    
 		{       // Prints data received from server

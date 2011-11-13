@@ -16,6 +16,8 @@ import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jerklib.Session;
+
 
 
 /**
@@ -31,6 +33,7 @@ public class serverConnectWindow extends JFrame{
     private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     Vector<String> networkNames = new Vector<String>();			// List of networks in list
     Vector<String> serverNames = new Vector<String>();			// List of networks in list
+    private Session ircSession; 
     
     
     public serverConnectWindow(ConnectionHandler con){
@@ -189,8 +192,7 @@ public class serverConnectWindow extends JFrame{
              			connection.connectIt(s, n);
                         connectionPreferences.put("lastnetwork", topDropDown.getSelectedItem().toString());
                         connectionPreferences.put("lastserver", s);
-             		}
-             			
+             		}             			
              	}else{
              		connection.connectIt(s, n);
                     connectionPreferences.put("lastnetwork", topDropDown.getSelectedItem().toString());
@@ -290,10 +292,13 @@ public class serverConnectWindow extends JFrame{
                         
             okButton.addActionListener(new ActionListener(){ //TODO: Legg til brukernavnsjekk (CHRISTER)
             	public void actionPerformed(ActionEvent actEvt){ // Saves configuration to file
-            		connectionPreferences.put("nickname",nicNameField.getText());
-            		connectionPreferences.put("email",nicNameField.getText());
-            		connectionPreferences.put("alias",aliasField.getText());
-            		connectionPreferences.put("name",nameField.getText());
+            		
+            		if(!connection.connectedToServer()){
+            			connectionPreferences.put("nickname",nicNameField.getText());
+            			connectionPreferences.put("email",nicNameField.getText());
+            			connectionPreferences.put("alias",aliasField.getText());
+            			connectionPreferences.put("name",nameField.getText());
+            		}
             		serverConnectWindow.this.setVisible(false);
             	}
             });
@@ -341,7 +346,7 @@ public class serverConnectWindow extends JFrame{
         add(bottomButtons);
         
     }
-
+    
     public void joinChannel(String channel) {
 
 
