@@ -37,7 +37,7 @@ public class serverConnectWindow extends JFrame{
     
     
     public serverConnectWindow(ConnectionHandler con){
-        super(I18N.get("serverconnectwindow.connect"));
+        super(I18N.get("serverconnectwindow.connect"));		// Set header title
       
         connection = con;
         // Preferences
@@ -51,15 +51,14 @@ public class serverConnectWindow extends JFrame{
         //Layouts
         GridBagLayout totalLayout = new GridBagLayout();
             setLayout(totalLayout);
-        FlowLayout toplayput = new FlowLayout();
+        GridBagLayout toplayput = new GridBagLayout();
         
         //Constraints
         GridBagConstraints gbc = new GridBagConstraints();
         
-        
         //top panel
         JPanel topPanel = new JPanel();
-            topPanel.setLayout(toplayput);
+        topPanel.setLayout(toplayput);
             
         JPanel invisiblePanel = new JPanel(new FlowLayout());
         
@@ -77,7 +76,6 @@ public class serverConnectWindow extends JFrame{
         
         
 
-        
         topDropDown.addActionListener (new ActionListener(){
         	public void actionPerformed(ActionEvent evt){
         		serverNames.clear();
@@ -90,13 +88,33 @@ public class serverConnectWindow extends JFrame{
         //Labels
         JLabel topLabel = new JLabel(I18N.get("serverconnectwindow.ircnetwork"));
         
+        gbc.insets = new Insets(1,1,1,1);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        
+        toplayput.setConstraints(topLabel, gbc);
+        
         //adding toplayout to gridbag
         topPanel.add(topLabel);
+        
+        // --- Set constraints --- // 
+        
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 2;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        toplayput.setConstraints(topDropDown, gbc);
+        
         topPanel.add(topDropDown);
         
         
         //top panel constraints
-        gbc.fill=GridBagConstraints.NONE;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
         gbc.gridx=1;
         gbc.gridy=0;
         gbc.gridwidth = 1;
@@ -113,7 +131,7 @@ public class serverConnectWindow extends JFrame{
             //addbutton
             
             JButton addSomething = new JButton(I18N.get("serverconnectwindow.add"));
-            gbc.fill=GridBagConstraints.NONE;
+            gbc.fill=GridBagConstraints.HORIZONTAL;
             gbc.gridx=0;
             gbc.gridy=0;
             gbc.gridwidth = 1;
@@ -225,7 +243,7 @@ public class serverConnectWindow extends JFrame{
          * 
          */
         
-        gbc.insets=new Insets(1,1,1,1);
+        gbc.insets=new Insets(1,10,1,1);
         gbc.gridx=0;
         gbc.gridy=4;
         gbc.gridheight = 1;
@@ -246,6 +264,7 @@ public class serverConnectWindow extends JFrame{
 
         
         gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.insets=new Insets(1,1,1,1);
         gbc.gridx=1;
         gbc.gridy=4;
         gbc.anchor = GridBagConstraints.WEST;
