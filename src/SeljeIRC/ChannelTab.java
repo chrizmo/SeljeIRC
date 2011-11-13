@@ -1,6 +1,7 @@
 
 package SeljeIRC;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.JTabbedPane;

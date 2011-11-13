@@ -1,5 +1,6 @@
 package SeljeIRC;
  
+import java.awt.Color;
 import java.util.List;
 import jerklib.Channel;
 import jerklib.ConnectionManager;
@@ -63,7 +64,7 @@ public class ConnectionHandler implements IRCEventListener {
 
 		}
                 else if(e.getType() == Type.CHANNEL_MESSAGE){
-                   //
+                   // Print channel-messages in channel-tab
                     MessageEvent me = (MessageEvent) e;
                     
                     String ch = me.getChannel().getName();
@@ -98,7 +99,7 @@ public class ConnectionHandler implements IRCEventListener {
                     // Print topic for channel:
                     JoinCompleteEvent jce = (JoinCompleteEvent) e;
                     String ch = jce.getChannel().getName();
-                    String message = "-!- Topic for " +ch +": "+jce.getChannel().getTopic();
+                    String message = ("-!- Topic for " +ch +": "+jce.getChannel().getTopic());
                     channelTab.updateTabScreen(ch,message);
 
                 }
