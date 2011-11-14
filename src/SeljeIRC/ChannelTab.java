@@ -94,6 +94,10 @@ public class ChannelTab extends JTabbedPane {
 
     }
     
+    public void fetchUsers(String ch, Channel c)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch));
+        st.updateUserList(c);
+    }
     
     
     

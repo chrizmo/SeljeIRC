@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import jerklib.Channel;
 
 /**
  *
@@ -23,6 +24,7 @@ public class SingleTab extends JPanel {
     private String channel;
     private JTextArea screen;
     private ConnectionHandler connection;
+    private ListOfUsers listPanel;
     
     public SingleTab(ConnectionHandler con,String ch){
         super();
@@ -58,7 +60,8 @@ public class SingleTab extends JPanel {
          * userlist
          */
         //TODO set up the userlist model
-        ListOfUsers listPanel = new ListOfUsers();
+        
+        listPanel = new ListOfUsers();
             listPanel.setBackground(Color.GRAY);
         
             
@@ -90,5 +93,11 @@ public class SingleTab extends JPanel {
       screen.append("\n"+dateFormat.format(date) +" " +update);
 
     }
+
+    void updateUserList(Channel c) {
+        listPanel.updateList(c);
+    }
+    
+    
    
 }

@@ -52,6 +52,7 @@ public class ConnectionHandler implements IRCEventListener {
 		
             event = e;
             
+            
             //channelTab.updateStatusScreen("Event :"+e.getType().toString());
             
             if (e.getType() == Type.CONNECT_COMPLETE)
@@ -101,6 +102,7 @@ public class ConnectionHandler implements IRCEventListener {
                     String ch = jce.getChannel().getName();
                     String message = ("-!- Topic for " +ch +": "+jce.getChannel().getTopic());
                     channelTab.updateTabScreen(ch,message);
+                    channelTab.fetchUsers(ch, e.getSession().getChannel(ch));
 
                 }
                 else if(e.getType() == Type.NICK_LIST_EVENT){
@@ -189,6 +191,10 @@ public class ConnectionHandler implements IRCEventListener {
             manager.quit();
             channelTab.removeAll();
             System.out.printf("Closing manager");
+        }
+        
+        public Session getCurrentSession()   {
+            return event.getSession();
         }
         
 	
