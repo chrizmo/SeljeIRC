@@ -1,11 +1,14 @@
 package SeljeIRC;
  
+import java.awt.Color;
+import java.util.List;
 import jerklib.Channel;
 import jerklib.ConnectionManager;
 import jerklib.Profile;
 import jerklib.Session;
 import jerklib.events.*;
 import jerklib.events.IRCEvent.Type;
+import jerklib.events.modes.ModeEvent;
 import jerklib.listeners.IRCEventListener;
 
 
@@ -49,24 +52,25 @@ public class ConnectionHandler implements IRCEventListener {
 		
             event = e;
             
+            
             //channelTab.updateStatusScreen("Event :"+e.getType().toString());
             
             if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
 			
-                        channelTab.updateStatusScreen("Connection established");
-                        //System.out.println(I18N.get("connect.success"));
-			hasConnected = true;
+                        channelTab.updateStatusScreen(I18N.get("connect.success"));
+                        hasConnected = true;
                         
 
 
 		}
                 else if(e.getType() == Type.CHANNEL_MESSAGE){
-                   //
+                   // Print channel-messages in channel-tab
                     MessageEvent me = (MessageEvent) e;
                     
                     String ch = me.getChannel().getName();
-                    String message = me.getNick()+" : "+me.getMessage(); 
+                    String message = "<"+me.getNick()+">" +" : "+me.getMessage();
+
                     
                     channelTab.updateTabScreen(ch,message);
                     
@@ -85,11 +89,44 @@ public class ConnectionHandler implements IRCEventListener {
                         String update = no.getErrorType().toString();
                         channelTab.updateStatusScreen(update);
                 }
-                    
+            
+                else if(e.getType() == Type.NICK_CHANGE){
+                	ErrorEvent no = (ErrorEvent) e;
+                	String update = no.getErrorType().toString();
+                	channelTab.updateStatusScreen("NickInUseBuddy");
+                    channelTab.updateStatusScreen(update);
+                }
+                else if(e.getType() == Type.JOIN_COMPLETE){
+                    // Print topic for channel:
+                    JoinCompleteEvent jce = (JoinCompleteEvent) e;
+                    String ch = jce.getChannel().getName();
+                    String message = ("-!- Topic for " +ch +": "+jce.getChannel().getTopic());
+                    channelTab.updateTabScreen(ch,message);
+                    channelTab.fetchUsers(ch, e.getSession().getChannel(ch));
+
+                }
+                else if(e.getType() == Type.NICK_LIST_EVENT){
+                    // List users in channel:
+                    NickListEvent nle = (NickListEvent) e;
+                    String ch = nle.getChannel().getName();
+                    List<String> message = nle.getNicks();
+                    channelTab.updateTabScreen(ch, "-!- Users: " +message);
+
+                }
+
+                else if(e.getType() == Type.MODE_EVENT){
+                    // Print mode-adjustments
+                    ModeEvent me = (ModeEvent) e;
+                    String ch = me.getChannel().getName();
+                    channelTab.updateTabScreen(ch, "-!- " +e.getRawEventData());
+
+                }
+
+
                 else    
 		{       // Prints data received from server
                         channelTab.updateStatusScreen(e.getType() + " " + e.getRawEventData());
-			// TODO Send this to Status-window...
+			
 		}
             
         }
@@ -100,7 +137,7 @@ public class ConnectionHandler implements IRCEventListener {
             
             if(connectedToServer()){
                 event.getSession().join(channel);
-                channelTab.updateStatusScreen("You have joined :"+channel);
+                channelTab.updateTabScreen(channel, "-!- You have joined :"+channel);
             }
             else
                 channelTab.updateStatusScreen("You have to connect to server first");
@@ -145,7 +182,7 @@ public class ConnectionHandler implements IRCEventListener {
             /*
              * just so you see what you write
              */
-            channelTab.updateTabScreen(channel,whatToSay);
+            channelTab.updateTabScreen(channel, "<"+event.getSession().getNick()+"> " +whatToSay);
             
         }
         
@@ -160,6 +197,9 @@ public class ConnectionHandler implements IRCEventListener {
             
             event.getSession().close(channel);
             
+        }
+        public Session getCurrentSession()   {
+            return event.getSession();
         }
         
 	

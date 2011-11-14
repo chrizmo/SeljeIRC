@@ -7,8 +7,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.util.List;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
+import jerklib.Channel;
 
 /**
  *  This object is containing all tabs, they are modelled as panels added
@@ -100,7 +101,18 @@ public class ChannelTab extends JTabbedPane {
     public void removeAllTabs(){
         this.removeAll();
     }
+
+    void updateTabScreen(String ch, List<String> message) {
+        int tabIndex = this.indexOfTab(ch);
+        SingleTab st = (SingleTab) this.getComponent(tabIndex);
+        st.updateScreen(message);
+
+    }
     
+    public void fetchUsers(String ch, Channel c)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch));
+        st.updateUserList(c);
+    }
     
     
     

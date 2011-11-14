@@ -18,11 +18,13 @@ public class UserListModel extends DefaultListModel {
      */
     public void addUserToList(String s)   {
         User newUser = new User(s, false, false);
-        if (size() == 0)                                    // Empty list
+        if (size() == 0)   {                                // Empty list
             super.addElement(newUser);                      // Add the user first
+        }
         else   {
             insert(newUser);                                // Insert user
         }
+        fireContentsChanged(this, 0, size());
     }
     
     /**
@@ -34,6 +36,7 @@ public class UserListModel extends DefaultListModel {
     public void removeUser(String s)   {
         User tmp = getUser(s);              // Gets the user object with given nick
         super.removeElement(tmp);           // Remove it
+        fireContentsChanged(this, 0, size());
     }
     
     /**
@@ -49,6 +52,7 @@ public class UserListModel extends DefaultListModel {
             tmp.setOp(o);                                   // Set the op mode
             removeElement(tmp);                             // Delete it from list
             insert(tmp);                                    // Insert it on its new place
+            fireContentsChanged(this, 0, size());
         }
         else System.out.println("User not in list");
         
@@ -67,6 +71,7 @@ public class UserListModel extends DefaultListModel {
             tmp.setVoice(v);
             removeElement(tmp);
             insert(tmp);
+            fireContentsChanged(this, 0, size());
         }
         else System.out.println("User not in list");
     }
@@ -78,7 +83,8 @@ public class UserListModel extends DefaultListModel {
      * @param n User to insert
      */
     private void insert(User n)   {
-        for (int i = 0; i < size(); i++)   {            // Iterate through all users
+        int i;
+        for (i = 0; i < size(); i++)   {            // Iterate through all users
             User userInList = (User)elementAt(i);       // Pick user
             if (userInList.compareTo(n) <= 0)   {       // Continue until current user is "bigger" than the new user
                 continue;

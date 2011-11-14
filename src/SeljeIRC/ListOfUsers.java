@@ -14,8 +14,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import jerklib.Channel;
 import jerklib.events.modes.ModeAdjustment.Action;
 
@@ -23,7 +26,7 @@ import jerklib.events.modes.ModeAdjustment.Action;
  *
  * @author hallvardwestman
  */
-public class ListOfUsers extends JPanel{
+public class ListOfUsers extends JPanel {
     
     DefaultListModel listModel;
     UserListModel lm;
@@ -33,92 +36,42 @@ public class ListOfUsers extends JPanel{
     
     
     public ListOfUsers(){
+        lm = new UserListModel();
+        lm.addListDataListener(new ListDataListener()   {
 
-        listModel = new DefaultListModel();
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Kathy Green");
-        listModel.addElement("Jane Doe");
-        listModel.addElement("John Smith");
-        listModel.addElement("Kathy Green");
-        
-        list = new JList(listModel);
-        
-        
+            @Override
+            public void intervalAdded(ListDataEvent lde) {
+                list.setFixedCellWidth(200);
+                list.setVisibleRowCount(lm.getSize());
+            }
+
+            @Override
+            public void intervalRemoved(ListDataEvent lde) {
+                list.setFixedCellWidth(200);
+                list.setVisibleRowCount(lm.getSize());
+            }
+
+            @Override
+            public void contentsChanged(ListDataEvent lde) {
+                list.setFixedCellWidth(200);
+                list.setVisibleRowCount(lm.getSize());
+            }
+            
+        });
+        list = new JList(lm);
+        list.setCellRenderer(new UserListRenderer());
         list.setLayoutOrientation(JList.VERTICAL);
-        
-        Dimension d = list.getPreferredSize();
-        int height =(int)d.getHeight();
-        list.setPreferredSize(new Dimension(200,height));
+        list.setFixedCellWidth(200);
+        createPopup();
         list.setBackground(Color.GRAY);
-        
-        this.add(list); 
+        this.add(list);
     }
     
-    /**
-     * Creates the user list from the channel parameter
-     * @author Lars Erik Pedersen
-     * @since 0.1
-     * @param c The Channel to fetch users from
-     */
-    public ListOfUsers(Channel c)   {
+    public void updateList(Channel c)   {
         chan = c;
-        lm = new UserListModel();
-        list = new JList(lm);
-        list.setLayoutOrientation(JList.VERTICAL);
         SwingUtilities.invokeLater(new Init());
-        createPopup();
-        Dimension d = list.getPreferredSize();
-        int height =(int)d.getHeight();
-        list.setPreferredSize(new Dimension(200,height));
-        list.setBackground(Color.GRAY);
-        
-        this.add(list);
-        
     }
-
+    
     /**
      * Creates the right click popup menu in the user list
      * @author Lars Erik Pedersen
@@ -180,6 +133,7 @@ public class ListOfUsers extends JPanel{
     private int getItem(Point p)   {
         return list.locationToIndex(p);
     }
+
     
     /**
      * Inner class. Listens for mouse events in the user list
@@ -245,6 +199,7 @@ public class ListOfUsers extends JPanel{
                 if (!chan.getNicks().iterator().hasNext())              // Not able to fetch users
                     SwingUtilities.invokeLater(new Init());             // Try again
                 Iterator i = chan.getNicks().iterator();                // Get iterator
+                lm.removeAllElements();
                 while (i.hasNext())   {                                 // More users
                     lm.addUserToList((String)i.next());                 // Add them to list
                 }

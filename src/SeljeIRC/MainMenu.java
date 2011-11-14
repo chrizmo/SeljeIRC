@@ -38,6 +38,8 @@ public class MainMenu extends JMenuBar {
         file.add(newServer);
     JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
         file.add(newChannel);
+    JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"));
+    	file.add(exitProgram);
         
         //--------------Action listeners-----------------------------
         
@@ -48,6 +50,7 @@ public class MainMenu extends JMenuBar {
                scw.setSize(new Dimension(400,300));
                scw.setLocationRelativeTo(null);
                scw.pack();
+               scw.setResizable(false);			// Makes sure user can't change size
                scw.setVisible(true);
                 
                
@@ -69,6 +72,16 @@ public class MainMenu extends JMenuBar {
                tabObject.updateStatusScreen("Cant join when not connected");
                
            } 
+        });
+        
+        exitProgram.addActionListener(new ActionListener(){ // Closes the program
+        	public void actionPerformed (ActionEvent evt){
+        		try{
+        			System.exit(0);
+        		}catch(SecurityException secE){
+        			System.err.println("Error during exit" + secE.getMessage());
+        		}
+        	}
         });
     }
 }

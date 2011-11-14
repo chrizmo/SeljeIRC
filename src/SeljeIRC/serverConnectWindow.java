@@ -16,6 +16,8 @@ import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jerklib.Session;
+
 
 
 /**
@@ -31,10 +33,11 @@ public class serverConnectWindow extends JFrame{
     private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     Vector<String> networkNames = new Vector<String>();			// List of networks in list
     Vector<String> serverNames = new Vector<String>();			// List of networks in list
+    private Session ircSession; 
     
     
     public serverConnectWindow(ConnectionHandler con){
-        super(I18N.get("serverconnectwindow.connect"));
+        super(I18N.get("serverconnectwindow.connect"));		// Set header title
       
         connection = con;
         // Preferences
@@ -48,15 +51,14 @@ public class serverConnectWindow extends JFrame{
         //Layouts
         GridBagLayout totalLayout = new GridBagLayout();
             setLayout(totalLayout);
-        FlowLayout toplayput = new FlowLayout();
+        GridBagLayout toplayput = new GridBagLayout();
         
         //Constraints
         GridBagConstraints gbc = new GridBagConstraints();
         
-        
         //top panel
         JPanel topPanel = new JPanel();
-            topPanel.setLayout(toplayput);
+        topPanel.setLayout(toplayput);
             
         JPanel invisiblePanel = new JPanel(new FlowLayout());
         
@@ -74,7 +76,6 @@ public class serverConnectWindow extends JFrame{
         
         
 
-        
         topDropDown.addActionListener (new ActionListener(){
         	public void actionPerformed(ActionEvent evt){
         		serverNames.clear();
@@ -87,13 +88,33 @@ public class serverConnectWindow extends JFrame{
         //Labels
         JLabel topLabel = new JLabel(I18N.get("serverconnectwindow.ircnetwork"));
         
+        gbc.insets = new Insets(1,1,1,1);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        
+        toplayput.setConstraints(topLabel, gbc);
+        
         //adding toplayout to gridbag
         topPanel.add(topLabel);
+        
+        // --- Set constraints --- // 
+        
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 2;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        toplayput.setConstraints(topDropDown, gbc);
+        
         topPanel.add(topDropDown);
         
         
         //top panel constraints
-        gbc.fill=GridBagConstraints.NONE;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
         gbc.gridx=1;
         gbc.gridy=0;
         gbc.gridwidth = 1;
@@ -110,7 +131,7 @@ public class serverConnectWindow extends JFrame{
             //addbutton
             
             JButton addSomething = new JButton(I18N.get("serverconnectwindow.add"));
-            gbc.fill=GridBagConstraints.NONE;
+            gbc.fill=GridBagConstraints.HORIZONTAL;
             gbc.gridx=0;
             gbc.gridy=0;
             gbc.gridwidth = 1;
@@ -189,8 +210,7 @@ public class serverConnectWindow extends JFrame{
              			connection.connectIt(s, n);
                         connectionPreferences.put("lastnetwork", topDropDown.getSelectedItem().toString());
                         connectionPreferences.put("lastserver", s);
-             		}
-             			
+             		}             			
              	}else{
              		connection.connectIt(s, n);
                     connectionPreferences.put("lastnetwork", topDropDown.getSelectedItem().toString());
@@ -223,7 +243,7 @@ public class serverConnectWindow extends JFrame{
          * 
          */
         
-        gbc.insets=new Insets(1,1,1,1);
+        gbc.insets=new Insets(1,10,1,1);
         gbc.gridx=0;
         gbc.gridy=4;
         gbc.gridheight = 1;
@@ -244,6 +264,7 @@ public class serverConnectWindow extends JFrame{
 
         
         gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.insets=new Insets(1,1,1,1);
         gbc.gridx=1;
         gbc.gridy=4;
         gbc.anchor = GridBagConstraints.WEST;
@@ -290,10 +311,13 @@ public class serverConnectWindow extends JFrame{
                         
             okButton.addActionListener(new ActionListener(){ //TODO: Legg til brukernavnsjekk (CHRISTER)
             	public void actionPerformed(ActionEvent actEvt){ // Saves configuration to file
-            		connectionPreferences.put("nickname",nicNameField.getText());
-            		connectionPreferences.put("email",nicNameField.getText());
-            		connectionPreferences.put("alias",aliasField.getText());
-            		connectionPreferences.put("name",nameField.getText());
+            		
+            		if(!connection.connectedToServer()){
+            			connectionPreferences.put("nickname",nicNameField.getText());
+            			connectionPreferences.put("email",nicNameField.getText());
+            			connectionPreferences.put("alias",aliasField.getText());
+            			connectionPreferences.put("name",nameField.getText());
+            		}
             		serverConnectWindow.this.setVisible(false);
             	}
             });
@@ -341,7 +365,7 @@ public class serverConnectWindow extends JFrame{
         add(bottomButtons);
         
     }
-
+    
     public void joinChannel(String channel) {
 
 

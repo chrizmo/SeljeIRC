@@ -6,13 +6,20 @@ package SeljeIRC;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import jerklib.Channel;
 
 /**
  *
@@ -25,6 +32,7 @@ public class SingleTab extends JPanel implements ActionListener {
     private ConnectionHandler connection;
     private ChannelTab channelTab;
     private int index;
+    private ListOfUsers listPanel;
     
     public SingleTab(ConnectionHandler con,String ch, ChannelTab ct){
         super();
@@ -68,7 +76,8 @@ public class SingleTab extends JPanel implements ActionListener {
          * userlist
          */
         //TODO set up the userlist model
-        ListOfUsers listPanel = new ListOfUsers();
+        
+        listPanel = new ListOfUsers();
             listPanel.setBackground(Color.GRAY);
         
             
@@ -94,7 +103,16 @@ public class SingleTab extends JPanel implements ActionListener {
         
     }
     public void updateScreen(String update){
-        screen.append("\n"+update);
+      DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+      Date date = new Date();
+      screen.append("\n"+dateFormat.format(date) +" " +update);
+    }
+
+    void updateScreen(List<String> update) {
+      DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+      Date date = new Date();
+      screen.append("\n"+dateFormat.format(date) +" " +update);
+
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -105,5 +123,11 @@ public class SingleTab extends JPanel implements ActionListener {
               
             }
           }
+
+    void updateUserList(Channel c) {
+        listPanel.updateList(c);
+    }
+    
+    
    
 }
