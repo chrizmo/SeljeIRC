@@ -88,6 +88,8 @@ public class SingleTab extends JPanel implements ActionListener {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
+        listScroller.setPreferredSize(new Dimension(200,2));
+
         add(textAreaScroller,BorderLayout.CENTER );
         add(listScroller,BorderLayout.EAST);
         
