@@ -26,6 +26,8 @@ public class MainMenu extends JMenuBar {
         tabObject = tab;
         connection = con;
         createFileMenu();
+        createEditMenu();
+        createHelpMenu();
         add(file);
         add(edit);
         add(help);
@@ -84,4 +86,42 @@ public class MainMenu extends JMenuBar {
         	}
         });
     }
+
+     public void createEditMenu(){
+
+
+    JMenuItem settings = new JMenuItem(I18N.get("mainmenu.settings"));
+        edit.add(settings);
+
+        //--------------Action listeners-----------------------------
+
+        settings.addActionListener(new ActionListener()   {
+           public void actionPerformed (ActionEvent ae)   {
+             
+
+
+
+           }
+        });
+
+    }
+
+          public void createHelpMenu(){
+
+
+    JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
+        help.add(helpItem);
+    JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"));
+        help.add(aboutItem);
+
+        //--------------Action listeners-----------------------------
+
+        help.addActionListener(new ActionListener()   {
+           public void actionPerformed (ActionEvent ae)   {
+
+           }
+        });
+
+    } // End of createHelpMenu
+
 }
