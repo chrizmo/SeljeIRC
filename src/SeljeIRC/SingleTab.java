@@ -6,6 +6,10 @@ package SeljeIRC;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -14,16 +18,26 @@ import javax.swing.JTextArea;
  *
  * @author wbserver
  */
-public class SingleTab extends JPanel {
+public class SingleTab extends JPanel implements ActionListener {
     
     private String channel;
     private JTextArea screen;
     private ConnectionHandler connection;
+    private ChannelTab channelTab;
+    private int index;
     
-    public SingleTab(ConnectionHandler con,String ch){
+    public SingleTab(ConnectionHandler con,String ch, ChannelTab ct){
         super();
         channel = ch;
         connection = con;
+        channelTab = ct;
+        index = channelTab.indexOfComponent(this);
+        
+        setOpaque(false);
+        JButton btClose = new JButton("x");
+            btClose.setPreferredSize(new Dimension(10,10));
+            add(btClose);
+        btClose.addActionListener(this);  
         
         /*
          * Borderlayout containing textarea and userlist
@@ -72,10 +86,24 @@ public class SingleTab extends JPanel {
         add(inputField,BorderLayout.SOUTH);
        
         
+       
+            //Icon closeIcon = new CloseIcon();
+            
+        
+        
         
     }
     public void updateScreen(String update){
         screen.append("\n"+update);
     }
+    
+    public void actionPerformed(ActionEvent e) {
+            
+            if (index != -1) {
+                connection.disconnectFromChannel(channel);
+                channelTab.remove(index);
+              
+            }
+          }
    
 }

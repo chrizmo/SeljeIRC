@@ -158,6 +158,8 @@ public class ConnectionHandler implements IRCEventListener {
         
         public void disconnectFromChannel(String channel){
             
+            event.getSession().close(channel);
+            
         }
         
 	

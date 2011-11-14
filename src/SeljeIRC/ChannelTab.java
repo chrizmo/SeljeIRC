@@ -63,13 +63,12 @@ public class ChannelTab extends JTabbedPane {
         
         
         
-        SingleTab st = new SingleTab(connection,Channel);
+        SingleTab st = new SingleTab(connection,Channel,this);
         this.addTab(Channel, null,st,"Does nothing" );
         
         int tabIndex = this.indexOfTab(Channel);
         
-        CloseTabButton ctb = new CloseTabButton(pane,tabIndex);
-        
+        //CloseTabButton ctb = new CloseTabButton(pane,tabIndex);
         
         
         this.setSelectedIndex(tabIndex);
@@ -87,6 +86,7 @@ public class ChannelTab extends JTabbedPane {
         SingleTab st = (SingleTab) this.getComponent(tabIndex);
         
         st.updateScreen(message);
+        
         
     }
     public void updateStatusScreen(String ch){
@@ -109,8 +109,10 @@ public class ChannelTab extends JTabbedPane {
     
     class CloseTabButton extends JPanel implements ActionListener {
           private JTabbedPane pane;
+          private int index;
           public CloseTabButton(JTabbedPane pane, int index) {
             this.pane = pane;
+            this.index = index;
             setOpaque(false);
             add(new JLabel(
                 pane.getTitleAt(index),
@@ -124,11 +126,12 @@ public class ChannelTab extends JTabbedPane {
             pane.setTabComponentAt(index, this);
           }
           public void actionPerformed(ActionEvent e) {
-            int i = pane.indexOfTabComponent(this);
             
             
-            if (i != -1) {
-              pane.remove(i);
+            if (index != -1) {
+                connection.disconnectFromChannel(pane.getTitleAt(index));
+                pane.remove(index);
+              
             }
           }
     }
