@@ -113,13 +113,11 @@ public class ConnectionHandler implements IRCEventListener {
                     channelTab.updateTabScreen(ch, "-!- Users: " +message);
 
                 }
-
                 else if(e.getType() == Type.MODE_EVENT){
                     // Print mode-adjustments
                     ModeEvent me = (ModeEvent) e;
                     String ch = me.getChannel().getName();
                     channelTab.updateTabScreen(ch, "-!- " +e.getRawEventData());
-
                 }
 
 
@@ -189,7 +187,7 @@ public class ConnectionHandler implements IRCEventListener {
         
         public void closeConnection(){
             manager.quit();
-            channelTab.removeAll();
+            channelTab.removeAllTabs();
             System.out.printf("Closing manager");
         }
         

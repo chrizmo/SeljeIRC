@@ -50,6 +50,8 @@ public class SeljeIRC extends JFrame{
              */
             
                 add(channelTabs,BorderLayout.CENTER);    
+                
+                
             
             /*
              * Setting up the main contentPane menu

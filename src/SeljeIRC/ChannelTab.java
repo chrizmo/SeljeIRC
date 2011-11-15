@@ -34,15 +34,11 @@ public class ChannelTab extends JTabbedPane {
      
     public ChannelTab(){
         super();
-        /*
+        /* 
          * what im doing?
-         */
-        
-        
-        
-        
-        
+         */   
     }
+    
     /**
      * only the statustab is created here, containing just jtextarea
      */
@@ -65,11 +61,12 @@ public class ChannelTab extends JTabbedPane {
         
         
         SingleTab st = new SingleTab(connection,Channel,this);
-        this.addTab(Channel, null,st,"Does nothing" );
         
-        int tabIndex = this.indexOfTab(Channel);
+        this.addTab(Channel,st);
+        int tabIndex = this.indexOfTab(Channel); 
         
-        //CloseTabButton ctb = new CloseTabButton(pane,tabIndex);
+        
+        CloseTabButton ctb = new CloseTabButton(pane,tabIndex);
         
         
         this.setSelectedIndex(tabIndex);
@@ -99,11 +96,18 @@ public class ChannelTab extends JTabbedPane {
     }
     
     public void removeAllTabs(){
-        this.removeAll();
+        
+        for(int i = 1; i <= this.getTabCount(); i++){
+            
+            this.remove(i);
+            
+        }
     }
 
     void updateTabScreen(String ch, List<String> message) {
+        
         int tabIndex = this.indexOfTab(ch);
+        System.out.printf("updatetab: "+tabIndex);
         SingleTab st = (SingleTab) this.getComponent(tabIndex);
         st.updateScreen(message);
 
@@ -115,27 +119,27 @@ public class ChannelTab extends JTabbedPane {
     }
     
     
-    
-    
-    
-    
     class CloseTabButton extends JPanel implements ActionListener {
           private JTabbedPane pane;
           private int index;
+          
           public CloseTabButton(JTabbedPane pane, int index) {
             this.pane = pane;
             this.index = index;
+            
+            
             setOpaque(false);
-            add(new JLabel(
-                pane.getTitleAt(index),
-                pane.getIconAt(index),
-                JLabel.LEFT));
+            add(new JLabel(pane.getTitleAt(index),pane.getIconAt(index),JLabel.LEFT));
+            
             //Icon closeIcon = new CloseIcon();
             JButton btClose = new JButton("x");
             btClose.setPreferredSize(new Dimension(10,10));
-            add(btClose);
+                add(btClose);
             btClose.addActionListener(this);
-            pane.setTabComponentAt(index, this);
+            
+            System.out.printf("newtab: "+index  );
+            
+            this.pane.setTabComponentAt(index, this);
           }
           public void actionPerformed(ActionEvent e) {
             

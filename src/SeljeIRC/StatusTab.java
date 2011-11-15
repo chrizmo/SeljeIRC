@@ -70,6 +70,9 @@ public class StatusTab extends JPanel{
     public void updateScreen(String update){
       DateFormat dateFormat = new SimpleDateFormat("HH:mm");
       Date date = new Date();
+      
+      
+      
       screen.append("\n"+dateFormat.format(date) +" " +update);
         // Auto-scroll
       screen.setCaretPosition(screen.getDocument().getLength());

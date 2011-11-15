@@ -55,7 +55,7 @@ public class SingleTab extends JPanel implements ActionListener {
         
         /*
          * addTab takes panel, so this panel is modeled as the "tab-object"
-         * 
+         *
          */
       
          setLayout(bl);
@@ -96,9 +96,6 @@ public class SingleTab extends JPanel implements ActionListener {
         InputField inputField = new InputField(connection,channel);
         add(inputField,BorderLayout.SOUTH);
        
-        
-       
-            //Icon closeIcon = new CloseIcon();
             
         
         

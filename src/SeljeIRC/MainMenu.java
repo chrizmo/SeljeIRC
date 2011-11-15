@@ -38,7 +38,7 @@ public class MainMenu extends JMenuBar {
         file.add(newServer);
     JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
         file.add(newChannel);
-    JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"));
+    JMenuItem exitProgram = new JMenuItem("DEN HÆR SKA LUKK MEN FUNKA IKKE FØR HALLVARD, SÅ HAN HARDKODA DET HÆR");
     	file.add(exitProgram);
         
         //--------------Action listeners-----------------------------
@@ -60,16 +60,26 @@ public class MainMenu extends JMenuBar {
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
                
+               JOptionPane jop = new JOptionPane();
+               
+               
+               
                if(connection.connectedToServer()){
                
-               String channel = JOptionPane.showInputDialog(I18N.get("mainmenu.whichchannel"));
+                   
+                   
+               String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
+                    
+                    if(channel != "" && channel != null && !channel.equals(null)){
+                        System.out.printf(channel);
+                    tabObject.createNewTab(channel);
+                    }
+                    else
+                        tabObject.updateStatusScreen("Didnt do anything, something wrong with string");
                
-              //ChannelTab.setConnection(connection)
-               
-               tabObject.createNewTab(channel);
                }
                else
-               tabObject.updateStatusScreen("Cant join when not connected");
+                    tabObject.updateStatusScreen("Cant join when not connected");
                
            } 
         });
