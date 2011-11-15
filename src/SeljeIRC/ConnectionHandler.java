@@ -28,10 +28,15 @@ public class ConnectionHandler implements IRCEventListener {
         
         
         public ConnectionHandler(ChannelTab ct){
-            channelTab = ct;
-            
+ 
+        	try{
+        	channelTab = ct;
+
             channelTab.setConnection(this);
             channelTab.createStatusTab();
+        	}catch(Exception e){
+        		System.err.println("System error" + e.getMessage());
+        	}
             /*
              * created object
              */

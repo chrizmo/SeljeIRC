@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.List;
 import javax.swing.JTabbedPane;
+import javax.swing.text.BadLocationException;
+
 import jerklib.Channel;
 
 /**
@@ -51,12 +53,17 @@ public class ChannelTab extends JTabbedPane {
     
     /**
      * add tabs for each channel
+     * @throws BadLocationException 
      */
     
-    public void createStatusTab(){
-        statusTab = new StatusTab(connection);
+    public void createStatusTab() throws BadLocationException{
+        try{
+        	statusTab = new StatusTab(connection);
         
-        this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
+        	this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
+        }catch(BadLocationException e){
+        	System.err.println("System error: " + e.getMessage());
+        }
     }
     /**
      * 
@@ -96,7 +103,11 @@ public class ChannelTab extends JTabbedPane {
         
     }
     public void updateStatusScreen(String ch){
-        statusTab.updateScreen(ch);
+        try{
+        	statusTab.updateScreen(ch);
+    	}catch(Exception e){
+    		System.err.println("System error " + e.getMessage());
+    	}
     }
     
     public static void setConnection(ConnectionHandler ch){
