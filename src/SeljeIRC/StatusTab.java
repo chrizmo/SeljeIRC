@@ -6,6 +6,7 @@ package SeljeIRC;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.text.DateFormat;
@@ -23,7 +24,7 @@ public class StatusTab extends JPanel{
     
     private JTextArea screen;
     public ConnectionHandler connection;
-    
+    private String buttonString;    
     public StatusTab(ConnectionHandler ch){
         super();
         connection = ch;
@@ -48,12 +49,12 @@ public class StatusTab extends JPanel{
          * Textarea containing status
          */
          //TODO set up public object of this that can be reached
-         screen = new JTextArea("Welcome to SeljeIRC\n"+"This application could be interpreted as an IRC-client");
-            screen.setEditable(false);
-            
-            screen.setBackground(Color.lightGray);
+            screen = new JTextArea("Welcome to SeljeIRC\n"+"This application could be interpreted as an IRC-client");
 
-       
+            screen.setEditable(false);
+            screen.setBackground(Color.lightGray);
+            
+            
        /*
         * Layout functionality related to statustab
         */
