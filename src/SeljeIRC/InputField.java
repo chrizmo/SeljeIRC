@@ -15,19 +15,21 @@ import javax.swing.JTextField;
  * @author wbserver
  */
 public class InputField extends JPanel {
-    private JLabel label;
+    private JLabel label = new JLabel();
     private JTextField inputField;
     private String channel;
+    private int tabType;
     ConnectionHandler connection;
         
-    public InputField(ConnectionHandler con,String cha){
+    public InputField(ConnectionHandler con, String cha, int TabType){
         super();
         channel = cha;
         connection = con;
+        tabType = TabType;
         //FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
-        
+
         
         
         label = new JLabel(I18N.get("inputfield.thechannelname"));
@@ -48,11 +50,11 @@ public class InputField extends JPanel {
                 /*
                  * sending input to approporiate screen
                  */
-                if(channel == null)
-                    connection.sayToServer(inputField.getText());       
-                else
-                    connection.sayToChannel(inputField.getText(),channel);
-                
+                switch(tabType){
+                	case SingleTab.PRIVATE: connection.sayToPrivate(inputField.getText(), channel); break;
+                	case SingleTab.CHANNEL: connection.sayToChannel(inputField.getText(),channel); break;        
+                	default: connection.sayToServer(inputField.getText()); break;
+                }
                 inputField.setText("");
                 
             }
@@ -65,17 +67,30 @@ public class InputField extends JPanel {
                 /*
                  * sending input to approporiate screen
                  */
-                if(channel == null)
-                    connection.sayToServer(inputField.getText());       
-                else
-                    connection.sayToChannel(inputField.getText(),channel);
-                
+                switch(tabType){
+                	case SingleTab.PRIVATE: connection.sayToPrivate(inputField.getText(), channel); break;
+                	case SingleTab.CHANNEL: connection.sayToChannel(inputField.getText(),channel); break;        
+                	default: connection.sayToServer(inputField.getText()); break;
+                }
                 inputField.setText("");
+                
                 
             }
         });
 
-        
+
     }
+    /**
+     * Sets the input Label next to the thingy
+     * @param channelName
+     */
     
+    public void setInputLabel(String channelName){
+    	try{
+    		this.label.setText("Tst");
+    	}catch(Exception e){
+    		System.err.println(e.getCause() + " crashed and fuck you: " + e.getMessage());
+    	}
+    	
+    }
 }

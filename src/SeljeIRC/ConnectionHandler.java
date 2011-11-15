@@ -40,11 +40,11 @@ public class ConnectionHandler implements IRCEventListener {
 	public void connectIt(String server, String nicName) {
 	
        
-        channelTab.updateStatusScreen("Trying to establish connection");    
-	manager = new ConnectionManager(new Profile(nicName));
+		channelTab.updateStatusScreen("Trying to establish connection");    
+		manager = new ConnectionManager(new Profile(nicName));
 	
-	Session session = manager.requestConnection(server);
-	session.addIRCEventListener(this);
+		Session session = manager.requestConnection(server);
+		session.addIRCEventListener(this);
 	}
 
 	
@@ -70,10 +70,19 @@ public class ConnectionHandler implements IRCEventListener {
                     
                     String ch = me.getChannel().getName();
                     String message = "<"+me.getNick()+">" +" : "+me.getMessage();
-
-                    
                     channelTab.updateTabScreen(ch,message);
-                    
+                }
+            
+                else if(e.getType() == Type.PRIVATE_MESSAGE){
+                	MessageEvent me = (MessageEvent) e;
+                	String userNick = me.getNick();
+                	String message = "<" + me.getNick() + ">" + " : " + me.getMessage();
+                	
+                	if(!channelTab.tabExists(userNick))
+                		channelTab.createNewTab(userNick, SingleTab.PRIVATE);
+                	
+            		channelTab.updateTabScreen(userNick, message);
+                	
                 }
                 else if(e.getType() == Type.NOTICE){
                         NoticeEvent no = (NoticeEvent) e;
@@ -117,6 +126,7 @@ public class ConnectionHandler implements IRCEventListener {
                 else if(e.getType() == Type.MODE_EVENT){
                     // Print mode-adjustments
                     ModeEvent me = (ModeEvent) e;
+
                     String ch = me.getChannel().getName();
                     channelTab.updateTabScreen(ch, "-!- " +e.getRawEventData());
 
@@ -141,6 +151,13 @@ public class ConnectionHandler implements IRCEventListener {
             }
             else
                 channelTab.updateStatusScreen("You have to connect to server first");
+        }
+        
+        public void createPrivateChat(String userName){
+        	if(connectedToServer()){
+        		//event.getSession();
+        	}else
+        		channelTab.updateStatusScreen("You have to connect to server first");
         }
 	
         public boolean connectedToServer(){
@@ -186,6 +203,15 @@ public class ConnectionHandler implements IRCEventListener {
             
         }
         
+        public void sayToPrivate(final String whatToSay, final String nickName){
+        	try{
+        		event.getSession().sayPrivate(nickName, whatToSay);
+        	
+        		channelTab.updateTabScreen(nickName, "<"+event.getSession().getNick()+"> " +whatToSay);
+        	}catch(Exception ex){
+        		System.err.println("Error sending private message: " + ex.getMessage());
+        	}
+        }
         
         public void closeConnection(){
             manager.quit();

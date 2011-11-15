@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.List;
 import javax.swing.JTabbedPane;
@@ -18,7 +19,7 @@ import jerklib.Channel;
  */
 //TODO 
 public class ChannelTab extends JTabbedPane {
-    
+	
     /*
      * indexing all tabs 
      */
@@ -57,14 +58,18 @@ public class ChannelTab extends JTabbedPane {
         
         this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
     }
-    /*
+    /**
+     * 
      * 
      */
-    public void createNewTab(String Channel){
+    public void createNewTab(String Channel, int tabType){
+        SingleTab st;
         
+        if(tabType == SingleTab.CHANNEL)
+        	st = new SingleTab(connection,Channel,this,SingleTab.CHANNEL);
+        else
+        	st = new SingleTab(connection,Channel,this,SingleTab.PRIVATE);
         
-        
-        SingleTab st = new SingleTab(connection,Channel,this);
         this.addTab(Channel, null,st,"Does nothing" );
         
         int tabIndex = this.indexOfTab(Channel);
@@ -73,11 +78,11 @@ public class ChannelTab extends JTabbedPane {
         
         
         this.setSelectedIndex(tabIndex);
-        
-        connection.joinChannel(Channel);
-        
-        
-    }
+        	
+        if(tabType == SingleTab.CHANNEL)
+            connection.joinChannel(Channel);
+    
+}
     public void updateTabScreen(String ch, String message){
         
        
@@ -108,14 +113,16 @@ public class ChannelTab extends JTabbedPane {
         st.updateScreen(message);
 
     }
+    // Checks if a certain tab exists
+    public boolean tabExists(String tabName){
+    	return((this.indexOfTab(tabName) >= 0) ? true : false); //FIX: Sjekk om koden kan forberedres
+    	
+    }
     
     public void fetchUsers(String ch, Channel c)   {
         SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch));
         st.updateUserList(c);
     }
-    
-    
-    
     
     
     

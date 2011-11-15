@@ -66,7 +66,7 @@ public class MainMenu extends JMenuBar {
                
               //ChannelTab.setConnection(connection)
                
-               tabObject.createNewTab(channel);
+               tabObject.createNewTab(channel, SingleTab.CHANNEL);
                }
                else
                tabObject.updateStatusScreen("Cant join when not connected");
