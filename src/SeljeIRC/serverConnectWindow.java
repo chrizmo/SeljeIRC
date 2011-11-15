@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
@@ -39,6 +40,8 @@ public class serverConnectWindow extends JFrame{
     public serverConnectWindow(ConnectionHandler con){
         super(I18N.get("serverconnectwindow.connect"));		// Set header title
       
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);	// How to close window
+        
         connection = con;
         // Preferences
         try{
@@ -73,7 +76,7 @@ public class serverConnectWindow extends JFrame{
         topDropDown.setSelectedItem(new String(connectionPreferences.get("lastnetwork", "")));
         serverNames = (Vector<String>)readServers(topDropDown.getSelectedItem().toString()); // Getting servers for element one
         final JComboBox subDropDown = new JComboBox(new DefaultComboBoxModel(serverNames));
-        
+        //TODO: Choose last server (Christer)
         
 
         topDropDown.addActionListener (new ActionListener(){
@@ -104,7 +107,7 @@ public class serverConnectWindow extends JFrame{
         
         gbc.gridx = 1;
         gbc.gridwidth = 2;
-        gbc.gridy = 0;
+        gbc	.gridy = 0;
         gbc.weightx = 2;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -131,6 +134,7 @@ public class serverConnectWindow extends JFrame{
             //addbutton
             
             JButton addSomething = new JButton(I18N.get("serverconnectwindow.add"));
+            addSomething.setName("ADD");
             gbc.fill=GridBagConstraints.HORIZONTAL;
             gbc.gridx=0;
             gbc.gridy=0;
@@ -140,22 +144,102 @@ public class serverConnectWindow extends JFrame{
             rightLayout.setConstraints(addSomething,gbc);
             rightPanel.add(addSomething);
             
+            addSomething.addActionListener(new ActionListener(){
+            	public void actionPerformed(ActionEvent evt){
+            		String serverName = new String();
+            		
+            		serverName = JOptionPane.showInputDialog(serverConnectWindow.this, I18N.get("serverconnectwindow.addnewserver"));
+            		serverNames.add(serverName);
+            		subDropDown.setModel(new DefaultComboBoxModel(serverNames));
+            		subDropDown.setSelectedItem(serverName);
+            		
+            	}
+            	
+            	
+            });
+            
             //changbutton
             JButton changeSomething = new JButton(I18N.get("serverconnectwindow.change"));
             gbc.gridy=1;
+            changeSomething.setName("CHANGE");
             rightLayout.setConstraints(changeSomething,gbc);
             rightPanel.add(changeSomething);
             
+            
+            changeSomething.addActionListener(new ActionListener(){
+            	public void actionPerformed(ActionEvent evt){
+            		try{
+            			if(serverNames.size() > 0){		// Check if there are servers defined
+            				int serverVectorPosition = serverNames.indexOf(subDropDown.getSelectedItem());
+            				String serverName = serverNames.get(serverVectorPosition);
+            				serverName = JOptionPane.showInputDialog(serverConnectWindow.this,I18N.get("serverconnectwindow.addnewserver"),serverName);
+            				serverNames.setElementAt(serverName, serverVectorPosition);
+            				subDropDown.setModel(new DefaultComboBoxModel(serverNames));
+            				subDropDown.setSelectedItem(serverName);
+            			}
+            		}catch(Exception e){
+            			System.err.println("Error while adding: " + e.getMessage());
+            		}
+            		
+            	}
+            });
+            
             JButton deleteSomething = new JButton(I18N.get("serverconnectwindow.delete"));
+            deleteSomething.setName("REMOVE");
             gbc.gridy=2;
             rightLayout.setConstraints(deleteSomething,gbc);
             rightPanel.add(deleteSomething);
             
+            
+            deleteSomething.addActionListener(new ActionListener(){ // Delete server from network
+            	public void actionPerformed(ActionEvent evt){
+            		try{
+            			if(serverNames.size() > 0){		// Check if there are servers defined
+            				int serverVectorPosition = serverNames.indexOf(subDropDown.getSelectedItem());
+            				serverNames.remove(serverVectorPosition);
+            				subDropDown.setModel(new DefaultComboBoxModel(serverNames));
+            				if(serverVectorPosition > 0)	// Checks if the vector is zero 
+            					subDropDown.setSelectedIndex(serverVectorPosition - 1);
+            			}
+            		}catch(Exception e){
+            			System.err.println("Error while deleting server: " + e.getMessage());
+            		}
+            	}
+            	
+            });
+            
             JButton sortSomething = new JButton(I18N.get("serverconnectwindow.sort"));
+            sortSomething.setName("SORT");
             gbc.gridy=3;
             rightLayout.setConstraints(sortSomething,gbc);
             rightPanel.add(sortSomething);
             
+            sortSomething.addActionListener(new ActionListener(){
+            	public void actionPerformed(ActionEvent evt){
+            		try{
+            			if(serverNames.size() > 0){
+            				String selectedServer = subDropDown.getSelectedItem().toString();
+            				serverNames = sortServers(serverNames);
+            				subDropDown.setModel(new DefaultComboBoxModel(serverNames));
+            				subDropDown.setSelectedItem(selectedServer);
+            			}
+            		}catch(Exception e){
+            			System.err.println("Error while sorting" + e.getMessage());
+            		}
+            	}
+
+				private Vector<String> sortServers(Vector<String> serverNames) {
+					Vector<String> tVector = serverNames;
+					try{	 
+						Collections.sort(tVector);
+					
+					}catch(Exception e){
+						System.err.println("Error while sorting" + e.getMessage());
+					}
+					
+					return tVector;
+				}
+            });
             
         gbc.fill=GridBagConstraints.NONE;
         gbc.gridx=3;
@@ -449,5 +533,16 @@ public class serverConnectWindow extends JFrame{
     		}
     	
     	}
+    	
+    	
+    	private class IRCNetworkHandler extends JFrame{
+
+    		IRCNetworkHandler(){} // Not implemented	
+    		
+    		private void addServer(){
+				
+			}
+        	
+        }
 
 }
