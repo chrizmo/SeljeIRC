@@ -6,6 +6,12 @@ package SeljeIRC;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,17 +25,27 @@ import jerklib.Channel;
  *
  * @author wbserver
  */
-public class SingleTab extends JPanel {
+public class SingleTab extends JPanel implements ActionListener {
     
     private String channel;
     private JTextArea screen;
     private ConnectionHandler connection;
+    private ChannelTab channelTab;
+    private int index;
     private ListOfUsers listPanel;
     
-    public SingleTab(ConnectionHandler con,String ch){
+    public SingleTab(ConnectionHandler con,String ch, ChannelTab ct){
         super();
         channel = ch;
         connection = con;
+        channelTab = ct;
+        index = channelTab.indexOfComponent(this);
+        
+        setOpaque(false);
+        JButton btClose = new JButton("x");
+            btClose.setPreferredSize(new Dimension(10,10));
+            add(btClose);
+        btClose.addActionListener(this);  
         
         /*
          * Borderlayout containing textarea and userlist
@@ -72,12 +88,19 @@ public class SingleTab extends JPanel {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
+        listScroller.setPreferredSize(new Dimension(200,2));
+
         add(textAreaScroller,BorderLayout.CENTER );
         add(listScroller,BorderLayout.EAST);
         
         InputField inputField = new InputField(connection,channel);
         add(inputField,BorderLayout.SOUTH);
        
+        
+       
+            //Icon closeIcon = new CloseIcon();
+            
+        
         
         
     }
@@ -93,6 +116,15 @@ public class SingleTab extends JPanel {
       screen.append("\n"+dateFormat.format(date) +" " +update);
 
     }
+    
+    public void actionPerformed(ActionEvent e) {
+            
+            if (index != -1) {
+                connection.disconnectFromChannel(channel);
+                channelTab.remove(index);
+              
+            }
+          }
 
     void updateUserList(Channel c) {
         listPanel.updateList(c);

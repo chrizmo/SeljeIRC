@@ -60,12 +60,16 @@ public class MainMenu extends JMenuBar {
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
                
-               
+               if(connection.connectedToServer()){
                
                String channel = JOptionPane.showInputDialog(I18N.get("mainmenu.whichchannel"));
                
               //ChannelTab.setConnection(connection)
+               
                tabObject.createNewTab(channel);
+               }
+               else
+               tabObject.updateStatusScreen("Cant join when not connected");
                
            } 
         });

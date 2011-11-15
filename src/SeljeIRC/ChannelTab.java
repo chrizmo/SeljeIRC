@@ -1,12 +1,15 @@
 
 package SeljeIRC;
 
-import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.JTabbedPane;
 import jerklib.Channel;
-import jerklib.events.MessageEvent;
 
 /**
  *  This object is containing all tabs, they are modelled as panels added
@@ -22,12 +25,20 @@ public class ChannelTab extends JTabbedPane {
     private static ConnectionHandler connection;
     StatusTab statusTab;
     
+    private JTabbedPane pane = this;
+    
+    
+    private int curTabIndex = 0;
+   
+    
      
     public ChannelTab(){
         super();
         /*
          * what im doing?
          */
+        
+        
         
         
         
@@ -53,14 +64,17 @@ public class ChannelTab extends JTabbedPane {
         
         
         
-        SingleTab st = new SingleTab(connection,Channel);
+        SingleTab st = new SingleTab(connection,Channel,this);
+        this.addTab(Channel, null,st,"Does nothing" );
         
-        this.addTab(Channel, null, st,"Does nothing");
+        int tabIndex = this.indexOfTab(Channel);
         
-        this.setSelectedIndex(this.indexOfTab(Channel));
+        //CloseTabButton ctb = new CloseTabButton(pane,tabIndex);
+        
+        
+        this.setSelectedIndex(tabIndex);
         
         connection.joinChannel(Channel);
-        
         
         
     }
@@ -73,6 +87,7 @@ public class ChannelTab extends JTabbedPane {
         SingleTab st = (SingleTab) this.getComponent(tabIndex);
         
         st.updateScreen(message);
+        
         
     }
     public void updateStatusScreen(String ch){
@@ -101,4 +116,35 @@ public class ChannelTab extends JTabbedPane {
     
     
     
+    
+    
+    
+    class CloseTabButton extends JPanel implements ActionListener {
+          private JTabbedPane pane;
+          private int index;
+          public CloseTabButton(JTabbedPane pane, int index) {
+            this.pane = pane;
+            this.index = index;
+            setOpaque(false);
+            add(new JLabel(
+                pane.getTitleAt(index),
+                pane.getIconAt(index),
+                JLabel.LEFT));
+            //Icon closeIcon = new CloseIcon();
+            JButton btClose = new JButton("x");
+            btClose.setPreferredSize(new Dimension(10,10));
+            add(btClose);
+            btClose.addActionListener(this);
+            pane.setTabComponentAt(index, this);
+          }
+          public void actionPerformed(ActionEvent e) {
+            
+            
+            if (index != -1) {
+                connection.disconnectFromChannel(pane.getTitleAt(index));
+                pane.remove(index);
+              
+            }
+          }
+    }
 }

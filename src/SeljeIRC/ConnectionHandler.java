@@ -193,6 +193,11 @@ public class ConnectionHandler implements IRCEventListener {
             System.out.printf("Closing manager");
         }
         
+        public void disconnectFromChannel(String channel){
+            
+            event.getSession().close(channel);
+            
+        }
         public Session getCurrentSession()   {
             return event.getSession();
         }
