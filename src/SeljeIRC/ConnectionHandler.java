@@ -1,6 +1,7 @@
 package SeljeIRC;
  
 import java.awt.Color;
+import java.util.Iterator;
 import java.util.List;
 import jerklib.Channel;
 import jerklib.ConnectionManager;
@@ -153,11 +154,14 @@ public class ConnectionHandler implements IRCEventListener {
                         channelTab.updateTabScreen(ch, "-!- " +e.getRawEventData());
                         if (me.getModeType() == ModeType.CHANNEL)   {                                   // Voice and Op are channel modes
                             List<ModeAdjustment> modes = me.getModeAdjustments();                       // Get list of adjustments
-                            ModeAdjustment m = modes.get(0);                                            // Get the first one (there may be more)
-                            if (m.getMode() == 'o')                                                     // Someone got oped / deoped
-                                channelTab.op(m.getArgument(), m.getAction() == Action.PLUS, ch);
-                            if (m.getMode() == 'v')                                                     // Someone got voiced / devoiced
-                                channelTab.voice(m.getArgument(), m.getAction() == Action.PLUS, ch);
+                            Iterator<ModeAdjustment> i = modes.iterator();
+                            while (i.hasNext())   {                                            // Get the first one (there may be more)
+                                ModeAdjustment m = i.next();
+                                if (m.getMode() == 'o')                                                     // Someone got oped / deoped
+                                    channelTab.op(m.getArgument(), m.getAction() == Action.PLUS, ch);
+                                if (m.getMode() == 'v')                                                     // Someone got voiced / devoiced
+                                    channelTab.voice(m.getArgument(), m.getAction() == Action.PLUS, ch);
+                            }
                                
                         }
                             
