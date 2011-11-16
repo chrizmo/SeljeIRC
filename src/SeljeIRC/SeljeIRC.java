@@ -26,7 +26,6 @@ public class SeljeIRC extends JFrame{
         BorderLayout totalLayout; //TotalLayouts
         
         static ConnectionHandler connection;
-        StatusTab statusTab;
         
         boolean isConnected;
 

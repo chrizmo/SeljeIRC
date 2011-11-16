@@ -59,6 +59,7 @@ public class InputField extends JPanel {
         });
         
         inputField.addActionListener(new ActionListener(){
+
             public void actionPerformed(ActionEvent ae){
                 
                 /*
@@ -76,6 +77,5 @@ public class InputField extends JPanel {
 
         
     }
-    
     
 }

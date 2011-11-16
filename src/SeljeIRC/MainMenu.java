@@ -18,12 +18,12 @@ public class MainMenu extends JMenuBar {
     private JMenu edit = new JMenu(I18N.get("mainmenu.edit"));
     private JMenu help = new JMenu(I18N.get("mainmenu.help"));
     
-    ChannelTab tabObject;
+    ChannelTab channelTab;
     ConnectionHandler connection;
     
     public MainMenu(ChannelTab tab, ConnectionHandler con){
         super();
-        tabObject = tab;
+        channelTab = tab;
         connection = con;
         createFileMenu();
         add(file);
@@ -66,20 +66,17 @@ public class MainMenu extends JMenuBar {
                
                if(connection.connectedToServer()){
                
-                   
-                   
+                   System.out.printf("creating new tab in mainmenunow");
+                    
                String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
                     
-                    if(channel != "" && channel != null && !channel.equals(null)){
-                        System.out.printf(channel);
-                    tabObject.createNewTab(channel);
-                    }
-                    else
-                        tabObject.updateStatusScreen("Didnt do anything, something wrong with string");
+                    channelTab.createNewTab(channel);
+                   
+                        
                
                }
                else
-                    tabObject.updateStatusScreen("Cant join when not connected");
+                    channelTab.updateStatusScreen("Cant join when not connected");
                
            } 
         });

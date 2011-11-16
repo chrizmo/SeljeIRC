@@ -25,7 +25,6 @@ public class ChannelTab extends JTabbedPane {
     private static ConnectionHandler connection;
     StatusTab statusTab;
     
-    private JTabbedPane pane = this;
     
     
     private int curTabIndex = 0;
@@ -52,21 +51,48 @@ public class ChannelTab extends JTabbedPane {
         statusTab = new StatusTab(connection);
         
         this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
+        
+        
+        
     }
     /*
      * 
      */
     public void createNewTab(String Channel){
         
-        
-        
         SingleTab st = new SingleTab(connection,Channel,this);
+        
+        /*
+         * adding tab
+         */
+        
+        
+        
+        System.out.printf("newtab: "+Channel);
         
         this.addTab(Channel,st);
         int tabIndex = this.indexOfTab(Channel); 
+            
+        //debugging
         
         
-        CloseTabButton ctb = new CloseTabButton(pane,tabIndex);
+        
+        
+        
+        System.out.printf("newtab: "+tabIndex);
+        
+        /*
+         * adding closebutton
+         */
+        CloseTabButton ctb = new CloseTabButton(this,tabIndex);
+        
+        
+        
+        /*
+         * setting focus on new tab
+         * connecting to channel
+         */
+        
         
         
         this.setSelectedIndex(tabIndex);
@@ -77,16 +103,32 @@ public class ChannelTab extends JTabbedPane {
     }
     public void updateTabScreen(String ch, String message){
         
-       
+        
         int tabIndex = this.indexOfTab(ch);
         
+        System.out.printf("updateing: "+tabIndex);
+       
+        Object[] o = this.getComponents();
+            SingleTab st = (SingleTab) this.getComponent(tabIndex);
         
-        SingleTab st = (SingleTab) this.getComponent(tabIndex);
-        
-        st.updateScreen(message);
+            st.updateScreen(message);
+       
+       
         
         
     }
+    /*
+     * function overloaded
+     */
+    void updateTabScreen(String ch, List<String> message) {
+        
+        int tabIndex = this.indexOfTab(ch);
+        System.out.printf("updatetab: "+tabIndex);
+        SingleTab st = (SingleTab) this.getComponent(tabIndex);
+        st.updateScreen(message);
+
+    }
+    
     public void updateStatusScreen(String ch){
         statusTab.updateScreen(ch);
     }
@@ -104,14 +146,7 @@ public class ChannelTab extends JTabbedPane {
         }
     }
 
-    void updateTabScreen(String ch, List<String> message) {
-        
-        int tabIndex = this.indexOfTab(ch);
-        System.out.printf("updatetab: "+tabIndex);
-        SingleTab st = (SingleTab) this.getComponent(tabIndex);
-        st.updateScreen(message);
-
-    }
+    
     
     public void fetchUsers(String ch, Channel c)   {
         SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch));
@@ -121,11 +156,15 @@ public class ChannelTab extends JTabbedPane {
     
     class CloseTabButton extends JPanel implements ActionListener {
           private JTabbedPane pane;
-          private int index;
+          private int indexTab;
           
           public CloseTabButton(JTabbedPane pane, int index) {
             this.pane = pane;
-            this.index = index;
+            this.indexTab = index;
+            
+            
+            
+            Object[] o = this.pane.getComponents();
             
             
             setOpaque(false);
@@ -137,16 +176,21 @@ public class ChannelTab extends JTabbedPane {
                 add(btClose);
             btClose.addActionListener(this);
             
-            System.out.printf("newtab: "+index  );
+            System.out.printf("newtab: "+this.indexTab);
             
-            this.pane.setTabComponentAt(index, this);
+            o = this.pane.getComponents();
+            
+            this.pane.setTabComponentAt(this.indexTab, this);
+            
+            o = this.pane.getComponents();
+            
           }
           public void actionPerformed(ActionEvent e) {
             
             
-            if (index != -1) {
-                connection.disconnectFromChannel(pane.getTitleAt(index));
-                pane.remove(index);
+            if (indexTab != -1) {
+                connection.disconnectFromChannel(this.pane.getTitleAt(indexTab));
+                this.pane.remove(indexTab);
               
             }
           }

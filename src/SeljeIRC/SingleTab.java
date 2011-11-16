@@ -25,7 +25,7 @@ import jerklib.Channel;
  *
  * @author wbserver
  */
-public class SingleTab extends JPanel implements ActionListener {
+public class SingleTab extends JPanel{
     
     private String channel;
     private JTextArea screen;
@@ -40,12 +40,6 @@ public class SingleTab extends JPanel implements ActionListener {
         connection = con;
         channelTab = ct;
         index = channelTab.indexOfComponent(this);
-        
-        setOpaque(false);
-        JButton btClose = new JButton("x");
-            btClose.setPreferredSize(new Dimension(10,10));
-            add(btClose);
-        btClose.addActionListener(this);  
         
         /*
          * Borderlayout containing textarea and userlist
@@ -78,7 +72,7 @@ public class SingleTab extends JPanel implements ActionListener {
         //TODO set up the userlist model
         
         listPanel = new ListOfUsers();
-            listPanel.setBackground(Color.GRAY);
+        listPanel.setBackground(Color.GRAY);
         
             
         /*
@@ -109,20 +103,10 @@ public class SingleTab extends JPanel implements ActionListener {
 
     void updateScreen(List<String> update) {
       DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-      Date date = new Date();
+      Date date = new Date();   
       screen.append("\n"+dateFormat.format(date) +" " +update);
 
     }
-    
-    public void actionPerformed(ActionEvent e) {
-            
-            if (index != -1) {
-                connection.disconnectFromChannel(channel);
-                channelTab.remove(index);
-              
-            }
-          }
-
     void updateUserList(Channel c) {
         listPanel.updateList(c);
     }
