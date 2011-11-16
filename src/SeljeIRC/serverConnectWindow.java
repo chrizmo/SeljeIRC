@@ -71,7 +71,6 @@ public class serverConnectWindow extends JFrame{
             
         JPanel invisiblePanel = new JPanel(new FlowLayout());
         
-        
         //Drop Down menus
         
         // The network menus
@@ -82,6 +81,7 @@ public class serverConnectWindow extends JFrame{
         topDropDown.setSelectedItem(new String(connectionPreferences.get("lastnetwork", "")));
         serverNames = (Vector<String>)readServers(topDropDown.getSelectedItem().toString()); // Getting servers for element one
         final JComboBox subDropDown = new JComboBox(new DefaultComboBoxModel(serverNames));
+        subDropDown.setSelectedItem(connectionPreferences.get("lastserver",""));
         //TODO: Choose last server (Christer)
         
 
