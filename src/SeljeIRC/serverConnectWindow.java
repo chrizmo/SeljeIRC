@@ -154,7 +154,7 @@ public class serverConnectWindow extends JFrame{
             	public void actionPerformed(ActionEvent evt){
             		String serverName = new String();
             		
-            		serverName = JOptionPane.showInputDialog(serverConnectWindow.this, I18N.get("serverconnectwindow.addnewserver"));
+            		serverName = JOptionPane.showInputDialog(serverConnectWindow.this,"dettefunker heller ikke for hallvard");
             		serverNames.add(serverName);
             		subDropDown.setModel(new DefaultComboBoxModel(serverNames));
             		subDropDown.setSelectedItem(serverName);
@@ -289,12 +289,12 @@ public class serverConnectWindow extends JFrame{
         
         connect.addActionListener(new ActionListener() {//TODO: Legg til connectionsjekk (Christer)
          public void actionPerformed( ActionEvent e)// TODO: Legg til bekreftelse om reconnect -"
-            { // Get server and nick, and run the connection // HUSK Å SLETTE ALLE TABS
+            { // Get server and nick, and run the connection // HUSK ÔøΩ SLETTE ALLE TABS
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
           
              	if(connection.connectedToServer()){		// Check if client is connected
-             		if((JOptionPane.showConfirmDialog(serverConnectWindow.this, I18N.get("serverconnectwindow.reconnect") ,I18N.get("serverconnectwindow.connect"),JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)) == JOptionPane.YES_OPTION){
+             		if((JOptionPane.showConfirmDialog(serverConnectWindow.this, "reconnect" ,"connect",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE)) == JOptionPane.YES_OPTION){
              			connection.closeConnection();
              			connection.connectIt(s, n);
                         connectionPreferences.put("lastnetwork", topDropDown.getSelectedItem().toString());

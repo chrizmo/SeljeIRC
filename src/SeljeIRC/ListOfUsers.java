@@ -35,7 +35,7 @@ public class ListOfUsers extends JPanel {
     Channel chan;
     JPopupMenu popup;
     ConnectionHandler connection = SeljeIRC.connection;
-    ChannelTab tabObject = SeljeIRC.channelTabs;
+    tabHandler tabObject = SeljeIRC.channelTabs;
     
     
     public ListOfUsers(){
@@ -164,7 +164,7 @@ public class ListOfUsers extends JPanel {
     	
     	
     	public void mousePressed(MouseEvent evt){
-           	if(evt.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker pŒ er seg selv (CHRISTER)
+           	if(evt.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker pï¿½ er seg selv (CHRISTER)
         		openPrivateChat(list.getSelectedValue().toString());
 
     	}

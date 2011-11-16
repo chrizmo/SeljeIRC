@@ -97,6 +97,7 @@ public class StatusTab extends JPanel{
 
       DateFormat dateFormat = new SimpleDateFormat("HH:mm");
       Date date = new Date();
+
       //screen.append("\n"+dateFormat.format(date) +" " +update);
       screen.getDocument().insertString(screen.getDocument().getLength() + 1,
                     "\n" + dateFormat.format(date) + " " + update, textColor);

@@ -32,7 +32,7 @@ public class InputField extends JPanel {
 
         
         
-        label = new JLabel(I18N.get("inputfield.thechannelname"));
+        label = new JLabel(cha);
             
         add(label,BorderLayout.WEST);
         
