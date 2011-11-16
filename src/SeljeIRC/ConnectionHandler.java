@@ -8,6 +8,7 @@ import jerklib.Profile;
 import jerklib.Session;
 import jerklib.events.*;
 import jerklib.events.IRCEvent.Type;
+import jerklib.events.modes.ModeAdjustment;
 import jerklib.events.modes.ModeAdjustment.Action;
 import jerklib.events.modes.ModeEvent;
 import jerklib.events.modes.ModeEvent.ModeType;
@@ -133,25 +134,33 @@ public class ConnectionHandler implements IRCEventListener {
                 else if (e.getType() == Type.JOIN)   {
                     JoinEvent je = (JoinEvent) e;
                     String nick = je.getNick();
-                    channelTab.updateTabScreen(je.getChannelName(), "-!- " +nick + " joined the channel");
-                    channelTab.userJoined(nick,je.getChannelName(), je.getChannel());
+                    channelTab.updateTabScreen(je.getChannelName(), "-!- " +nick + I18N.get("channel.userjoin"));
+                    channelTab.userJoined(nick,je.getChannelName());
                 }
                 
                 else if (e.getType() == Type.PART)   {
                     PartEvent pe = (PartEvent) e;
                     String nick = pe.getWho();
-                    channelTab.updateTabScreen(pe.getChannelName(), "-!- " +nick + " left the channel");
-                    channelTab.userLeft(nick, pe.getChannelName(), pe.getChannel());
+                    channelTab.updateTabScreen(pe.getChannelName(), "-!- " +nick + I18N.get("channel.userleft"));
+                    channelTab.userLeft(nick, pe.getChannelName());
                 }
 
                 else if(e.getType() == Type.MODE_EVENT){
                     // Print mode-adjustments
                     ModeEvent me = (ModeEvent) e;
-
-                    String ch = me.getChannel().getName();
-                    channelTab.updateTabScreen(ch, "-!- " +e.getRawEventData());
-                    if (me.getModeType() == ModeType.USER)   {
-                        
+                    if (me.getChannel() != null)   {
+                        String ch = me.getChannel().getName();
+                        channelTab.updateTabScreen(ch, "-!- " +e.getRawEventData());
+                        if (me.getModeType() == ModeType.CHANNEL)   {                                   // Voice and Op are channel modes
+                            List<ModeAdjustment> modes = me.getModeAdjustments();                       // Get list of adjustments
+                            ModeAdjustment m = modes.get(0);                                            // Get the first one (there may be more)
+                            if (m.getMode() == 'o')                                                     // Someone got oped / deoped
+                                channelTab.op(m.getArgument(), m.getAction() == Action.PLUS, ch);
+                            if (m.getMode() == 'v')                                                     // Someone got voiced / devoiced
+                                channelTab.voice(m.getArgument(), m.getAction() == Action.PLUS, ch);
+                               
+                        }
+                            
                     }
                 }
 

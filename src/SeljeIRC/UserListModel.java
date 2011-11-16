@@ -180,7 +180,7 @@ public class UserListModel extends DefaultListModel {
                 return 1;
             if (voice && !u.voice)
                 return -1;
-            if (!voice && voice)
+            if (!voice && u.voice)
                 return 1;
             return nick.compareToIgnoreCase(u.nick);
         }

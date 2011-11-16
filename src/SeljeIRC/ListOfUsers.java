@@ -164,7 +164,7 @@ public class ListOfUsers extends JPanel {
     	
     	
     	public void mousePressed(MouseEvent evt){
-           	if(evt.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker pŒ er seg selv (CHRISTER)
+           	if(evt.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker pï¿½ er seg selv (CHRISTER)
         		openPrivateChat(list.getSelectedValue().toString());
 
     	}
@@ -249,9 +249,8 @@ public class ListOfUsers extends JPanel {
                     lm.voice((String)i.next(), true);                   // Voice those users
                 } 
             }
-            catch (Exception e)   {             // Some exception...
-                e.printStackTrace();
-                SwingUtilities.invokeLater(new Init());                 // Try againg later
+            catch (Exception e)   {             // Some exception..
+                SwingUtilities.invokeLater(this);                 // Try againg later
             }
         }
     }
