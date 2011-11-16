@@ -26,16 +26,25 @@ import jerklib.Channel;
  * @author wbserver
  */
 public class SingleTab extends JPanel{
-    
+	
+	final static public int STATUS = 0;
+	final static public int CHANNEL = 1;
+	final static public int PRIVATE = 2;
+	
+	
     private String channel;
     private JTextArea screen;
     private ConnectionHandler connection;
-    private ChannelTab channelTab;
+    private tabHandler channelTab;
     private int index;
     private ListOfUsers listPanel;
+    private int typeOfTab = 1;			// The type of this tab. Standard is channel
     
-    public SingleTab(ConnectionHandler con,String ch, ChannelTab ct){
+    
+    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType){
         super();
+        
+        typeOfTab = tabType;			// Sets the type of tab
         channel = ch;
         connection = con;
         channelTab = ct;
@@ -87,10 +96,9 @@ public class SingleTab extends JPanel{
         add(textAreaScroller,BorderLayout.CENTER );
         add(listScroller,BorderLayout.EAST);
         
-        InputField inputField = new InputField(connection,channel);
+        InputField inputField = new InputField(connection,channel,this.typeOfTab);
         add(inputField,BorderLayout.SOUTH);
-       
-            
+
         
         
         
@@ -111,6 +119,12 @@ public class SingleTab extends JPanel{
         listPanel.updateList(c);
     }
     
+    void newUserJoined(String n)   {
+        listPanel.getListModel().addUserToList(n);
+    }
     
+    void userLeft(String n)   {
+        listPanel.getListModel().removeUser(n);
+    }
    
 }

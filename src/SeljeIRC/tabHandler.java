@@ -6,9 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.List;
 import javax.swing.JTabbedPane;
+import javax.swing.text.BadLocationException;
+
 import jerklib.Channel;
 
 /**
@@ -17,8 +20,8 @@ import jerklib.Channel;
  * @author hallvardwestman
  */
 //TODO 
-public class ChannelTab extends JTabbedPane {
-    
+public class tabHandler extends JTabbedPane {
+	
     /*
      * indexing all tabs 
      */
@@ -31,7 +34,7 @@ public class ChannelTab extends JTabbedPane {
    
     
      
-    public ChannelTab(){
+    public tabHandler(){
         super();
         /* 
          * what im doing?
@@ -45,27 +48,34 @@ public class ChannelTab extends JTabbedPane {
     
     /**
      * add tabs for each channel
+     * @throws BadLocationException 
      */
     
-    public void createStatusTab(){
-        statusTab = new StatusTab(connection);
-        
+    public void createStatusTab() throws BadLocationException{
+        try{
+        	statusTab = new StatusTab(connection);
         this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
-        
-        
-        
+        }catch(BadLocationException e){
+        	System.err.println("System error: " + e.getMessage());
+        }
     }
-    /*
+    /**
+     * 
      * 
      */
-    public void createNewTab(String Channel){
+    public void createNewTab(String Channel, int tabType){
+        SingleTab st;
         
-        SingleTab st = new SingleTab(connection,Channel,this);
         
         /*
          * adding tab
          */
+        if(tabType == SingleTab.CHANNEL)
+        	st = new SingleTab(connection,Channel,this,SingleTab.CHANNEL);
+        else
+        	st = new SingleTab(connection,Channel,this,SingleTab.PRIVATE);
         
+        this.addTab(Channel, null,st,"Does nothing" );
         
         
         System.out.printf("newtab: "+Channel);
@@ -84,7 +94,7 @@ public class ChannelTab extends JTabbedPane {
         /*
          * adding closebutton
          */
-        CloseTabButton ctb = new CloseTabButton(this,tabIndex);
+        //CloseTabButton ctb = new CloseTabButton(this,tabIndex);
         
         
         
@@ -92,15 +102,12 @@ public class ChannelTab extends JTabbedPane {
          * setting focus on new tab
          * connecting to channel
          */
-        
-        
-        
         this.setSelectedIndex(tabIndex);
-        
-        connection.joinChannel(Channel);
-        
-        
-    }
+        	
+        if(tabType == SingleTab.CHANNEL)
+            connection.joinChannel(Channel);
+    
+}
     public void updateTabScreen(String ch, String message){
         
         
@@ -130,7 +137,11 @@ public class ChannelTab extends JTabbedPane {
     }
     
     public void updateStatusScreen(String ch){
-        statusTab.updateScreen(ch);
+        try{
+        	statusTab.updateScreen(ch);
+    	}catch(Exception e){
+    		System.err.println("System error " + e.getMessage());
+    	}
     }
     
     public static void setConnection(ConnectionHandler ch){
@@ -146,12 +157,28 @@ public class ChannelTab extends JTabbedPane {
         }
     }
 
-    
+    // Checks if a certain tab exists
+    public boolean tabExists(String tabName){
+    	return((this.indexOfTab(tabName) >= 0) ? true : false); //FIX: Sjekk om koden kan forberedres
+    	
+    }
     
     public void fetchUsers(String ch, Channel c)   {
         SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch));
         st.updateUserList(c);
     }
+
+    void userJoined(String nick, String channelName, Channel channel) {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+        st.newUserJoined(nick);
+    }
+
+    void userLeft(String nick, String channelName, Channel channel)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+        st.userLeft(nick);
+    }
+
+    
     
     
     class CloseTabButton extends JPanel implements ActionListener {
