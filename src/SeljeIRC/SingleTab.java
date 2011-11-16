@@ -80,28 +80,31 @@ public class SingleTab extends JPanel implements ActionListener {
             
         JScrollPane textAreaScroller = new JScrollPane(screen);
         
+        add(textAreaScroller,BorderLayout.CENTER );
         
         /*
          * userlist
          */
         //TODO set up the userlist model
-        
-        listPanel = new ListOfUsers();
+        if(this.typeOfTab == SingleTab.CHANNEL){
+        	listPanel = new ListOfUsers();
             listPanel.setBackground(Color.GRAY);
         
             
         /*
          * layout functionality for tabs
          */
-        JScrollPane listScroller = new JScrollPane(listPanel,
+            JScrollPane listScroller = new JScrollPane(listPanel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
-        listScroller.setPreferredSize(new Dimension(200,2));
+        	listScroller.setPreferredSize(new Dimension(200,2));
 
-        add(textAreaScroller,BorderLayout.CENTER );
-        add(listScroller,BorderLayout.EAST);
-        
+        	
+        	add(listScroller,BorderLayout.EAST);
+        	
+        	
+        } 
         InputField inputField = new InputField(connection,channel,this.typeOfTab);
         add(inputField,BorderLayout.SOUTH);
        
