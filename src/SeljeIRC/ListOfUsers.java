@@ -123,6 +123,10 @@ public class ListOfUsers extends JPanel {
         list.addMouseListener(new PopupListener());
     }
     
+    public UserListModel getListModel()   {
+        return lm;
+    }
+    
     /**
      * Gets the selected item in the user list
      * @author Lars Erik Pedersen

@@ -113,6 +113,17 @@ public class ChannelTab extends JTabbedPane {
         SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch));
         st.updateUserList(c);
     }
+
+    void userJoined(String nick, String channelName, Channel channel) {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+        st.newUserJoined(nick);
+    }
+    
+    void userLeft(String nick, String channelName, Channel channel)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+        st.userLeft(nick);
+    }
+
     
     
     

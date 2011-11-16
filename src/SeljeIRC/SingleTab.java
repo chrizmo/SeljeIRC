@@ -130,6 +130,12 @@ public class SingleTab extends JPanel implements ActionListener {
         listPanel.updateList(c);
     }
     
+    void newUserJoined(String n)   {
+        listPanel.getListModel().addUserToList(n);
+    }
     
+    void userLeft(String n)   {
+        listPanel.getListModel().removeUser(n);
+    }
    
 }
