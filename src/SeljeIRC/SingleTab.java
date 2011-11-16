@@ -26,16 +26,25 @@ import jerklib.Channel;
  * @author wbserver
  */
 public class SingleTab extends JPanel implements ActionListener {
-    
+	
+	final static public int STATUS = 0;
+	final static public int CHANNEL = 1;
+	final static public int PRIVATE = 2;
+	
+	
     private String channel;
     private JTextArea screen;
     private ConnectionHandler connection;
     private ChannelTab channelTab;
     private int index;
     private ListOfUsers listPanel;
+    private int typeOfTab = 1;			// The type of this tab. Standard is channel
     
-    public SingleTab(ConnectionHandler con,String ch, ChannelTab ct){
+    
+    public SingleTab(ConnectionHandler con,String ch, ChannelTab ct, int tabType){
         super();
+        
+        typeOfTab = tabType;			// Sets the type of tab
         channel = ch;
         connection = con;
         channelTab = ct;
@@ -93,13 +102,12 @@ public class SingleTab extends JPanel implements ActionListener {
         add(textAreaScroller,BorderLayout.CENTER );
         add(listScroller,BorderLayout.EAST);
         
-        InputField inputField = new InputField(connection,channel);
+        InputField inputField = new InputField(connection,channel,this.typeOfTab);
         add(inputField,BorderLayout.SOUTH);
        
         
        
             //Icon closeIcon = new CloseIcon();
-            
         
         
         

@@ -11,6 +11,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -33,6 +34,8 @@ public class ListOfUsers extends JPanel {
     JList list;
     Channel chan;
     JPopupMenu popup;
+    ConnectionHandler connection = SeljeIRC.connection;
+    ChannelTab tabObject = SeljeIRC.channelTabs;
     
     
     public ListOfUsers(){
@@ -121,6 +124,20 @@ public class ListOfUsers extends JPanel {
         popup.addSeparator();
         popup.add(slap);
         list.addMouseListener(new PopupListener());
+        list.addMouseListener(new DoubleClickListener());
+    }
+    /**
+     * Opens a private chat window with a user
+     * @author Christer Vaskinn
+     * @since 0.1
+     * @param userName The username to which the user wants to have a private conversation with
+     * 
+     */
+    private void openPrivateChat(String userName){
+       if(connection.connectedToServer()){
+        	tabObject.createNewTab(userName,SingleTab.PRIVATE);
+        }else
+        	tabObject.updateStatusScreen("Can't join when not connected"); //TODO: Legg til translation
     }
     
     public UserListModel getListModel()   {
@@ -137,7 +154,21 @@ public class ListOfUsers extends JPanel {
     private int getItem(Point p)   {
         return list.locationToIndex(p);
     }
+    
+    /**
+     * Listens for double click to invoce private chat
+     * @author Christer Vaskinn
+     * @since 0.1
+     */
+    private class DoubleClickListener extends MouseAdapter{
+    	
+    	
+    	public void mousePressed(MouseEvent evt){
+           	if(evt.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker på er seg selv (CHRISTER)
+        		openPrivateChat(list.getSelectedValue().toString());
 
+    	}
+    }
     
     /**
      * Inner class. Listens for mouse events in the user list
@@ -155,7 +186,7 @@ public class ListOfUsers extends JPanel {
         */
         @Override
         public void mousePressed(MouseEvent me)   {
-            Popup(me);
+        		Popup(me);
         }
         
         /**
@@ -180,7 +211,9 @@ public class ListOfUsers extends JPanel {
                 ((JList)me.getComponent()).setSelectedIndex(getItem(me.getPoint()));
                 popup.show(me.getComponent(), me.getX(), me.getY());
             }
-        }   
+        }
+        
+        
     }
     
     /**

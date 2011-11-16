@@ -22,21 +22,27 @@ import jerklib.Session;
 
 
 /**
- *
- * @author hallvardwestman
+ * 
+ * @author SljeIRC
+ * @since 0.1
  */
 //
 public class serverConnectWindow extends JFrame{
     
     static int openFrameCount = 0;
-    ConnectionHandler connection;
+    ConnectionHandler connection = SeljeIRC.connection;
     private Preferences connectionPreferences;
     private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     Vector<String> networkNames = new Vector<String>();			// List of networks in list
     Vector<String> serverNames = new Vector<String>();			// List of networks in list
     private Session ircSession; 
     
-    
+    /**
+     * Creates the connection window for the user
+     * @since 0.1
+     * @param con ConnectionHandler object provided by main menu
+     * 
+     */
     public serverConnectWindow(ConnectionHandler con){
         super(I18N.get("serverconnectwindow.connect"));		// Set header title
       
@@ -164,7 +170,6 @@ public class serverConnectWindow extends JFrame{
             changeSomething.setName("CHANGE");
             rightLayout.setConstraints(changeSomething,gbc);
             rightPanel.add(changeSomething);
-            
             
             changeSomething.addActionListener(new ActionListener(){
             	public void actionPerformed(ActionEvent evt){
@@ -449,6 +454,12 @@ public class serverConnectWindow extends JFrame{
         add(bottomButtons);
         
     }
+    /**
+     * Connects to servre
+     * 
+     * @param channel String of channel to connect to
+     * @deprecated 
+     */
     
     public void joinChannel(String channel) {
 
@@ -457,8 +468,8 @@ public class serverConnectWindow extends JFrame{
     }
  	
     	 /**
-    	  * 
-    	  * @return
+    	  * Reads networks from a .ini files
+    	  * @return Vector<String> with list of networks
     	  */
    	public Vector<String> readNetworks(){
 		BufferedReader brReader;
@@ -487,9 +498,9 @@ public class serverConnectWindow extends JFrame{
 		
 	}	
    	/**
-   	 * 
-   	 * @param networkName
-   	 * @return
+   	 * Reads servers based on the provided network from ini file
+   	 * @param networkName String with the network to find servers
+   	 * @return Vector<String> list of servers
    	 */
    	public Vector<String> readServers(String networkName){
 		BufferedReader brReader;
@@ -516,11 +527,12 @@ public class serverConnectWindow extends JFrame{
 	}
     	
     	/**
+    	 * Opens a file for reading purposes
     	 * 
     	 * @param filename FileName of file to open
     	 * @return A Buffered reader object to the file
     	 * 
-    	 * Basically opens a file for the user.
+    	 *
     	 */ 
     	private BufferedReader openIniFile(String filename){
     		
@@ -533,16 +545,5 @@ public class serverConnectWindow extends JFrame{
     		}
     	
     	}
-    	
-    	
-    	private class IRCNetworkHandler extends JFrame{
-
-    		IRCNetworkHandler(){} // Not implemented	
-    		
-    		private void addServer(){
-				
-			}
-        	
-        }
 
 }

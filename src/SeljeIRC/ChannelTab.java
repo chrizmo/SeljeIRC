@@ -6,9 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.List;
 import javax.swing.JTabbedPane;
+import javax.swing.text.BadLocationException;
+
 import jerklib.Channel;
 
 /**
@@ -18,7 +21,7 @@ import jerklib.Channel;
  */
 //TODO 
 public class ChannelTab extends JTabbedPane {
-    
+	
     /*
      * indexing all tabs 
      */
@@ -50,21 +53,30 @@ public class ChannelTab extends JTabbedPane {
     
     /**
      * add tabs for each channel
+     * @throws BadLocationException 
      */
     
-    public void createStatusTab(){
-        statusTab = new StatusTab(connection);
+    public void createStatusTab() throws BadLocationException{
+        try{
+        	statusTab = new StatusTab(connection);
         
-        this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
+        	this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
+        }catch(BadLocationException e){
+        	System.err.println("System error: " + e.getMessage());
+        }
     }
-    /*
+    /**
+     * 
      * 
      */
-    public void createNewTab(String Channel){
+    public void createNewTab(String Channel, int tabType){
+        SingleTab st;
         
+        if(tabType == SingleTab.CHANNEL)
+        	st = new SingleTab(connection,Channel,this,SingleTab.CHANNEL);
+        else
+        	st = new SingleTab(connection,Channel,this,SingleTab.PRIVATE);
         
-        
-        SingleTab st = new SingleTab(connection,Channel,this);
         this.addTab(Channel, null,st,"Does nothing" );
         
         int tabIndex = this.indexOfTab(Channel);
@@ -73,11 +85,11 @@ public class ChannelTab extends JTabbedPane {
         
         
         this.setSelectedIndex(tabIndex);
-        
-        connection.joinChannel(Channel);
-        
-        
-    }
+        	
+        if(tabType == SingleTab.CHANNEL)
+            connection.joinChannel(Channel);
+    
+}
     public void updateTabScreen(String ch, String message){
         
        
@@ -91,7 +103,11 @@ public class ChannelTab extends JTabbedPane {
         
     }
     public void updateStatusScreen(String ch){
-        statusTab.updateScreen(ch);
+        try{
+        	statusTab.updateScreen(ch);
+    	}catch(Exception e){
+    		System.err.println("System error " + e.getMessage());
+    	}
     }
     
     public static void setConnection(ConnectionHandler ch){
@@ -107,6 +123,11 @@ public class ChannelTab extends JTabbedPane {
         SingleTab st = (SingleTab) this.getComponent(tabIndex);
         st.updateScreen(message);
 
+    }
+    // Checks if a certain tab exists
+    public boolean tabExists(String tabName){
+    	return((this.indexOfTab(tabName) >= 0) ? true : false); //FIX: Sjekk om koden kan forberedres
+    	
     }
     
     public void fetchUsers(String ch, Channel c)   {
@@ -124,9 +145,6 @@ public class ChannelTab extends JTabbedPane {
         st.userLeft(nick);
     }
 
-    
-    
-    
     
     
     
