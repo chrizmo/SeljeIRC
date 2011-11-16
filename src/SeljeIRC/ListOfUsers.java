@@ -140,6 +140,10 @@ public class ListOfUsers extends JPanel {
         	tabObject.updateStatusScreen("Can't join when not connected"); //TODO: Legg til translation
     }
     
+    public UserListModel getListModel()   {
+        return lm;
+    }
+    
     /**
      * Gets the selected item in the user list
      * @author Lars Erik Pedersen

@@ -8,7 +8,9 @@ import jerklib.Profile;
 import jerklib.Session;
 import jerklib.events.*;
 import jerklib.events.IRCEvent.Type;
+import jerklib.events.modes.ModeAdjustment.Action;
 import jerklib.events.modes.ModeEvent;
+import jerklib.events.modes.ModeEvent.ModeType;
 import jerklib.listeners.IRCEventListener;
 
 
@@ -127,6 +129,20 @@ public class ConnectionHandler implements IRCEventListener {
                     channelTab.updateTabScreen(ch, "-!- Users: " +message);
 
                 }
+                
+                else if (e.getType() == Type.JOIN)   {
+                    JoinEvent je = (JoinEvent) e;
+                    String nick = je.getNick();
+                    channelTab.updateTabScreen(je.getChannelName(), "-!- " +nick + " joined the channel");
+                    channelTab.userJoined(nick,je.getChannelName(), je.getChannel());
+                }
+                
+                else if (e.getType() == Type.PART)   {
+                    PartEvent pe = (PartEvent) e;
+                    String nick = pe.getWho();
+                    channelTab.updateTabScreen(pe.getChannelName(), "-!- " +nick + " left the channel");
+                    channelTab.userLeft(nick, pe.getChannelName(), pe.getChannel());
+                }
 
                 else if(e.getType() == Type.MODE_EVENT){
                     // Print mode-adjustments
@@ -134,9 +150,10 @@ public class ConnectionHandler implements IRCEventListener {
 
                     String ch = me.getChannel().getName();
                     channelTab.updateTabScreen(ch, "-!- " +e.getRawEventData());
-
+                    if (me.getModeType() == ModeType.USER)   {
+                        
+                    }
                 }
-
 
                 else    
 		{       // Prints data received from server
