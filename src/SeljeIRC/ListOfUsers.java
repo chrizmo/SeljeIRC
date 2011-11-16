@@ -35,7 +35,7 @@ public class ListOfUsers extends JPanel {
     Channel chan;
     JPopupMenu popup;
     ConnectionHandler connection = SeljeIRC.connection;
-    ChannelTab tabObject = SeljeIRC.channelTabs;
+    tabHandler tabObject = SeljeIRC.channelTabs;
     
     
     public ListOfUsers(){

@@ -25,7 +25,7 @@ import jerklib.Channel;
  *
  * @author wbserver
  */
-public class SingleTab extends JPanel implements ActionListener {
+public class SingleTab extends JPanel{
 	
 	final static public int STATUS = 0;
 	final static public int CHANNEL = 1;
@@ -35,13 +35,13 @@ public class SingleTab extends JPanel implements ActionListener {
     private String channel;
     private JTextArea screen;
     private ConnectionHandler connection;
-    private ChannelTab channelTab;
+    private tabHandler channelTab;
     private int index;
     private ListOfUsers listPanel;
     private int typeOfTab = 1;			// The type of this tab. Standard is channel
     
     
-    public SingleTab(ConnectionHandler con,String ch, ChannelTab ct, int tabType){
+    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType){
         super();
         
         typeOfTab = tabType;			// Sets the type of tab
@@ -49,12 +49,6 @@ public class SingleTab extends JPanel implements ActionListener {
         connection = con;
         channelTab = ct;
         index = channelTab.indexOfComponent(this);
-        
-        setOpaque(false);
-        JButton btClose = new JButton("x");
-            btClose.setPreferredSize(new Dimension(10,10));
-            add(btClose);
-        btClose.addActionListener(this);  
         
         /*
          * Borderlayout containing textarea and userlist
@@ -64,7 +58,7 @@ public class SingleTab extends JPanel implements ActionListener {
         
         /*
          * addTab takes panel, so this panel is modeled as the "tab-object"
-         * 
+         *
          */
       
          setLayout(bl);
@@ -87,7 +81,7 @@ public class SingleTab extends JPanel implements ActionListener {
         //TODO set up the userlist model
         
         listPanel = new ListOfUsers();
-            listPanel.setBackground(Color.GRAY);
+        listPanel.setBackground(Color.GRAY);
         
             
         /*
@@ -104,10 +98,7 @@ public class SingleTab extends JPanel implements ActionListener {
         
         InputField inputField = new InputField(connection,channel,this.typeOfTab);
         add(inputField,BorderLayout.SOUTH);
-       
-        
-       
-            //Icon closeIcon = new CloseIcon();
+
         
         
         
@@ -120,20 +111,10 @@ public class SingleTab extends JPanel implements ActionListener {
 
     void updateScreen(List<String> update) {
       DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-      Date date = new Date();
+      Date date = new Date();   
       screen.append("\n"+dateFormat.format(date) +" " +update);
 
     }
-    
-    public void actionPerformed(ActionEvent e) {
-            
-            if (index != -1) {
-                connection.disconnectFromChannel(channel);
-                channelTab.remove(index);
-              
-            }
-          }
-
     void updateUserList(Channel c) {
         listPanel.updateList(c);
     }

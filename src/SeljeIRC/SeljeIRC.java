@@ -20,12 +20,11 @@ public class SeljeIRC extends JFrame{
         
         MainMenu mainMenu;      //Standard Menu
         
-        static ChannelTab channelTabs; //JTabbedPane containing all tabs
+        static tabHandler channelTabs; //JTabbedPane containing all tabs
         static InputField inputField;  //Standard Input field for each tab
         BorderLayout totalLayout; //TotalLayouts
         
         static ConnectionHandler connection;
-        //static StatusTab statusTab;
         
         boolean isConnected;
 
@@ -35,7 +34,7 @@ public class SeljeIRC extends JFrame{
              * Connection to server
              */
             
-            channelTabs = new ChannelTab();
+            channelTabs = new tabHandler();
             connection = new ConnectionHandler(channelTabs);
             
             /*
@@ -49,6 +48,8 @@ public class SeljeIRC extends JFrame{
              */
             
                 add(channelTabs,BorderLayout.CENTER);    
+                
+                
             
             /*
              * Setting up the main contentPane menu

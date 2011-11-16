@@ -26,11 +26,11 @@ public class ConnectionHandler implements IRCEventListener {
         
         private IRCEvent event = null;
         private boolean hasConnected = false;
-        private ChannelTab channelTab;
+        private tabHandler channelTab;
         
         
         
-        public ConnectionHandler(ChannelTab ct){
+        public ConnectionHandler(tabHandler ct){
  
         	try{
         	channelTab = ct;
@@ -246,7 +246,7 @@ public class ConnectionHandler implements IRCEventListener {
         
         public void closeConnection(){
             manager.quit();
-            channelTab.removeAll();
+            channelTab.removeAllTabs();
             System.out.printf("Closing manager");
         }
         

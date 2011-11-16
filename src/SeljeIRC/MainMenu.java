@@ -17,12 +17,14 @@ public class MainMenu extends JMenuBar {
     private JMenu file = new JMenu(I18N.get("mainmenu.file"));
     private JMenu edit = new JMenu(I18N.get("mainmenu.edit"));
     private JMenu help = new JMenu(I18N.get("mainmenu.help"));
-    ChannelTab tabObject;
+
+    
+    tabHandler channelTab;
     ConnectionHandler connection;
 
-    public MainMenu(ChannelTab tab, ConnectionHandler con) {
+    public MainMenu(tabHandler tab, ConnectionHandler con) {
         super();
-        tabObject = tab;
+        channelTab = tab;
         connection = con;
         createFileMenu();
         createEditMenu();
@@ -37,7 +39,8 @@ public class MainMenu extends JMenuBar {
         file.add(newServer);
         JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
         file.add(newChannel);
-        JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"));
+
+        JMenuItem exitProgram = new JMenuItem("till dont work");
         file.add(exitProgram);
 
         //--------------Action listeners-----------------------------
@@ -60,16 +63,22 @@ public class MainMenu extends JMenuBar {
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
                
+               JOptionPane jop = new JOptionPane();
+               
+               
+               
                if(connection.connectedToServer()){
                
-               String channel = JOptionPane.showInputDialog(I18N.get("mainmenu.whichchannel"));
-               
-              //ChannelTab.setConnection(connection)
-               
-               tabObject.createNewTab(channel, SingleTab.CHANNEL);
+                   System.out.printf("creating new tab in mainmenunow");
+                    
+               String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
+                    
+                    channelTab.createNewTab(channel, SingleTab.CHANNEL);
+                   
+                        
                }
                else
-               tabObject.updateStatusScreen("Cant join when not connected");
+                    channelTab.updateStatusScreen("Cant join when not connected");
                
            } 
         });
@@ -89,7 +98,7 @@ public class MainMenu extends JMenuBar {
     public void createEditMenu() {
 
 
-        JMenuItem settings = new JMenuItem(I18N.get("mainmenu.settings"));
+        JMenuItem settings = new JMenuItem("still dont work");
         edit.add(settings);
 
         //--------------Action listeners-----------------------------
@@ -97,7 +106,7 @@ public class MainMenu extends JMenuBar {
         settings.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent nils) {
-                JOptionPane.showMessageDialog(tabObject, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);
             }
         });
 
@@ -106,7 +115,7 @@ public class MainMenu extends JMenuBar {
     public void createHelpMenu() {
         JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
         help.add(helpItem);
-        JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"));
+        JMenuItem aboutItem = new JMenuItem("dont work");
         help.add(aboutItem);
 
         //--------------Action listeners-----------------------------
@@ -114,7 +123,7 @@ public class MainMenu extends JMenuBar {
         helpItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(tabObject, "Oh wait, you wanted"
+                JOptionPane.showMessageDialog(channelTab, "Oh wait, you wanted"
                         + " help? Well, maybe later...");
             }
         });
@@ -122,7 +131,7 @@ public class MainMenu extends JMenuBar {
         aboutItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(tabObject, "SeljeIRC is an "
+                JOptionPane.showMessageDialog(channelTab, "SeljeIRC is an "
                         + "IRC-client written in Java by:\n"
                         + "Jon Arne Westgaard, Lars Erik Pedersen, "
                         + "Christer Vaskinn and Hallvard Westman.\n\n"
