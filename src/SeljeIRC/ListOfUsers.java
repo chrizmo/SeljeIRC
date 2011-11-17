@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +27,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.text.BadLocationException;
 import jerklib.Channel;
 import jerklib.events.modes.ModeAdjustment.Action;
 
@@ -152,6 +155,22 @@ public class ListOfUsers extends JPanel {
             
         });
         JMenuItem kick = new JMenuItem(I18N.get("user.kick"));
+        kick.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+"))   {   
+                    chan.kick(user.substring(1), user.substring(1));
+                    lm.removeUser(user.substring(1));
+                }
+                else   {
+                    chan.kick(user, user);
+                    lm.removeUser(user);
+                }
+            }
+            
+        });
         JMenuItem ban = new JMenuItem(I18N.get("user.ban"));
         JMenuItem kickban = new JMenuItem(I18N.get("user.kickban"));
         

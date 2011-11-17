@@ -122,6 +122,16 @@ public class UserListModel extends DefaultListModel {
         else return null;                           // The user is not in the list
     }
 
+    public void changeNick(String oldNick, String newNick) {
+        User tmp = getUser(oldNick);
+        removeUser(oldNick);
+        tmp.nick = newNick;
+        insert(tmp);
+        if (tmp.op) op(newNick, true);
+        else if (tmp.voice) voice(newNick, true);
+        fireContentsChanged(this, 0, size());
+    }
+
     /**
      * Inner class. Defines a User within the channel
      * @author Lars Erik Pedersen

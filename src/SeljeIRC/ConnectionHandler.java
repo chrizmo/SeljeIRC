@@ -119,10 +119,17 @@ public class ConnectionHandler implements IRCEventListener {
                 }
             
                 else if(e.getType() == Type.NICK_CHANGE){
-                	ErrorEvent no = (ErrorEvent) e;
-                	String update = no.getErrorType().toString();
-                	channelTab.updateStatusScreen("NickInUseBuddy");
-                    channelTab.updateStatusScreen(update);
+                	//ErrorEvent no = (ErrorEvent) e;
+                	//String update = no.getErrorType().toString();
+                	//channelTab.updateStatusScreen("NickInUseBuddy");
+                    //channelTab.updateStatusScreen(update);
+                    NickChangeEvent nce = (NickChangeEvent) e;
+                    String ch = e.getSession().getChannels().iterator().next().getName();  //TODO Fix if user is in more channels!
+                    channelTab.changedNick(nce.getOldNick(), nce.getNewNick(), ch);
+                    try {
+                        channelTab.updateTabScreen(ch, nce.getOldNick() + " is known as " + nce.getNewNick()); //TODO I18N
+                    } catch (BadLocationException ex) {
+                      }
                 }
                 else if(e.getType() == Type.JOIN_COMPLETE){
                     // Print topic for channel:

@@ -154,5 +154,9 @@ public class SingleTab extends JPanel{
     void voice(String n, boolean mode)   {
         listPanel.getListModel().voice(n, mode);
     }
+    
+    void changeNick(String oldNick, String newNick)   {
+        listPanel.getListModel().changeNick(oldNick, newNick);
+    }
    
 }
