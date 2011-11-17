@@ -27,9 +27,9 @@ import javax.swing.text.StyleConstants;
 public class StatusTab extends JPanel{
     
     private JTextPane screen;
-    public ConnectionHandler connection;
+    public connectionHandler connection;
     private String buttonString;    
-    public StatusTab(ConnectionHandler ch) throws BadLocationException{
+    public StatusTab(connectionHandler ch) throws BadLocationException{
         // TODO Do we really need to throw things around??
         super();
         connection = ch;

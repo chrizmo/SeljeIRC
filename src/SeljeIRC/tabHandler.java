@@ -6,10 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.List;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
 import jerklib.Channel;
@@ -25,7 +25,7 @@ public class tabHandler extends JTabbedPane {
     /*
      * indexing all tabs 
      */
-    private static ConnectionHandler connection;
+    private static connectionHandler connection;
     StatusTab statusTab;
     
     
@@ -34,11 +34,12 @@ public class tabHandler extends JTabbedPane {
    
     
      
-    public tabHandler(){
+    public tabHandler() throws BadLocationException{
         super();
         /* 
          * what im doing?
          */   
+        this.createStatusTab();
     }
     
     /**
@@ -54,7 +55,10 @@ public class tabHandler extends JTabbedPane {
     public void createStatusTab() throws BadLocationException{
         try{
         	statusTab = new StatusTab(connection);
-        this.addTab(I18N.get("channeltab.status"), null, statusTab,"Does nothing");
+        this.add(I18N.get("channeltab.status"), statusTab);
+        
+        
+        
         }catch(BadLocationException e){
         	System.err.println("System error: " + e.getMessage());
         }
@@ -75,18 +79,12 @@ public class tabHandler extends JTabbedPane {
         else
         	st = new SingleTab(connection,Channel,this,SingleTab.PRIVATE);
         
-        this.addTab(Channel, null,st,"Does nothing" );
-        
-        
         System.out.printf("newtab: "+Channel);
         
-        this.addTab(Channel,st);
+        this.add(Channel,st);
         int tabIndex = this.indexOfTab(Channel); 
             
         //debugging
-        
-        
-        
         
         
         System.out.printf("newtab: "+tabIndex);
@@ -94,8 +92,15 @@ public class tabHandler extends JTabbedPane {
         /*
          * adding closebutton
          */
-        //CloseTabButton ctb = new CloseTabButton(this,tabIndex);
+        ButtonTabComponent ctb = new ButtonTabComponent(this);
         
+        /*
+         * TODO: SET ACTIONLISTENER TO DISCONNECT
+         */
+        this.setTabComponentAt(tabIndex,ctb);
+        
+        
+        Object[] o = this.getComponents();
         
         
         /*
@@ -144,7 +149,7 @@ public class tabHandler extends JTabbedPane {
     	}
     }
     
-    public static void setConnection(ConnectionHandler ch){
+    public static void setConnection(connectionHandler ch){
         connection = ch;
     }
     
@@ -220,7 +225,8 @@ public class tabHandler extends JTabbedPane {
             
             o = this.pane.getComponents();
             
-            this.pane.setTabComponentAt(this.indexTab, this);
+            
+            this.pane.setComponentAt(this.indexTab, this);
             
             o = this.pane.getComponents();
             

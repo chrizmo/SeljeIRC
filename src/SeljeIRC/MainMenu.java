@@ -20,9 +20,9 @@ public class MainMenu extends JMenuBar {
 
     
     tabHandler channelTab;
-    ConnectionHandler connection;
+    connectionHandler connection;
 
-    public MainMenu(tabHandler tab, ConnectionHandler con) {
+    public MainMenu(tabHandler tab, connectionHandler con) {
         super();
         channelTab = tab;
         connection = con;

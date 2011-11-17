@@ -21,7 +21,7 @@ import jerklib.listeners.IRCEventListener;
  */
 
 
-public class ConnectionHandler implements IRCEventListener {
+public class connectionHandler implements IRCEventListener {
 	private ConnectionManager manager;
         
         private IRCEvent event = null;
@@ -30,13 +30,18 @@ public class ConnectionHandler implements IRCEventListener {
         
         
         
-        public ConnectionHandler(tabHandler ct){
+        public connectionHandler(tabHandler ct){
  
         	try{
         	channelTab = ct;
 
             channelTab.setConnection(this);
-            channelTab.createStatusTab();
+            
+            
+            //why? hallvard is asking
+            //channelTab.createStatusTab();
+            
+            
         	}catch(Exception e){
         		System.err.println("System error" + e.getMessage());
         	}

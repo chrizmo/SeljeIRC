@@ -34,14 +34,14 @@ public class SingleTab extends JPanel{
 	
     private String channel;
     private JTextArea screen;
-    private ConnectionHandler connection;
+    private connectionHandler connection;
     private tabHandler channelTab;
     private int index;
     private ListOfUsers listPanel;
     private int typeOfTab = 1;			// The type of this tab. Standard is channel
     
     
-    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType){
+    public SingleTab(connectionHandler con,String ch, tabHandler ct, int tabType){
         super();
         
         typeOfTab = tabType;			// Sets the type of tab

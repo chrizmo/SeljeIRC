@@ -19,9 +19,9 @@ public class InputField extends JPanel {
     private JTextField inputField;
     private String channel;
     private int tabType;
-    ConnectionHandler connection;
+    connectionHandler connection;
         
-    public InputField(ConnectionHandler con, String cha, int TabType){
+    public InputField(connectionHandler con, String cha, int TabType){
         super();
         channel = cha;
         connection = con;
