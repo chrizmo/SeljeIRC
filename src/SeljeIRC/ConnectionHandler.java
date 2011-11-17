@@ -37,10 +37,10 @@ public class ConnectionHandler implements IRCEventListener {
         public ConnectionHandler(tabHandler ct){
  
         	try{
-        	channelTab = ct;
+        		channelTab = ct;
 
-            channelTab.setConnection(this);
-            channelTab.createStatusTab();
+        		channelTab.setConnection(this);
+        		channelTab.createStatusTab();
         	}catch(Exception e){
         		System.err.println("System error" + e.getMessage());
         	}
@@ -259,12 +259,15 @@ public class ConnectionHandler implements IRCEventListener {
          */
         public void sayToChannel(String whatToSay,String channel) throws BadLocationException{
             
-            
-            event.getSession().sayChannel(whatToSay,event.getSession().getChannel(channel));
+            try{
+            	event.getSession().sayChannel(whatToSay,event.getSession().getChannel(channel));
             /*
              * just so you see what you write
              */
-            channelTab.updateTabScreen(channel, "<"+event.getSession().getNick()+"> " +whatToSay);
+            	channelTab.updateTabScreen(channel, "<"+event.getSession().getNick()+"> " +whatToSay);
+            }catch(BadLocationException ex){
+            	System.err.println("Error sending private message: " + ex.getMessage());
+            }
             
         }
         

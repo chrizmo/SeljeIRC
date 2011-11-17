@@ -103,10 +103,12 @@ public class tabHandler extends JTabbedPane {
          * connecting to channel
          */
         this.setSelectedIndex(tabIndex);
-        	
-        if(tabType == SingleTab.CHANNEL)
-            connection.joinChannel(Channel);
-    
+        try {	
+        	if(tabType == SingleTab.CHANNEL)
+        		connection.joinChannel(Channel);
+        }catch(BadLocationException e){
+        	System.err.println("System error" + e.getMessage());
+        }
 }
     public void updateTabScreen(String ch, String message) throws BadLocationException{
         
