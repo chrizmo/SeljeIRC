@@ -160,7 +160,7 @@ public class ConnectionHandler implements IRCEventListener {
                                 if (m.getMode() == 'o')                                                     // Someone got oped / deoped
                                     channelTab.op(m.getArgument(), m.getAction() == Action.PLUS, ch);
                                 if (m.getMode() == 'v')                                                     // Someone got voiced / devoiced
-                                    channelTab.voice(m.getArgument(), m.getAction() == Action.PLUS, ch);
+                                    channelTab.voice(m.getArgument(), m.getAction() == Action.PLUS, ch); 
                             }
                                
                         }

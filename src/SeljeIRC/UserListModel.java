@@ -54,7 +54,7 @@ public class UserListModel extends DefaultListModel {
             insert(tmp);                                    // Insert it on its new place
             fireContentsChanged(this, 0, size());
         }
-        else System.out.println("User not in list");
+        else System.out.println("User " + s + " not in list");
         
     }
     
@@ -73,7 +73,7 @@ public class UserListModel extends DefaultListModel {
             insert(tmp);
             fireContentsChanged(this, 0, size());
         }
-        else System.out.println("User not in list");
+        else System.out.println("User " + s + " not in list");
     }
     
     /**
