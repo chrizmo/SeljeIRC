@@ -249,9 +249,8 @@ public class ListOfUsers extends JPanel {
                     lm.voice((String)i.next(), true);                   // Voice those users
                 } 
             }
-            catch (Exception e)   {             // Some exception...
-                e.printStackTrace();
-                SwingUtilities.invokeLater(new Init());                 // Try againg later
+            catch (Exception e)   {             // Some exception..
+                SwingUtilities.invokeLater(this);                 // Try againg later
             }
         }
     }

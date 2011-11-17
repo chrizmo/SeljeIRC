@@ -49,12 +49,12 @@ public class UserListModel extends DefaultListModel {
     public void op(String s, boolean o)   {                 // Will allways be called after the complete userlist is initialized
         User tmp = getUser(s);                              // Fetch user with nickname s
         if (tmp != null)   {                                // User is in list
-            tmp.setOp(o);                                   // Set the op mode
+            tmp.setOp(o);                                   // Set the op mode7
             removeElement(tmp);                             // Delete it from list
             insert(tmp);                                    // Insert it on its new place
             fireContentsChanged(this, 0, size());
         }
-        else System.out.println("User not in list");
+        else System.out.println("User " + s + " not in list");
         
     }
     
@@ -73,7 +73,7 @@ public class UserListModel extends DefaultListModel {
             insert(tmp);
             fireContentsChanged(this, 0, size());
         }
-        else System.out.println("User not in list");
+        else System.out.println("User " + s + " not in list");
     }
     
     /**
@@ -180,7 +180,7 @@ public class UserListModel extends DefaultListModel {
                 return 1;
             if (voice && !u.voice)
                 return -1;
-            if (!voice && voice)
+            if (!voice && u.voice)
                 return 1;
             return nick.compareToIgnoreCase(u.nick);
         }

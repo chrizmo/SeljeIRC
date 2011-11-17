@@ -129,5 +129,13 @@ public class SingleTab extends JPanel{
     void userLeft(String n)   {
         listPanel.getListModel().removeUser(n);
     }
+    
+    void op(String n, boolean mode)   {
+        listPanel.getListModel().op(n, mode);
+    }
+    
+    void voice(String n, boolean mode)   {
+        listPanel.getListModel().voice(n, mode);
+    }
    
 }

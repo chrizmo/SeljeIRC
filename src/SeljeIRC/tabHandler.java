@@ -168,15 +168,28 @@ public class tabHandler extends JTabbedPane {
         st.updateUserList(c);
     }
 
-    void userJoined(String nick, String channelName, Channel channel) {
+    void userJoined(String nick, String channelName) {
         SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
         st.newUserJoined(nick);
     }
 
-    void userLeft(String nick, String channelName, Channel channel)   {
+    
+    void userLeft(String nick, String channelName)   {
         SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
         st.userLeft(nick);
     }
+    
+    void op(String nick, boolean mode, String channelName)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+        st.op(nick, mode);
+    }
+    
+    void voice(String nick, boolean mode, String channelName)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+        st.voice(nick, mode);
+    }
+    
+    
 
     
     
