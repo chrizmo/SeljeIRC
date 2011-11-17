@@ -19,6 +19,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import jerklib.Channel;
 
 /**
@@ -33,7 +37,7 @@ public class SingleTab extends JPanel{
 	
 	
     private String channel;
-    private JTextArea screen;
+    private JTextPane screen;
     private ConnectionHandler connection;
     private tabHandler channelTab;
     private int index;
@@ -67,13 +71,12 @@ public class SingleTab extends JPanel{
         /*
          * Textarea
          */
-        screen = new JTextArea();
+        screen = new JTextPane();
             screen.setEditable(false);
             
             screen.setBackground(Color.lightGray);
             
         JScrollPane textAreaScroller = new JScrollPane(screen);
-        
         add(textAreaScroller,BorderLayout.CENTER );
         
         /*
@@ -106,16 +109,30 @@ public class SingleTab extends JPanel{
         
         
     }
-    public void updateScreen(String update){
+    public void updateScreen(String update) throws BadLocationException{
+      // TODO This is ugly, but will be fixed when Colors is done
       DateFormat dateFormat = new SimpleDateFormat("HH:mm");
       Date date = new Date();
-      screen.append("\n"+dateFormat.format(date) +" " +update);
+
+      SimpleAttributeSet color = new SimpleAttributeSet();
+      StyleConstants.setFontFamily(color, "Courier New");
+      StyleConstants.setForeground(color, Color.black);
+      screen.getDocument().insertString(screen.getDocument().getLength(),
+                    "\n"+dateFormat.format(date) +" " +update, color);
+      screen.setCaretPosition(screen.getDocument().getLength());
     }
 
-    void updateScreen(List<String> update) {
+    void updateScreen(List<String> update) throws BadLocationException {
+      // TODO This is ugly, but will be fixed when Colors is done
       DateFormat dateFormat = new SimpleDateFormat("HH:mm");
       Date date = new Date();   
-      screen.append("\n"+dateFormat.format(date) +" " +update);
+
+      SimpleAttributeSet color = new SimpleAttributeSet();
+      StyleConstants.setFontFamily(color, "Courier New");
+      StyleConstants.setForeground(color, Color.black);
+      screen.getDocument().insertString(screen.getDocument().getLength(),
+                    "\n"+dateFormat.format(date) +" " +update, color);
+      screen.setCaretPosition(screen.getDocument().getLength());
 
     }
     void updateUserList(Channel c) {
