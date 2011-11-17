@@ -108,7 +108,7 @@ public class tabHandler extends JTabbedPane {
             connection.joinChannel(Channel);
     
 }
-    public void updateTabScreen(String ch, String message){
+    public void updateTabScreen(String ch, String message) throws BadLocationException{
         
         
         int tabIndex = this.indexOfTab(ch);
@@ -127,7 +127,7 @@ public class tabHandler extends JTabbedPane {
     /*
      * function overloaded
      */
-    void updateTabScreen(String ch, List<String> message) {
+    void updateTabScreen(String ch, List<String> message) throws BadLocationException {
         
         int tabIndex = this.indexOfTab(ch);
         System.out.printf("updatetab: "+tabIndex);
