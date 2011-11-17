@@ -4,6 +4,8 @@ package SeljeIRC;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
@@ -93,9 +95,58 @@ public class ListOfUsers extends JPanel {
         
         //Items for Control sub menu
         JMenuItem op = new JMenuItem("Op");
+        op.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+")) 
+                    chan.op(user.substring(1));
+                else
+                    chan.op(user);
+            }
+            
+        });
         JMenuItem deop = new JMenuItem("Deop");
+        deop.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+")) 
+                    chan.deop(user.substring(1));
+                else
+                    chan.deop(user);
+            }
+            
+        });
+        
         JMenuItem voice = new JMenuItem("Voice");
+        voice.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+")) 
+                    chan.voice(user.substring(1));
+                else
+                    chan.voice(user);
+            }
+            
+        });
         JMenuItem devoice = new JMenuItem("Devoice");
+        devoice.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+")) 
+                    chan.deVoice(user.substring(1));
+                else
+                    chan.deVoice(user);
+            }
+            
+        });
         JMenuItem kick = new JMenuItem(I18N.get("user.kick"));
         JMenuItem ban = new JMenuItem(I18N.get("user.ban"));
         JMenuItem kickban = new JMenuItem(I18N.get("user.kickban"));
