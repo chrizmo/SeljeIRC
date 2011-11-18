@@ -155,24 +155,11 @@ public class ListOfUsers extends JPanel {
             
         });
         JMenuItem kick = new JMenuItem(I18N.get("user.kick"));
-        kick.addActionListener(new ActionListener()   {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+"))   {   
-                    chan.kick(user.substring(1), user.substring(1));
-                    lm.removeUser(user.substring(1));
-                }
-                else   {
-                    chan.kick(user, user);
-                    lm.removeUser(user);
-                }
-            }
-            
-        });
+        kick.addActionListener(new KickListener());
+        JMenuItem kickWhy = new JMenuItem(I18N.get("user.kickwhy"));
+        kickWhy.addActionListener(new KickListener());
         JMenuItem ban = new JMenuItem(I18N.get("user.ban"));
-        JMenuItem kickban = new JMenuItem(I18N.get("user.kickban"));
+        JMenuItem kickBan = new JMenuItem(I18N.get("user.kickban"));
         
         //Items for CTCP sub menu
         JMenuItem ping = new JMenuItem("Ping");
@@ -183,8 +170,9 @@ public class ListOfUsers extends JPanel {
         control.add(voice);
         control.add(devoice);
         control.add(kick);
+        control.add(kickWhy);
         control.add(ban);
-        control.add(kickban);
+        control.add(kickBan);
         
         ctcp.add(ping);
         ctcp.add(version);
@@ -282,6 +270,29 @@ public class ListOfUsers extends JPanel {
         
     }
     
+    class KickListener implements ActionListener   {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            String user = list.getSelectedValue().toString();
+            String myNick = connection.getCurrentSession().getNick();
+            user = (user.startsWith("@") || user.startsWith("+")) ? user.substring(1) : user;  //Get raw username
+            if (ae.getActionCommand().equals(I18N.get("user.kickwhy")))   {
+                JOptionPane jop = new JOptionPane();
+                String why = jop.showInputDialog("Why do you kick?");   //TODO I18N
+                if (why == null) return;                                // No input, cancel
+                chan.kick(user, why);
+            }
+            else   {
+                chan.kick(user, user);
+            }
+            if (lm.isOp(myNick))
+                lm.removeUser(user);
+        }
+    }
+        
+
+    
     /**
      * Fetches the user list from given channel.
      * The fetching of users needs to be a thread, because otherwise it will lock the GUI when trying to fetch
@@ -313,10 +324,11 @@ public class ListOfUsers extends JPanel {
                 i = chan.getNicksForMode(Action.PLUS, 'v').iterator();  // Get voices
                 while (i.hasNext())   {                                 // More voices
                     lm.voice((String)i.next(), true);                   // Voice those users
-                } 
+                }
             }
             catch (Exception e)   {             // Some exception..
-                SwingUtilities.invokeLater(this);                 // Try againg later
+                System.out.println("Not able to fetch users yet");
+                SwingUtilities.invokeLater(new Init());                 // Try againg later
             }
         }
     }

@@ -132,6 +132,15 @@ public class UserListModel extends DefaultListModel {
         fireContentsChanged(this, 0, size());
     }
 
+    public void update() {
+        fireContentsChanged(this, 0, size());
+    }
+
+    public boolean isOp(String myNick) {
+        if (getUser(myNick).op) return true;
+        else return false;
+    }
+
     /**
      * Inner class. Defines a User within the channel
      * @author Lars Erik Pedersen

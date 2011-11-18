@@ -158,5 +158,9 @@ public class SingleTab extends JPanel{
     void changeNick(String oldNick, String newNick)   {
         listPanel.getListModel().changeNick(oldNick, newNick);
     }
+
+    void userKicked(String who) {
+        listPanel.getListModel().removeUser(who);
+    }
    
 }

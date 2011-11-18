@@ -3,6 +3,7 @@ package SeljeIRC;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -106,7 +107,7 @@ public class MainMenu extends JMenuBar {
         settings.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent nils) {
-                JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);
+                 JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);
             }
         });
 
