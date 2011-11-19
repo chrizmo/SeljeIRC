@@ -94,7 +94,21 @@ public class ListOfUsers extends JPanel {
         
         //Main menu items
         JMenuItem whois = new JMenuItem(I18N.get("user.whois"));
+        whois.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                connection.getCurrentSession().whois(getSelectedUser());
+            }
+        });
         JMenuItem query = new JMenuItem(I18N.get("user.query"));
+        query.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openPrivateChat(getSelectedUser());
+            }
+        });
         JMenu control = new JMenu(I18N.get("user.control"));
         JMenu ctcp = new JMenu("CTCP");
         //JMenu dcc = new JMenu("DCC");
@@ -106,11 +120,7 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+")) 
-                    chan.op(user.substring(1));
-                else
-                    chan.op(user);
+                chan.op(getSelectedUser());
             }
             
         });
@@ -119,11 +129,7 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+")) 
-                    chan.deop(user.substring(1));
-                else
-                    chan.deop(user);
+                chan.deop(getSelectedUser());
             }
             
         });
@@ -133,11 +139,7 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+")) 
-                    chan.voice(user.substring(1));
-                else
-                    chan.voice(user);
+                chan.voice(getSelectedUser());
             }
             
         });
@@ -146,11 +148,7 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+")) 
-                    chan.deVoice(user.substring(1));
-                else
-                    chan.deVoice(user);
+                chan.deVoice(getSelectedUser());
             }
             
         });
@@ -213,6 +211,12 @@ public class ListOfUsers extends JPanel {
     
     public UserListModel getListModel()   {
         return lm;
+    }
+    
+    private String getSelectedUser()   {
+        String user = (String)list.getSelectedValue().toString();
+        user = (user.startsWith("@") || user.startsWith("+")) ? user.substring(1) : user;
+        return user;
     }
     
     /**
@@ -279,9 +283,8 @@ public class ListOfUsers extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            String user = list.getSelectedValue().toString();
+            String user = getSelectedUser();
             String myNick = connection.getCurrentSession().getNick();
-            user = (user.startsWith("@") || user.startsWith("+")) ? user.substring(1) : user;  //Get raw username
             if (ae.getActionCommand().equals(I18N.get("user.kickwhy")))   {
                 JOptionPane jop = new JOptionPane();
                 String why = jop.showInputDialog("Why do you kick?");   //TODO I18N
@@ -300,8 +303,7 @@ public class ListOfUsers extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            String user = list.getSelectedValue().toString();
-            user = (user.startsWith("@") || user.startsWith("+")) ? user.substring(1) : user;
+            String user = getSelectedUser();
             if (ae.getActionCommand().equals(I18N.get("user.version")))
                 connection.getCurrentSession().ctcp(user, "VERSION");
             else if (ae.getActionCommand().equals("Ping"))

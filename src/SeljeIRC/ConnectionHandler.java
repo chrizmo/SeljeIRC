@@ -226,6 +226,11 @@ public class ConnectionHandler implements IRCEventListener {
                         ce.getSession().notice(ce.getNick(), "\001"+"TIME "+df.format(date)+"\001");
                     }
                 }
+                
+                /*else if(e.getType() == Type.WHOIS_EVENT)   {
+                    WhoisEvent we = (WhoisEvent) e;
+                    // TODO format this shit
+                }*/
 
                 else    
 		{       // Prints data received from server
