@@ -25,7 +25,7 @@ public class SeljeIRC extends JFrame{
         static InputField inputField;  //Standard Input field for each tab
         BorderLayout totalLayout; //TotalLayouts
         
-        static connectionHandler connection;
+        static ConnectionHandler connection;
         
         boolean isConnected;
 
@@ -36,7 +36,7 @@ public class SeljeIRC extends JFrame{
              */
             
             channelTabs = new tabHandler();
-            connection = new connectionHandler(channelTabs);
+            connection = new ConnectionHandler(channelTabs);
             
             /*
              * Layout of main contentPane
@@ -92,7 +92,7 @@ public class SeljeIRC extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
     }
-        public static connectionHandler returnConnection(){
+        public static ConnectionHandler returnConnection(){
             return connection;
         }
 

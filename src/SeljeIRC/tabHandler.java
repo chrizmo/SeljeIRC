@@ -25,7 +25,7 @@ public class tabHandler extends JTabbedPane {
     /*
      * indexing all tabs 
      */
-    private static connectionHandler connection;
+    private static ConnectionHandler connection;
     StatusTab statusTab;
     
     
@@ -39,6 +39,12 @@ public class tabHandler extends JTabbedPane {
         /* 
          * what im doing?
          */   
+        
+        
+//        ButtonTabComponent ctb = new ButtonTabComponent(this,connection);
+      
+        
+        
         this.createStatusTab();
     }
     
@@ -55,11 +61,80 @@ public class tabHandler extends JTabbedPane {
     public void createStatusTab() throws BadLocationException{
         try{
         	statusTab = new StatusTab(connection);
-        this.add(I18N.get("channeltab.status"), statusTab);
+                
+ //Object o = this.getComponents();               
+                
+        this.addTab(I18N.get("channeltab.status"), statusTab);
+// o = this.getComponents();       
+        ButtonTabComponent ctb = new ButtonTabComponent(this,connection);
+        this.setTabComponentAt(0,ctb);
+ //o = this.getComponents();       
+        this.remove(0);
+ //o = this.getComponents();       
+        this.addTab(I18N.get("channeltab.status"), statusTab);
+     
         
+        /*
+  o = this.getComponents();
+  
+  this.addTab("a",new JTextArea("aaa"));
+    ButtonTabComponent aa = new ButtonTabComponent(this,connection);
+    
+        int a = this.indexOfTab("a");
+    
+        this.setTabComponentAt(a,aa);
+  this.addTab("b",new JTextArea("bbb"));
+  
+  ButtonTabComponent bb = new ButtonTabComponent(this,connection);
+    int b = this.indexOfTab("b");
+    this.setTabComponentAt(b,bb);
+  
+   o = this.getComponents();
+   
+   
+ 
+   
+ 
+ 
+for(int i = 1;i< this.getTabCount();i++){  
+   
+   JTextArea tmp = (JTextArea) this.getComponent(i+1);
+   System.out.print(tmp.getText());
+}
+ 
+ this.remove(b);
+ 
+ 
+ for(int i = 1;i<this.getTabCount();i++){  
+   
+   JTextArea tmp = (JTextArea) this.getComponent(i+1);
+   System.out.print(tmp.getText());
+}
+ 
+ o = this.getComponents();
+ 
+ this.addTab("c",new JTextArea("ccc"));
+ this.addTab("b",new JTextArea("bbb"));
+ 
+ int c = this.indexOfTab("c");
+ b = this.indexOfTab("b");
+ 
+ for(int i = 1;i<this.getTabCount();i++){  
+   
+   JTextArea tmp = (JTextArea) this.getComponent(i+1);
+   System.out.print(tmp.getText());
+}
+ 
+ o = this.getComponents();
+ 
+ 
+ 
+ this.remove(b);
+ 
+    * */
+ System.out.print("done");
         
-        
-        }catch(BadLocationException e){
+        }catch(Exception e){
         	System.err.println("System error: " + e.getMessage());
         }
     }
@@ -74,69 +149,62 @@ public class tabHandler extends JTabbedPane {
         /*
          * adding tab
          */
+        
         if(tabType == SingleTab.CHANNEL)
         	st = new SingleTab(connection,Channel,this,SingleTab.CHANNEL);
         else
         	st = new SingleTab(connection,Channel,this,SingleTab.PRIVATE);
         
-        System.out.printf("newtab: "+Channel);
+        Object o = this.getComponents();
         
-        this.add(Channel,st);
+        this.addTab(Channel,st);
         int tabIndex = this.indexOfTab(Channel); 
-            
-        //debugging
-        
-        
-        System.out.printf("newtab: "+tabIndex);
-        
         /*
          * adding closebutton
          */
-        ButtonTabComponent ctb = new ButtonTabComponent(this);
+        ButtonTabComponent ctb = new ButtonTabComponent(this,connection);
         
         /*
          * TODO: SET ACTIONLISTENER TO DISCONNECT
-         */
+         */ 
+            //checking whats in the jtabbedpane
+  
         this.setTabComponentAt(tabIndex,ctb);
-        
-        
-        Object[] o = this.getComponents();
-        
-        
+            //checking whats in the jtabbedpane
+        o = this.getComponents();
         /*
          * setting focus on new tab
          * connecting to channel
          */
         this.setSelectedIndex(tabIndex);
-        	
-        if(tabType == SingleTab.CHANNEL)
-            connection.joinChannel(Channel);
-    
+        try {	
+        	if(tabType == SingleTab.CHANNEL)
+        		connection.joinChannel(Channel);
+        }catch(Exception e){
+        	System.err.println("System error" + e.getMessage());
+        }
+        
+        o = this.getComponents();
+        
+        
+        
 }
-    public void updateTabScreen(String ch, String message){
+    public void updateTabScreen(String ch, String message) throws BadLocationException{
         
-        
-        int tabIndex = this.indexOfTab(ch);
-        
-        System.out.printf("updateing: "+tabIndex);
+       SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch)+1);
        
-        Object[] o = this.getComponents();
-            SingleTab st = (SingleTab) this.getComponent(tabIndex);
-        
             st.updateScreen(message);
        
-       
-        
-        
     }
+   
     /*
      * function overloaded
      */
-    void updateTabScreen(String ch, List<String> message) {
+    void updateTabScreen(String ch, List<String> message) throws BadLocationException {
         
         int tabIndex = this.indexOfTab(ch);
         System.out.printf("updatetab: "+tabIndex);
-        SingleTab st = (SingleTab) this.getComponent(tabIndex);
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch)+1);
         st.updateScreen(message);
 
     }
@@ -149,7 +217,7 @@ public class tabHandler extends JTabbedPane {
     	}
     }
     
-    public static void setConnection(connectionHandler ch){
+    public static void setConnection(ConnectionHandler ch){
         connection = ch;
     }
     
@@ -169,76 +237,33 @@ public class tabHandler extends JTabbedPane {
     }
     
     public void fetchUsers(String ch, Channel c)   {
-        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch));
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch)+1);
         st.updateUserList(c);
     }
 
-    void userJoined(String nick, String channelName) {
-        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+    void userJoined(String nick, String ch) {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch)+1);
         st.newUserJoined(nick);
     }
 
     
-    void userLeft(String nick, String channelName)   {
-        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+    void userLeft(String nick, String ch)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch)+1);
         st.userLeft(nick);
     }
     
-    void op(String nick, boolean mode, String channelName)   {
-        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+    void op(String nick, boolean mode, String ch)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch)+1);
         st.op(nick, mode);
     }
     
-    void voice(String nick, boolean mode, String channelName)   {
-        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+    void voice(String nick, boolean mode, String ch)   {
+       SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch)+1);
         st.voice(nick, mode);
     }
     
-    
-
-    
-    
-    
-    class CloseTabButton extends JPanel implements ActionListener {
-          private JTabbedPane pane;
-          private int indexTab;
-          
-          public CloseTabButton(JTabbedPane pane, int index) {
-            this.pane = pane;
-            this.indexTab = index;
-            
-            
-            
-            Object[] o = this.pane.getComponents();
-            
-            
-            setOpaque(false);
-            add(new JLabel(pane.getTitleAt(index),pane.getIconAt(index),JLabel.LEFT));
-            
-            //Icon closeIcon = new CloseIcon();
-            JButton btClose = new JButton("x");
-            btClose.setPreferredSize(new Dimension(10,10));
-                add(btClose);
-            btClose.addActionListener(this);
-            
-            System.out.printf("newtab: "+this.indexTab);
-            
-            o = this.pane.getComponents();
-            
-            
-            this.pane.setComponentAt(this.indexTab, this);
-            
-            o = this.pane.getComponents();
-            
-          }
-          public void actionPerformed(ActionEvent e) {
-            
-            
-            if (indexTab != -1) {
-                connection.disconnectFromChannel(this.pane.getTitleAt(indexTab));
-                this.pane.remove(indexTab);
-              
-            }
-          }
+    void changedNick(String oldNick, String newNick, String ch)   {
+       SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(ch)+1);
+        st.changeNick(oldNick, newNick);
     }
 }

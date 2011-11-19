@@ -12,11 +12,13 @@ import java.awt.event.*;
  * a JButton to close the tab it belongs to 
  */
 public class ButtonTabComponent extends JPanel {
-    private final JTabbedPane pane;
+    private final tabHandler pane;
+    private ConnectionHandler connection;
  
-    public ButtonTabComponent(final JTabbedPane pane) {
+    public ButtonTabComponent(final tabHandler pane, ConnectionHandler con) {
         //unset default FlowLayout' gaps
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        connection = con;
         if (pane == null) {
             throw new NullPointerException("TabbedPane is null");
         }
@@ -68,7 +70,12 @@ public class ButtonTabComponent extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int i = pane.indexOfTabComponent(ButtonTabComponent.this);
             if (i != -1) {
+                
+                String channel = pane.getTitleAt(i);
+                //TODO check type!
+                connection.disconnectFromChannel(channel);
                 pane.remove(i);
+                
             }
         }
  

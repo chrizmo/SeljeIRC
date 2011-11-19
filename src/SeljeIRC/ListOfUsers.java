@@ -4,9 +4,16 @@ package SeljeIRC;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JMenu;
@@ -20,6 +27,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.text.BadLocationException;
 import jerklib.Channel;
 import jerklib.events.modes.ModeAdjustment.Action;
 
@@ -34,9 +42,10 @@ public class ListOfUsers extends JPanel {
     JList list;
     Channel chan;
     JPopupMenu popup;
-    connectionHandler connection = SeljeIRC.connection;
+    ConnectionHandler connection = SeljeIRC.connection;
     tabHandler tabObject = SeljeIRC.channelTabs;
     
+    private Pattern userModePattern = Pattern.compile("^[@|\\+]");		// The regex pattern used to find op and voice
     
     public ListOfUsers(){
         lm = new UserListModel();
@@ -93,10 +102,75 @@ public class ListOfUsers extends JPanel {
         
         //Items for Control sub menu
         JMenuItem op = new JMenuItem("Op");
+        op.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+")) 
+                    chan.op(user.substring(1));
+                else
+                    chan.op(user);
+            }
+            
+        });
         JMenuItem deop = new JMenuItem("Deop");
+        deop.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+")) 
+                    chan.deop(user.substring(1));
+                else
+                    chan.deop(user);
+            }
+            
+        });
+        
         JMenuItem voice = new JMenuItem("Voice");
+        voice.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+")) 
+                    chan.voice(user.substring(1));
+                else
+                    chan.voice(user);
+            }
+            
+        });
         JMenuItem devoice = new JMenuItem("Devoice");
+        devoice.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+")) 
+                    chan.deVoice(user.substring(1));
+                else
+                    chan.deVoice(user);
+            }
+            
+        });
         JMenuItem kick = new JMenuItem(I18N.get("user.kick"));
+        kick.addActionListener(new ActionListener()   {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String user = list.getSelectedValue().toString();
+                if (user.startsWith("@") || user.startsWith("+"))   {   
+                    chan.kick(user.substring(1), user.substring(1));
+                    lm.removeUser(user.substring(1));
+                }
+                else   {
+                    chan.kick(user, user);
+                    lm.removeUser(user);
+                }
+            }
+            
+        });
         JMenuItem ban = new JMenuItem(I18N.get("user.ban"));
         JMenuItem kickban = new JMenuItem(I18N.get("user.kickban"));
         
@@ -123,8 +197,7 @@ public class ListOfUsers extends JPanel {
         //popup.add(dcc);
         popup.addSeparator();
         popup.add(slap);
-        list.addMouseListener(new PopupListener());
-        list.addMouseListener(new DoubleClickListener());
+        list.addMouseListener(new MouseEventListener());
     }
     /**
      * Opens a private chat window with a user
@@ -135,7 +208,12 @@ public class ListOfUsers extends JPanel {
      */
     private void openPrivateChat(String userName){
        if(connection.connectedToServer()){
-        	tabObject.createNewTab(userName,SingleTab.PRIVATE);
+    	   Matcher userModeMatcher = userModePattern.matcher(userName);		// Used for regex evaluation
+    	   if(userModeMatcher.find())										// Checks for op or voice in username
+    		   userName = userName.substring(1);							// Removes the symbol in front of username
+    	   
+    	   
+    	   tabObject.createNewTab(userName,SingleTab.PRIVATE);				// Create tab for PM
         }else
         	tabObject.updateStatusScreen("Can't join when not connected"); //TODO: Legg til translation
     }
@@ -156,27 +234,12 @@ public class ListOfUsers extends JPanel {
     }
     
     /**
-     * Listens for double click to invoce private chat
-     * @author Christer Vaskinn
-     * @since 0.1
-     */
-    private class DoubleClickListener extends MouseAdapter{
-    	
-    	
-    	public void mousePressed(MouseEvent evt){
-           	if(evt.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker p� er seg selv (CHRISTER)
-        		openPrivateChat(list.getSelectedValue().toString());
-
-    	}
-    }
-    
-    /**
      * Inner class. Listens for mouse events in the user list
      * @author Lars Erik Pedersen
      * @version 0.1
      * @since 0.1
      */
-    class PopupListener extends MouseAdapter   {
+    class MouseEventListener extends MouseAdapter   {
         
         /**
         * Listens for mouse pressed
@@ -186,7 +249,10 @@ public class ListOfUsers extends JPanel {
         */
         @Override
         public void mousePressed(MouseEvent me)   {
-        		Popup(me);
+           	if(me.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker p� er seg selv (CHRISTER)
+        		openPrivateChat(list.getSelectedValue().toString());
+           	else	
+           		Popup(me);
         }
         
         /**

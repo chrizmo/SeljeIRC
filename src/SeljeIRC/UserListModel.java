@@ -49,12 +49,21 @@ public class UserListModel extends DefaultListModel {
     public void op(String s, boolean o)   {                 // Will allways be called after the complete userlist is initialized
         User tmp = getUser(s);                              // Fetch user with nickname s
         if (tmp != null)   {                                // User is in list
-            tmp.setOp(o);                                   // Set the op mode
-            removeElement(tmp);                             // Delete it from list
-            insert(tmp);                                    // Insert it on its new place
+            if (tmp.voice && o)   {
+                tmp.setVoice(false);                            // DIRTY, Temporarly remove voice, to avoid sorting error
+                tmp.setOp(o);                                   // Set the op mode
+                removeElement(tmp);                             // Delete it from list
+                insert(tmp);                                    // Insert it on its new place
+                tmp.setVoice(true);                             // DIRTY, Give him the voice back...
+            }
+            else   {
+                tmp.setOp(o);
+                removeElement(tmp);
+                insert(tmp);
+            }
             fireContentsChanged(this, 0, size());
         }
-        else System.out.println("User not in list");
+        else System.out.println("User " + s + " not in list");
         
     }
     
@@ -68,12 +77,16 @@ public class UserListModel extends DefaultListModel {
     public void voice(String s, boolean v)   {              // As above
         User tmp = getUser(s);
         if (tmp != null)   {
+            if (tmp.op)   {             // Shall not rearrange list, if a op gets voice
+                tmp.setVoice(v);
+                return;
+            }
             tmp.setVoice(v);
             removeElement(tmp);
             insert(tmp);
             fireContentsChanged(this, 0, size());
         }
-        else System.out.println("User not in list");
+        else System.out.println("User " + s + " not in list");
     }
     
     /**
@@ -107,6 +120,16 @@ public class UserListModel extends DefaultListModel {
         int i = indexOf(tmp);                       // Gets the index of that user
         if (i != -1 ) return (User)elementAt(i);    // The user is in the list
         else return null;                           // The user is not in the list
+    }
+
+    public void changeNick(String oldNick, String newNick) {
+        User tmp = getUser(oldNick);
+        removeUser(oldNick);
+        tmp.nick = newNick;
+        insert(tmp);
+        if (tmp.op) op(newNick, true);
+        else if (tmp.voice) voice(newNick, true);
+        fireContentsChanged(this, 0, size());
     }
 
     /**

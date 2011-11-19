@@ -27,9 +27,9 @@ import javax.swing.text.StyleConstants;
 public class StatusTab extends JPanel{
     
     private JTextPane screen;
-    public connectionHandler connection;
+    public ConnectionHandler connection;
     private String buttonString;    
-    public StatusTab(connectionHandler ch) throws BadLocationException{
+    public StatusTab(ConnectionHandler ch) throws BadLocationException{
         // TODO Do we really need to throw things around??
         super();
         connection = ch;
@@ -56,9 +56,11 @@ public class StatusTab extends JPanel{
          */
          // TODO set up public object of this that can be reached
          // TODO Line 62-64 could probably be moved out of this function... But I'm tired... And lazy.
+        // TODO Remove line 62-64 and get standard color from Colors.java
             screen = new JTextPane();
             screen.setEditable(false);
             screen.setBackground(Color.lightGray);
+            // TODO This is ugly, but will be fixed when Colors is done:
             SimpleAttributeSet color = new SimpleAttributeSet();
             StyleConstants.setFontFamily(color, "Courier New");
             StyleConstants.setForeground(color, Color.black);
@@ -91,6 +93,7 @@ public class StatusTab extends JPanel{
       // TODO Sort out how to accept the color as a parameter
       // TODO Overload function som nick is in one color, message itself in another
       // Some stuff to define the colors
+      // TODO This is ugly, but will be fixed when Colors is done:
       SimpleAttributeSet textColor = new SimpleAttributeSet();
       StyleConstants.setFontFamily(textColor, "Courier New");
       StyleConstants.setForeground(textColor, Color.BLUE);
