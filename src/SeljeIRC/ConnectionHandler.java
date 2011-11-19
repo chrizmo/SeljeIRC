@@ -227,13 +227,19 @@ public class ConnectionHandler implements IRCEventListener {
                     }
                 }
                 
-                /*else if(e.getType() == Type.WHOIS_EVENT)   {
+                else if(e.getType() == Type.WHOIS_EVENT)   {
                     WhoisEvent we = (WhoisEvent) e;
-                    // TODO format this shit
-                }*/
+                    channelTab.updateStatusScreen("-!- " + we.getUser() + " [" + we.getHost() + "]");
+                    channelTab.updateStatusScreen("-!-  ircname   : " + we.getRealName());
+                    channelTab.updateStatusScreen("-!-  channels  : " + we.getChannelNames());
+                    channelTab.updateStatusScreen("-!-  server    : " + we.whoisServer() + " [" + we.whoisServerInfo() + "]");
+                    channelTab.updateStatusScreen("-!- End of WHOIS");
+                }
 
                 else    
 		{       // Prints data received from server
+                        System.out.print(e.getRawEventData());
+                        if(!e.getRawEventData().matches(".*(311|319|312|320|317|318).*")) //Do not print whois events marked as DEFAULT
                         channelTab.updateStatusScreen(e.getType() + " " + e.getRawEventData());
 		}
             
