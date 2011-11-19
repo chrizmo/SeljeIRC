@@ -3,7 +3,6 @@ package SeljeIRC;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -41,7 +40,7 @@ public class MainMenu extends JMenuBar {
         JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
         file.add(newChannel);
 
-        JMenuItem exitProgram = new JMenuItem("till dont work");
+        JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"));
         file.add(exitProgram);
 
         //--------------Action listeners-----------------------------
@@ -99,15 +98,22 @@ public class MainMenu extends JMenuBar {
     public void createEditMenu() {
 
 
-        JMenuItem settings = new JMenuItem("still dont work");
+        JMenuItem settings = new JMenuItem("Settings");
+        JMenuItem colors = new JMenuItem("Colors");
         edit.add(settings);
+        edit.add(colors);
 
         //--------------Action listeners-----------------------------
 
         settings.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent nils) {
                  JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+
+        colors.addActionListener(new ActionListener() {
+            public void actionPerformed (ActionEvent letsMakeSomeColors) {
+                Colors.colorWindow();
             }
         });
 
