@@ -1,6 +1,9 @@
 package SeljeIRC;
  
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -208,6 +211,21 @@ public class ConnectionHandler implements IRCEventListener {
                     }
                 }
                 
+                else if (e.getType() == Type.CTCP_EVENT)   {
+                    CtcpEvent ce = (CtcpEvent) e;
+                    if(ce.getCtcpString().equals("VERSION"))   {
+                        ce.getSession().notice(ce.getNick(), "\001"+"VERSION SeljeIRC v0.1"+"\001");
+                    }
+                    else if(ce.getCtcpString().contains("PING"))   {
+                        System.out.println(ce.getCtcpString());
+                        ce.getSession().notice(ce.getNick(), "\001"+ce.getCtcpString()+"\001");
+                    }
+                    else if(ce.getCtcpString().contains("TIME"))   {
+                        DateFormat df = new SimpleDateFormat("EEE d MMM yyyy HH:mm:ss Z");
+                        Date date = new Date();
+                        ce.getSession().notice(ce.getNick(), "\001"+"TIME "+df.format(date)+"\001");
+                    }
+                }
 
                 else    
 		{       // Prints data received from server

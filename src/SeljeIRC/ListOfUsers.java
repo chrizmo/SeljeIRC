@@ -163,7 +163,11 @@ public class ListOfUsers extends JPanel {
         
         //Items for CTCP sub menu
         JMenuItem ping = new JMenuItem("Ping");
+        ping.addActionListener(new CtcpListener());
         JMenuItem version = new JMenuItem(I18N.get("user.version"));
+        version.addActionListener(new CtcpListener());
+        JMenuItem time = new JMenuItem(I18N.get("user.time"));
+        time.addActionListener(new CtcpListener());
         
         control.add(op);
         control.add(deop);
@@ -176,6 +180,7 @@ public class ListOfUsers extends JPanel {
         
         ctcp.add(ping);
         ctcp.add(version);
+        ctcp.add(time);
         
         popup.add(whois);
         popup.add(query);
@@ -289,6 +294,22 @@ public class ListOfUsers extends JPanel {
             if (lm.isOp(myNick))
                 lm.removeUser(user);
         }
+    }
+    
+    class CtcpListener implements ActionListener   {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            String user = list.getSelectedValue().toString();
+            user = (user.startsWith("@") || user.startsWith("+")) ? user.substring(1) : user;
+            if (ae.getActionCommand().equals(I18N.get("user.version")))
+                connection.getCurrentSession().ctcp(user, "VERSION");
+            else if (ae.getActionCommand().equals("Ping"))
+                connection.getCurrentSession().ctcp(user, "PING");
+            else if (ae.getActionCommand().equals(I18N.get("user.time")))
+                connection.getCurrentSession().ctcp(user, "TIME");
+        }
+        
     }
         
 
