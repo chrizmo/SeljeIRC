@@ -22,7 +22,7 @@ public class WhoisParser implements CommandParser
 				we = new WhoisEventImpl
 				(		
 					token.arg(0),
-					token.arg(4),
+					token.arg(5),
 					token.arg(1),
 					token.arg(2),
 					token.data(), 

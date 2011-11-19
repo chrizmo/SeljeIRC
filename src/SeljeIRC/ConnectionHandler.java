@@ -1,6 +1,9 @@
 package SeljeIRC;
  
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -128,24 +131,27 @@ public class ConnectionHandler implements IRCEventListener {
                 	//channelTab.updateStatusScreen("NickInUseBuddy");
                     //channelTab.updateStatusScreen(update);
                     NickChangeEvent nce = (NickChangeEvent) e;
-                    String ch = e.getSession().getChannels().iterator().next().getName();  //TODO Fix if user is in more channels!
-                    channelTab.changedNick(nce.getOldNick(), nce.getNewNick(), ch);
-                    try {
-                        channelTab.updateTabScreen(ch, nce.getOldNick() + " is known as " + nce.getNewNick()); //TODO I18N
-                    } catch (BadLocationException ex) {
-                      }
+                    Iterator<Channel> i = e.getSession().getChannels().iterator();
+                    String ch;
+                    while (i.hasNext())   {                                // If the user that changed nick is in several channels
+                        ch = i.next().getName();
+                        channelTab.changedNick(nce.getOldNick(), nce.getNewNick(), ch);
+                        try {
+                            channelTab.updateTabScreen(ch, "-!- " + nce.getOldNick() + " is known as " + nce.getNewNick()); //TODO I18N
+                        } catch (BadLocationException ex) {
+                          }
+                    }
                 }
+                
                 else if(e.getType() == Type.JOIN_COMPLETE){
                     // Print topic for channel:
                     JoinCompleteEvent jce = (JoinCompleteEvent) e;
                     String ch = jce.getChannel().getName();
                     String message = ("-!- Topic for " +ch +": "+jce.getChannel().getTopic());
-            try {
-                channelTab.updateTabScreen(ch, message);
-            } catch (BadLocationException ex) {
-                Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                    channelTab.fetchUsers(ch, e.getSession().getChannel(ch));
+                    try {
+                        channelTab.updateTabScreen(ch, message);
+                    } catch (BadLocationException ex) {
+                    }
 
                 }
                 else if(e.getType() == Type.NICK_LIST_EVENT){
@@ -153,12 +159,13 @@ public class ConnectionHandler implements IRCEventListener {
                     NickListEvent nle = (NickListEvent) e;
                     String ch = nle.getChannel().getName();
                     List<String> message = nle.getNicks();
-            try {
-                channelTab.updateTabScreen(ch, "-!- Users: " + message);
-            } catch (BadLocationException ex) {
-                Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+                    channelTab.fetchUsers(ch, e.getSession().getChannel(ch));
+                    try {
+                        channelTab.updateTabScreen(ch, "-!- Users: " + message);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                
                 }
                 
                 else if (e.getType() == Type.JOIN)   {
@@ -204,15 +211,40 @@ public class ConnectionHandler implements IRCEventListener {
                                     channelTab.voice(m.getArgument(), m.getAction() == Action.PLUS, ch); 
                             }
                                
-                        }
-                            
+                        }                            
                     }
+                }
+                
+                else if (e.getType() == Type.CTCP_EVENT)   {
+                    CtcpEvent ce = (CtcpEvent) e;
+                    if(ce.getCtcpString().equals("VERSION"))   {
+                        ce.getSession().notice(ce.getNick(), "\001"+"VERSION SeljeIRC v0.1"+"\001");
+                    }
+                    else if(ce.getCtcpString().contains("PING"))   {
+                        System.out.println(ce.getCtcpString());
+                        ce.getSession().notice(ce.getNick(), "\001"+ce.getCtcpString()+"\001");
+                    }
+                    else if(ce.getCtcpString().contains("TIME"))   {
+                        DateFormat df = new SimpleDateFormat("EEE d MMM yyyy HH:mm:ss Z");
+                        Date date = new Date();
+                        ce.getSession().notice(ce.getNick(), "\001"+"TIME "+df.format(date)+"\001");
+                    }
+                }
+                
+                else if(e.getType() == Type.WHOIS_EVENT)   {
+                    WhoisEvent we = (WhoisEvent) e;
+                    channelTab.updateStatusScreen("-!- " + we.getUser() + " [" + we.getHost() + "]");
+                    channelTab.updateStatusScreen("-!-  ircname   : " + we.getRealName());
+                    channelTab.updateStatusScreen("-!-  channels  : " + we.getChannelNames());
+                    channelTab.updateStatusScreen("-!-  server    : " + we.whoisServer() + " [" + we.whoisServerInfo() + "]");
+                    channelTab.updateStatusScreen("-!- End of WHOIS");
                 }
 
                 else    
 		{       // Prints data received from server
+                        System.out.print(e.getRawEventData());
+                        if(!e.getRawEventData().matches(".*(311|319|312|320|317|318).*")) //Do not print whois events marked as DEFAULT
                         channelTab.updateStatusScreen(e.getType() + " " + e.getRawEventData());
-			
 		}
             
         }

@@ -94,7 +94,21 @@ public class ListOfUsers extends JPanel {
         
         //Main menu items
         JMenuItem whois = new JMenuItem(I18N.get("user.whois"));
+        whois.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                connection.getCurrentSession().whois(getSelectedUser());
+            }
+        });
         JMenuItem query = new JMenuItem(I18N.get("user.query"));
+        query.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                openPrivateChat(getSelectedUser());
+            }
+        });
         JMenu control = new JMenu(I18N.get("user.control"));
         JMenu ctcp = new JMenu("CTCP");
         //JMenu dcc = new JMenu("DCC");
@@ -106,11 +120,7 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+")) 
-                    chan.op(user.substring(1));
-                else
-                    chan.op(user);
+                chan.op(getSelectedUser());
             }
             
         });
@@ -119,11 +129,7 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+")) 
-                    chan.deop(user.substring(1));
-                else
-                    chan.deop(user);
+                chan.deop(getSelectedUser());
             }
             
         });
@@ -133,11 +139,7 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+")) 
-                    chan.voice(user.substring(1));
-                else
-                    chan.voice(user);
+                chan.voice(getSelectedUser());
             }
             
         });
@@ -146,48 +148,37 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+")) 
-                    chan.deVoice(user.substring(1));
-                else
-                    chan.deVoice(user);
+                chan.deVoice(getSelectedUser());
             }
             
         });
         JMenuItem kick = new JMenuItem(I18N.get("user.kick"));
-        kick.addActionListener(new ActionListener()   {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                String user = list.getSelectedValue().toString();
-                if (user.startsWith("@") || user.startsWith("+"))   {   
-                    chan.kick(user.substring(1), user.substring(1));
-                    lm.removeUser(user.substring(1));
-                }
-                else   {
-                    chan.kick(user, user);
-                    lm.removeUser(user);
-                }
-            }
-            
-        });
+        kick.addActionListener(new KickListener());
+        JMenuItem kickWhy = new JMenuItem(I18N.get("user.kickwhy"));
+        kickWhy.addActionListener(new KickListener());
         JMenuItem ban = new JMenuItem(I18N.get("user.ban"));
-        JMenuItem kickban = new JMenuItem(I18N.get("user.kickban"));
+        JMenuItem kickBan = new JMenuItem(I18N.get("user.kickban"));
         
         //Items for CTCP sub menu
         JMenuItem ping = new JMenuItem("Ping");
+        ping.addActionListener(new CtcpListener());
         JMenuItem version = new JMenuItem(I18N.get("user.version"));
+        version.addActionListener(new CtcpListener());
+        JMenuItem time = new JMenuItem(I18N.get("user.time"));
+        time.addActionListener(new CtcpListener());
         
         control.add(op);
         control.add(deop);
         control.add(voice);
         control.add(devoice);
         control.add(kick);
+        control.add(kickWhy);
         control.add(ban);
-        control.add(kickban);
+        control.add(kickBan);
         
         ctcp.add(ping);
         ctcp.add(version);
+        ctcp.add(time);
         
         popup.add(whois);
         popup.add(query);
@@ -220,6 +211,12 @@ public class ListOfUsers extends JPanel {
     
     public UserListModel getListModel()   {
         return lm;
+    }
+    
+    private String getSelectedUser()   {
+        String user = (String)list.getSelectedValue().toString();
+        user = (user.startsWith("@") || user.startsWith("+")) ? user.substring(1) : user;
+        return user;
     }
     
     /**
@@ -282,6 +279,43 @@ public class ListOfUsers extends JPanel {
         
     }
     
+    class KickListener implements ActionListener   {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            String user = getSelectedUser();
+            String myNick = connection.getCurrentSession().getNick();
+            if (ae.getActionCommand().equals(I18N.get("user.kickwhy")))   {
+                JOptionPane jop = new JOptionPane();
+                String why = jop.showInputDialog("Why do you kick?");   //TODO I18N
+                if (why == null) return;                                // No input, cancel
+                chan.kick(user, why);
+            }
+            else   {
+                chan.kick(user, user);
+            }
+            if (lm.isOp(myNick))
+                lm.removeUser(user);
+        }
+    }
+    
+    class CtcpListener implements ActionListener   {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            String user = getSelectedUser();
+            if (ae.getActionCommand().equals(I18N.get("user.version")))
+                connection.getCurrentSession().ctcp(user, "VERSION");
+            else if (ae.getActionCommand().equals("Ping"))
+                connection.getCurrentSession().ctcp(user, "PING");
+            else if (ae.getActionCommand().equals(I18N.get("user.time")))
+                connection.getCurrentSession().ctcp(user, "TIME");
+        }
+        
+    }
+        
+
+    
     /**
      * Fetches the user list from given channel.
      * The fetching of users needs to be a thread, because otherwise it will lock the GUI when trying to fetch
@@ -313,10 +347,11 @@ public class ListOfUsers extends JPanel {
                 i = chan.getNicksForMode(Action.PLUS, 'v').iterator();  // Get voices
                 while (i.hasNext())   {                                 // More voices
                     lm.voice((String)i.next(), true);                   // Voice those users
-                } 
+                }
             }
             catch (Exception e)   {             // Some exception..
-                SwingUtilities.invokeLater(this);                 // Try againg later
+                System.out.println("Not able to fetch users yet");
+                SwingUtilities.invokeLater(new Init());                 // Try againg later
             }
         }
     }
