@@ -26,7 +26,7 @@ public class InputField extends JPanel {
     ConnectionHandler connection;
     
     private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+");
-        
+
     public InputField(ConnectionHandler con, String cha, int TabType){
         super();
         channel = cha;
@@ -96,7 +96,13 @@ public class InputField extends JPanel {
         	switch(typeOfMessage){
     			case SingleTab.PRIVATE: connection.sayToPrivate(textToPost, channel); break;
     			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break;        
-    			default: connection.sayToServer(textToPost); break;
+    			default: 
+    				if(tabType == SingleTab.STATUS){
+    					connection.sayToServer(textToPost);
+    				}else{
+    					connection.sayToServer(textToPost,channel);
+    					break;
+    				}
         	}
         }catch(BadLocationException e){
         	System.err.println("System error" + e.getMessage());

@@ -63,26 +63,38 @@ public class tabHandler extends JTabbedPane {
      * 
      * 
      */
-    public void createNewTab(String Channel, int tabType){
+    public void createNewTab(String tabName, int tabType){
         SingleTab st;
         
         
         /*
          * adding tab
          */
-        if(!Channel.isEmpty()){
-        	if(tabType == SingleTab.CHANNEL)
-        		st = new SingleTab(connection,Channel,this,SingleTab.CHANNEL);
-        	else
-        		st = new SingleTab(connection,Channel,this,SingleTab.PRIVATE);
+        if(!tabName.isEmpty()){
+        	
+    		
+    		if(!tabName.startsWith("#")){		// Appends the hash if not provided
+    			StringBuilder stBuild = new StringBuilder();
+    			stBuild.insert(0, "#");
+    			stBuild.append(tabName);
+    			tabName = stBuild.toString();
+    		}
+        	
+    		if(this.indexOfTab(tabName) < 0){			// Checks if tab exists, goes to tab if true
+    		
+    			if(tabType == SingleTab.CHANNEL)			// Checks the tab type
+    				st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
+    			else
+    				st = new SingleTab(connection,tabName,this,SingleTab.PRIVATE);
         
-        	this.addTab(Channel, null,st,"Does nothing" );
+    			this.addTab(tabName, null,st,"Does nothing" );
         
         
-        	//System.out.printf("newtab: "+Channel);
+    			//System.out.printf("newtab: "+Channel);
         
-        	this.addTab(Channel,st);
-        	int tabIndex = this.indexOfTab(Channel); 
+    			this.addTab(tabName,st);
+    			int tabIndex = this.indexOfTab(tabName);
+
         	
 
         //debugging
@@ -104,16 +116,20 @@ public class tabHandler extends JTabbedPane {
          * setting focus on new tab
          * connecting to channel
          */
-        this.setSelectedIndex(tabIndex);
-        try {	
-        	if(tabType == SingleTab.CHANNEL)
-        		connection.joinChannel(Channel);
-        }catch(BadLocationException e){
-        	System.err.println("System error" + e.getMessage());
-        }
+        	this.setSelectedIndex(tabIndex);
+        	
+        	try {	
+        		if(tabType == SingleTab.CHANNEL)
+        			connection.joinChannel(tabName);
+        	}catch(BadLocationException e){
+        		System.err.println("System error" + e.getMessage());
+        	}
+    	}else{		// Already connected to channel
+    			this.setSelectedIndex(this.indexOfTab(tabName));
+    		}
         
         }else{
-        	this.updateStatusScreen("Blank name provided");
+        	this.updateStatusScreen("Blank value provided, no tabs created");
         }
 }
     public void updateTabScreen(String ch, String message) throws BadLocationException{
