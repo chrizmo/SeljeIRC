@@ -105,7 +105,7 @@ static void colorWindow () {
     colorBoxShit.setVisible(true);
 
             OK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent faenEgETrøtt) {
+            public void actionPerformed(ActionEvent faenEgETrott) {
            colorBoxShit.setVisible(false);
             }
         });

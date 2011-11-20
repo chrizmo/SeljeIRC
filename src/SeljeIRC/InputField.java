@@ -28,7 +28,6 @@ public class InputField extends JPanel {
     
     private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+");
 
-        
     public InputField(ConnectionHandler con, String cha, int TabType){
         super();
         channel = cha;
@@ -99,6 +98,7 @@ public class InputField extends JPanel {
     			case SingleTab.PRIVATE: connection.sayToPrivate(textToPost, channel); break;
     			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break; 
     			default: connection.sayToServer(textToPost); break;
+
         	}
         }catch(BadLocationException e){
         	System.err.println("System error" + e.getMessage());
@@ -106,20 +106,6 @@ public class InputField extends JPanel {
         
     	txtInputField.setText("");
     
-    	
-    }
-    
-    /**
-     * Sets the input Label next to the thingy
-     * @param channelName
-     */
-    
-    public void setInputLabel(String channelName){
-    	try{
-    		this.label.setText("Tst");
-    	}catch(Exception e){
-    		System.err.println(e.getCause() + " crashed and fuck you: " + e.getMessage());
-    	}
     	
     }
 }

@@ -49,46 +49,84 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         this.addTab(I18N.get("channeltab.status"), statusTab);
     }
     
-    public void createNewTab(String tabTitle, int tabType) throws BadLocationException{
-        
+    /*
+     * only the statustab is created here, containing just jtextarea
+     */
+  
+    
+    /**
+     * add tabs for each channel
+     * @throws BadLocationException 
+     */
+    
+    
+    /**
+     * 
+     * 
+     */
+    public void createNewTab(String tabName, int tabType) throws BadLocationException{
         SingleTab st;
         
         
-        if(tabType == SingleTab.CHANNEL)
-        	st = new SingleTab(connection,tabTitle,this,SingleTab.CHANNEL);
-        else 
-            st = new SingleTab(connection,tabTitle,this,SingleTab.PRIVATE);
-       
-        
-        
-        addFocusListener(this);
-        this.addTab(tabTitle,st);
-        int tabIndex = this.indexOfTab(tabTitle); 
         /*
-         * adding closebutton, not on statustab
+         * adding tab
          */
-        if(tabType == SingleTab.CHANNEL || tabType == SingleTab.PRIVATE){
-            ButtonTabComponent ctb = new ButtonTabComponent(this,connection,tabType);
-            this.setTabComponentAt(tabIndex,ctb);
-        }
-            //checking whats in the jtabbedpane
-       
+       // if(!tabName.isEmpty()){
+        	
+    		
+    		/*if(!tabName.startsWith("#")){		// Appends the hash if not provided
+    			StringBuilder stBuild = new StringBuilder();
+    			stBuild.insert(0, "#");
+    			stBuild.append(tabName);
+    			tabName = stBuild.toString();
+    		}
+        	
+    		if(this.indexOfTab(tabName) < 0){			// Checks if tab exists, goes to tab if true
+    		*/
+    			if(tabType == SingleTab.CHANNEL)			// Checks the tab type
+    				st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
+    			else
+    				st = new SingleTab(connection,tabName,this,SingleTab.PRIVATE);
         
-        this.setSelectedIndex(tabIndex);
+                        addFocusListener(this);
+                        this.addTab(tabName,st);
+                        int tabIndex = this.indexOfTab(tabName); 
+                        /*
+                         * adding closebutton, not on statustab
+                         */
+                        if(tabType == SingleTab.CHANNEL || tabType == SingleTab.PRIVATE){
+                            ButtonTabComponent ctb = new ButtonTabComponent(this,connection,tabType);
+                            this.setTabComponentAt(tabIndex,ctb);
+                        }
+                            //checking whats in the jtabbedpane
+
         
-        try {	
-        	if(tabType == SingleTab.CHANNEL)
-        		connection.joinChannel(tabTitle);
-        }catch(Exception e){
-        	System.err.println("System error" + e.getMessage());
-        }
+
+                        this.setSelectedIndex(tabIndex);
+
+                        try {	
+                                if(tabType == SingleTab.CHANNEL)
+                                        connection.joinChannel(tabName);
+                        }catch(Exception e){
+                                System.err.println("System error" + e.getMessage());
+                        }        
+               /* }else{		// Already connected to channel
+    			this.setSelectedIndex(this.indexOfTab(tabName));
+    		}
         
-        
-        
-        
+        }else{
+        	this.updateStatusScreen("Blank value provided, no tabs created");
+        }*/
 }
     public void updateTabScreen(String ch, String message) throws BadLocationException{
+            
         
+            //test
+        
+        
+            if(ch != "Status"){
+               // ch = ch.toLowerCase();
+            }
             SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
                 st.updateScreen(message);
             
@@ -192,7 +230,4 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     public void focusLost(FocusEvent fe) {
         
     }
-
-    
-    
 }
