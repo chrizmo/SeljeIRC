@@ -102,7 +102,6 @@ public class SeljeIRC extends JFrame{
         
         
         
-        
 public static void main(String[] args) throws BadLocationException {
     
         /*

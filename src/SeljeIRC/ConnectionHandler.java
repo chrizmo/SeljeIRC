@@ -28,6 +28,7 @@ import jerklib.listeners.IRCEventListener;
 /**
  * 
  * @author Jon Arne Westgaard
+ * @author Lars Erik Pedersen
  */
 
 
@@ -213,24 +214,44 @@ public class ConnectionHandler implements IRCEventListener {
                 else if(e.getType() == Type.MODE_EVENT){
                     // Print mode-adjustments
                     ModeEvent me = (ModeEvent) e;
+                    ModeAdjustment m;
                     if (me.getChannel() != null)   {
                         String ch = me.getChannel().getName();
-                try {
-                    channelTab.updateTabScreen(ch, "-!- " + e.getRawEventData());
-                } catch (BadLocationException ex) {
-                    Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                        String message;
+                        StringBuilder strModes = new StringBuilder("-!- mode [");
+                        StringBuilder strNicks = new StringBuilder();
+                        /*try {
+                            channelTab.updateTabScreen(ch, "-!- " + e.getRawEventData());
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        }*/
                         if (me.getModeType() == ModeType.CHANNEL)   {                                   // Voice and Op are channel modes
                             List<ModeAdjustment> modes = me.getModeAdjustments();                       // Get list of adjustments
                             Iterator<ModeAdjustment> i = modes.iterator();
                             while (i.hasNext())   {                                            // Get the first one (there may be more)
-                                ModeAdjustment m = i.next();
-                                if (m.getMode() == 'o')                                                     // Someone got oped / deoped
+                                m = i.next();
+                                if (m.getMode() == 'o')   {                                                  // Someone got oped / deoped
                                     channelTab.op(m.getArgument(), m.getAction() == Action.PLUS, ch);
-                                if (m.getMode() == 'v')                                                     // Someone got voiced / devoiced
-                                    channelTab.voice(m.getArgument(), m.getAction() == Action.PLUS, ch); 
+                                    strModes.append(m.toString().substring(0, 2));
+                                    strNicks.append(m.getArgument()).append(' ');
+                                }
+                                else if (m.getMode() == 'v')   {                                                  // Someone got voiced / devoiced
+                                    channelTab.voice(m.getArgument(), m.getAction() == Action.PLUS, ch);
+                                    strModes.append(m.toString().substring(0, 2));
+                                    strNicks.append(m.getArgument()).append(' ');
+                                }
+                                else
+                                    strModes.append(m.toString().substring(0, 2));
+                                
                             }
-                               
+                            if (me.setBy().length() != 0)                                                 
+                                message = strModes.toString() + " "  + strNicks.toString() + "] by " + me.setBy();
+                            else
+                                message = strModes.toString() + "]";
+                            try {
+                                channelTab.updateTabScreen(ch, message);
+                            } catch (BadLocationException ex) {
+                            }
                         }                            
                     }
                 }
@@ -249,7 +270,14 @@ public class ConnectionHandler implements IRCEventListener {
                         Date date = new Date();
                         ce.getSession().notice(ce.getNick(), "\001"+"TIME "+df.format(date)+"\001");
                     }
+                    else if (ce.getCtcpString().contains("ACTION"))   {
+                        try {
+                            channelTab.updateTabScreen(ce.getChannel().getName(), "* "+ce.getNick()+ce.getMessage().substring(7));
+                        } catch (BadLocationException ex) {
+                        }
+                    }
                 }
+
                 
                 else if(e.getType() == Type.WHOIS_EVENT)   {
                     WhoisEvent we = (WhoisEvent) e;
@@ -259,7 +287,17 @@ public class ConnectionHandler implements IRCEventListener {
                     channelTab.updateStatusScreen("-!-  server    : " + we.whoisServer() + " [" + we.whoisServerInfo() + "]");
                     channelTab.updateStatusScreen("-!- End of WHOIS");
                 }
-                
+      
+                else if (e.getType() == Type.TOPIC)   {
+                    TopicEvent te = (TopicEvent) e;
+                    String chanName = te.getChannel().getName();
+                    String setBy = te.getSetBy();
+                    String topic = te.getTopic();
+                    try {
+                        channelTab.updateTabScreen(chanName, "-!- " + setBy + " changed the topic of " + chanName + " to: " + topic );
+                    } catch (BadLocationException ex) {
+                    }
+                }
 
                 else    
 		{       // Prints data received from server
