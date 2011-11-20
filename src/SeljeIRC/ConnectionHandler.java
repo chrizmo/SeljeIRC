@@ -1,18 +1,16 @@
 package SeljeIRC;
  
-import java.awt.Color;
-import java.util.HashMap;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JList;
 import javax.swing.text.BadLocationException;
 import jerklib.Channel;
 import jerklib.ConnectionManager;
@@ -98,6 +96,8 @@ public class ConnectionHandler implements IRCEventListener {
                     
                     String ch = me.getChannel().getName();
                     String message = "<"+me.getNick()+">" +" : "+me.getMessage();
+                    
+                    
             try {
                 channelTab.updateTabScreen(ch, message);
             } catch (BadLocationException ex) {
@@ -112,17 +112,17 @@ public class ConnectionHandler implements IRCEventListener {
                 	
                 	if(!channelTab.tabExists(userNick))
                 		try {
-                channelTab.createNewTab(userNick, SingleTab.PRIVATE);
-            } catch (BadLocationException ex) {
-                Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                channelTab.updateTabScreen(userNick, message);
-            } catch (BadLocationException ex) {
-                Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                	
-                }
+                             channelTab.createNewTab(userNick, SingleTab.PRIVATE,null);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        try {
+                            channelTab.updateTabScreen(userNick, message);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                            }
                 else if(e.getType() == Type.NOTICE){
                         NoticeEvent no = (NoticeEvent) e;
                         
@@ -164,7 +164,7 @@ public class ConnectionHandler implements IRCEventListener {
                     String ch = jce.getChannel().getName();
                     String message = ("-!- Topic for " +ch +": "+jce.getChannel().getTopic());
                     try {
-                        channelTab.updateTabScreen(ch, message);
+                        channelTab.createNewTab(ch,SingleTab.CHANNEL, message);
                     } catch (BadLocationException ex) {
                     }
 
@@ -186,23 +186,28 @@ public class ConnectionHandler implements IRCEventListener {
                 else if (e.getType() == Type.JOIN)   {
                     JoinEvent je = (JoinEvent) e;
                     String nick = je.getNick();
-            try {
-                channelTab.updateTabScreen(je.getChannelName(), "-!- " + nick + I18N.get("channel.userjoin"));
-            } catch (BadLocationException ex) {
-                Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                    channelTab.userJoined(nick,je.getChannelName());
-                }
+                    try {
+                        channelTab.updateTabScreen(je.getChannelName(), "-!- " + nick + I18N.get("channel.userjoin"));
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                            channelTab.userJoined(nick,je.getChannelName());
+                        }
                 
                 else if (e.getType() == Type.PART)   {
                     PartEvent pe = (PartEvent) e;
                     String nick = pe.getWho();
-            try {
-                channelTab.updateTabScreen(pe.getChannelName(), "-!- " + nick + I18N.get("channel.userleft"));
-            } catch (BadLocationException ex) {
-                Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                    channelTab.userLeft(nick, pe.getChannelName());
+                    
+                    if(!nick.equalsIgnoreCase(event.getSession().getNick())){
+                    
+                    try {
+                        channelTab.updateTabScreen(pe.getChannelName(), "-!- " + nick + I18N.get("channel.userleft"));
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                            channelTab.userLeft(nick, pe.getChannelName());
+                        
+                    }
                 }
 
                 else if(e.getType() == Type.MODE_EVENT){
@@ -254,6 +259,7 @@ public class ConnectionHandler implements IRCEventListener {
                     channelTab.updateStatusScreen("-!-  server    : " + we.whoisServer() + " [" + we.whoisServerInfo() + "]");
                     channelTab.updateStatusScreen("-!- End of WHOIS");
                 }
+                
 
                 else    
 		{       // Prints data received from server
@@ -266,24 +272,32 @@ public class ConnectionHandler implements IRCEventListener {
         
         
         public void joinChannel (String channel) throws BadLocationException {
-
-            try {
-            if(channel != null){
-            	if(connectedToServer() && event.getSession().getChannel(channel) == null){		// TODO: Sjekke om man alt har koblet til kanal            		
-            			
-            		event.getSession().join(channel);
-            		channelTab.updateTabScreen(channel, "-!- You have joined :"+channel);
-            	}
-            	else
-            		channelTab.updateStatusScreen("You have to connect to server first");
-        	}else{
-        			channelTab.updateStatusScreen("Channel not provided");
-        	}
-            }catch (Exception ex){
-            	System.err.println("Exception caught! Type: " + ex.getClass().toString() + " Message: " + ex.getMessage());
-
+           // String tabTitle;
+            
+            if(connectedToServer()){
+                //create a validate function?
+                if(!channel.startsWith("#")){		// Appends the hash if not provided
+                            StringBuilder stBuild = new StringBuilder();
+                            stBuild.insert(0, "#");
+                            stBuild.append(channel);
+                            channel = stBuild.toString();
+                    }
+                
+                if(channel  != ""){
+                    
+                        String ch = reWriteChannel(channel);
+                        if(ch == null){
+                            event.getSession().join(channel);
+                        }
+                        else{
+                            channelTab.setSelectedIndex(channelTab.indexOfTab(ch));
+                        }
+                }else
+                  channelTab.updateStatusScreen("Gotta write something");  
             }
-        	
+            else
+                channelTab.updateStatusScreen("not connected");
+           
         }
         
         public void createPrivateChat(String userName){
@@ -361,7 +375,7 @@ public class ConnectionHandler implements IRCEventListener {
             			if(commandFromUser.startsWith("/topic"))				// Sets the channel topic
             				this.setChannelTopic(channelName, textFromCommand);
             			else if(commandFromUser.startsWith("/j") || commandFromUser.startsWith("/join")){	// Joins channel Require hashtag
-            				channelTab.createNewTab(channelName, SingleTab.CHANNEL);
+            				joinChannel(channelName);
             			}
             			else if(commandFromUser.startsWith("/op")){							// Set op in the channel
             				Channel ch = event.getSession().getChannel(channelName);
@@ -456,6 +470,25 @@ public class ConnectionHandler implements IRCEventListener {
         public Session getCurrentSession()   {
             return event.getSession();
         }
+        
+        public void validateChannel(String ch){
+            
+        }
+        
+        public String reWriteChannel(String ch){
+            
+            List<Channel> l = event.getSession().getChannels();
+            Iterator<Channel> i = l.iterator();
+            String ls;
+            while(i.hasNext())   {
+                ls = i.next().getName();
+                if(ls.equalsIgnoreCase(ch))
+                    return ls;
+            }
+            return null;
+        }
+            
+        
         
 	
 } // End of public class ConnectionHandler	

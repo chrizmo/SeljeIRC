@@ -208,7 +208,7 @@ public class ListOfUsers extends JPanel {
     		   userName = userName.substring(1);							// Removes the symbol in front of username
     	   
     	   
-    	   tabObject.createNewTab(userName,SingleTab.PRIVATE);				// Create tab for PM
+    	   connection.joinChannel(userName);				// Create tab for PM
         }else
         	tabObject.updateStatusScreen("Can't join when not connected"); //TODO: Legg til translation
     }

@@ -35,7 +35,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         /* 
          * what im doing?
          */   
-        SingleTab statusTab = new SingleTab(connection,"Status",this,SingleTab.STATUS);
+        SingleTab statusTab = new SingleTab(connection,"status",this,SingleTab.STATUS);
                 
  //Object o = this.getComponents();               
                 
@@ -64,31 +64,19 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      * 
      * 
      */
-    public void createNewTab(String tabName, int tabType) throws BadLocationException{
+    public void createNewTab(String tabName, int tabType,String topic) throws BadLocationException{
         SingleTab st;
+       
         
-        
-        /*
-         * adding tab
-         */
-       // if(!tabName.isEmpty()){
-        	
-    		
-    		/*if(!tabName.startsWith("#")){		// Appends the hash if not provided
-    			StringBuilder stBuild = new StringBuilder();
-    			stBuild.insert(0, "#");
-    			stBuild.append(tabName);
-    			tabName = stBuild.toString();
-    		}
-        	
-    		if(this.indexOfTab(tabName) < 0){			// Checks if tab exists, goes to tab if true
-    		*/
-    			if(tabType == SingleTab.CHANNEL)			// Checks the tab type
+                    if(tabType == SingleTab.CHANNEL)			// Checks the tab type
     				st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
     			else
     				st = new SingleTab(connection,tabName,this,SingleTab.PRIVATE);
-        
-                        addFocusListener(this);
+                                
+                        
+                    
+                    addFocusListener(this);
+                        
                         this.addTab(tabName,st);
                         int tabIndex = this.indexOfTab(tabName); 
                         /*
@@ -99,34 +87,13 @@ public class tabHandler extends JTabbedPane implements FocusListener {
                             this.setTabComponentAt(tabIndex,ctb);
                         }
                             //checking whats in the jtabbedpane
-
-        
-
-                        this.setSelectedIndex(tabIndex);
-
-                        try {	
-                                if(tabType == SingleTab.CHANNEL)
-                                        connection.joinChannel(tabName);
-                        }catch(Exception e){
-                                System.err.println("System error" + e.getMessage());
-                        }        
-               /* }else{		// Already connected to channel
-    			this.setSelectedIndex(this.indexOfTab(tabName));
-    		}
-        
-        }else{
-        	this.updateStatusScreen("Blank value provided, no tabs created");
-        }*/
+                    this.setSelectedIndex(tabIndex);
+                        this.updateTabScreen(tabName,topic);
+      
 }
     public void updateTabScreen(String ch, String message) throws BadLocationException{
             
-        
-            //test
-        
-        
-            if(ch != "Status"){
-               // ch = ch.toLowerCase();
-            }
+            //System.out.print(message);
             SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
                 st.updateScreen(message);
             
@@ -134,18 +101,23 @@ public class tabHandler extends JTabbedPane implements FocusListener {
             int curSelected = this.getSelectedIndex();
             int thisIndex = this.indexOfTab(ch);
             
-            if(thisIndex != curSelected && thisIndex != 0){
-                System.out.print("indexoftab= "+" "+thisIndex + "curSelected = "+curSelected );
-                
-                this.setBackgroundAt(thisIndex, Color.blue);
-                
-            }    
+            try{
+                if(thisIndex != curSelected && thisIndex != 0){
+                    System.out.print("indexoftab= "+" "+thisIndex + "curSelected = "+curSelected );
+
+                    this.setBackgroundAt(thisIndex, Color.blue);
+
+                }
+            }catch(Exception e){
+                //this is bullshit.
+            }
    
     }
     /*
      * use this instead of indexoftab when you want the right component out and not just title
      */
     public int getIndexOfTab(String ch){
+            
             return this.indexOfTab(ch)+1;
     }
    
@@ -153,7 +125,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      * function overloaded
      */
     void updateTabScreen(String ch, List<String> message) throws BadLocationException {
-        
+  
         int tabIndex = this.indexOfTab(ch);
         System.out.printf("updatetab: "+tabIndex);
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
@@ -162,8 +134,9 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     }
     
     public void updateStatusScreen(String ch){
+     
         try{
-        	updateTabScreen("Status",ch);
+        	updateTabScreen("status",ch);
     	}catch(Exception e){
     		System.err.println("System error " + e.getMessage());
     	}
@@ -183,38 +156,45 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     }
 
     // Checks if a certain tab exists
-    public boolean tabExists(String tabName){
-    	return((this.indexOfTab(tabName) >= 0) ? true : false); //FIX: Sjekk om koden kan forberedres
+    public boolean tabExists(String ch){
+       
+    	return((this.indexOfTab(ch) >= 0) ? true : false); //FIX: Sjekk om koden kan forberedres
     	
     }
     
     public void fetchUsers(String ch, Channel c)   {
+       
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.updateUserList(c);
     }
 
     void userJoined(String nick, String ch) {
+    
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.newUserJoined(nick);
     }
 
     
     void userLeft(String nick, String ch)   {
+        
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.userLeft(nick);
     }
     
     void op(String nick, boolean mode, String ch)   {
+
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.op(nick, mode);
     }
     
     void voice(String nick, boolean mode, String ch)   {
+      
        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.voice(nick, mode);
     }
     
     void changedNick(String oldNick, String newNick, String ch)   {
+   
        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.changeNick(oldNick, newNick);
     }

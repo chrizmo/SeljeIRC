@@ -68,22 +68,14 @@ public class MainMenu extends JMenuBar {
                
                JOptionPane jop = new JOptionPane();
                
-               
-               
-               if(connection.connectedToServer()){
-               
-                    
                String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
+                 
                     try {
-                        channelTab.createNewTab(channel, SingleTab.CHANNEL);
+                       connection.joinChannel(channel);
                     } catch (BadLocationException ex) {
                         Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                   
-                        
-               }
-               else
-                    channelTab.updateStatusScreen("Cant join when not connected");
+             
                
            } 
         });
