@@ -8,9 +8,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
@@ -37,6 +33,7 @@ public class SingleTab extends JPanel{
 	
 	
     private String channel;
+
     private JTextPane screen;
     private ConnectionHandler connection;
     private tabHandler channelTab;
@@ -45,7 +42,7 @@ public class SingleTab extends JPanel{
     private int typeOfTab = 1;			// The type of this tab. Standard is channel
     
     
-    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType){
+    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType) throws BadLocationException{
         super();
         
         typeOfTab = tabType;			// Sets the type of tab
@@ -53,6 +50,7 @@ public class SingleTab extends JPanel{
         connection = con;
         channelTab = ct;
         index = channelTab.indexOfComponent(this);
+        
         
         /*
          * Borderlayout containing textarea and userlist
@@ -73,8 +71,21 @@ public class SingleTab extends JPanel{
          */
         screen = new JTextPane();
             screen.setEditable(false);
-            
             screen.setBackground(Color.lightGray);
+            
+        if(tabType == STATUS){
+            SimpleAttributeSet color = new SimpleAttributeSet();
+            StyleConstants.setFontFamily(color, "Courier New");
+            StyleConstants.setForeground(color, Color.black);
+            // Print welcome-message in black:
+            screen.getDocument().insertString(screen.getDocument().getLength(),
+                    "Welcome to SeljeIRC\n", color);
+            // Print message in gray
+            StyleConstants.setForeground(color, Color.gray);
+            screen.getDocument().insertString(screen.getDocument().getLength(),
+                    "This application could be interpreted as an IRC-client", color);
+        }    
+            
             
         JScrollPane textAreaScroller = new JScrollPane(screen);
         add(textAreaScroller,BorderLayout.CENTER );
@@ -109,6 +120,9 @@ public class SingleTab extends JPanel{
         
         
     }
+    public int getType(){
+        return typeOfTab;
+    }
     public void updateScreen(String update) throws BadLocationException{
       // TODO This is ugly, but will be fixed when Colors is done
       DateFormat dateFormat = new SimpleDateFormat("HH:mm");
@@ -120,6 +134,10 @@ public class SingleTab extends JPanel{
       screen.getDocument().insertString(screen.getDocument().getLength(),
                     "\n"+dateFormat.format(date) +" " +update, color);
       screen.setCaretPosition(screen.getDocument().getLength());
+      
+      
+          
+      
     }
 
     void updateScreen(List<String> update) throws BadLocationException {
@@ -158,5 +176,6 @@ public class SingleTab extends JPanel{
     void changeNick(String oldNick, String newNick)   {
         listPanel.getListModel().changeNick(oldNick, newNick);
     }
+    
    
 }
