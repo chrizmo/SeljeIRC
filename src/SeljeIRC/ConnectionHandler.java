@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.text.BadLocationException;
 import jerklib.Channel;
 import jerklib.ConnectionManager;
@@ -31,7 +34,13 @@ public class ConnectionHandler implements IRCEventListener {
         private IRCEvent event = null;
         private boolean hasConnected = false;
         private tabHandler channelTab;
+        private Channel channelCommands;
         
+        
+        /* Regular Expression patterns */
+        private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+(\\s#\\w*)?");
+        private Pattern inputCommandTextFinderPattern = Pattern.compile("(^/\\w+(\\s#\\w+)?\\s)([\\w\\s]+)?$");
+        private Pattern inputCommandChannelPattern = Pattern.compile("#\\w+");	// Finds a channel name in pattern
         
         
         public ConnectionHandler(tabHandler ct){
@@ -63,8 +72,6 @@ public class ConnectionHandler implements IRCEventListener {
 	public void receiveEvent(IRCEvent e) {
 		
             event = e;
-            
-            
             //channelTab.updateStatusScreen("Event :"+e.getType().toString());
             
             if (e.getType() == Type.CONNECT_COMPLETE)
@@ -107,15 +114,17 @@ public class ConnectionHandler implements IRCEventListener {
                         NoticeEvent no = (NoticeEvent) e;
                         
                         String update = no.getNoticeMessage().toString();
-                        channelTab.updateStatusScreen(update);
+                        channelTab.updateStatusScreen(update);                        
                 }
                 else if(e.getType() == Type.ERROR){
                     
                         
                         ErrorEvent no = (ErrorEvent) e;
-                        
+                        	
                         String update = no.getErrorType().toString();
+                        
                         channelTab.updateStatusScreen(update);
+                        channelTab.updateStatusScreen("Error data: " + e.getRawEventData()); //TODO REMOVE
                 }
             
                 else if(e.getType() == Type.NICK_CHANGE){
@@ -208,14 +217,21 @@ public class ConnectionHandler implements IRCEventListener {
         
         
         public void joinChannel (String channel) throws BadLocationException {
-            
-            
-            if(connectedToServer()){
-                event.getSession().join(channel);
-                channelTab.updateTabScreen(channel, "-!- You have joined :"+channel);
+            try {
+            if(channel != null){
+            	if(connectedToServer()){		// TODO: Sjekke om man alt har koblet til kanal            		
+            		event.getSession().join(channel);
+            		channelTab.updateTabScreen(channel, "-!- You have joined :"+channel);
+            	}
+            	else
+            		channelTab.updateStatusScreen("You have to connect to server first");
+        	}else{
+        			channelTab.updateStatusScreen("Channel not provided");
+        	}
+            }catch (Exception ex){
+            	System.err.println("Exception caught! Type: " + ex.getClass().toString() + " Message: " + ex.getMessage());
             }
-            else
-                channelTab.updateStatusScreen("You have to connect to server first");
+        	
         }
         
         public void createPrivateChat(String userName){
@@ -224,7 +240,24 @@ public class ConnectionHandler implements IRCEventListener {
         	}else
         		channelTab.updateStatusScreen("You have to connect to server first");
         }
-	
+        
+        /**
+         * Sets the channel topic for a specified channel
+         * 
+         * @author Christer Vaskinn
+         * @param channelName String, the channel to set the topic at
+         * @param channelTopic String, the topic to set on the channel
+         */
+        
+        public void setChannelTopic(String channelName, String channelTopic){
+        	if(channelName != null){
+        			Channel ircChannel =  event.getSession().getChannel(channelName);
+        			ircChannel.setTopic(channelTopic);
+        	}else{
+        		channelTab.updateStatusScreen("Channel name not provided");
+        	}
+        }
+        
         public boolean connectedToServer(){
             
             if(event != null){
@@ -241,15 +274,67 @@ public class ConnectionHandler implements IRCEventListener {
          * sending string directly to server
          */
                 
-        public void sayToServer(String whatToSay){
-                
-            if(connectedToServer()){
-                event.getSession().sayRaw(whatToSay);
-            
-                channelTab.updateStatusScreen(whatToSay);
-            }
-            else{
-                channelTab.updateStatusScreen(whatToSay + "\n" + "Not connected to server tough");
+        public void sayToServer(String inputString){
+                if(connectedToServer()){
+            	
+            	Matcher stringCommandFinder = inputCommandFinderPattern.matcher(inputString);
+            	
+            	
+            	channelTab.updateStatusScreen(inputString);
+            	
+            	if(stringCommandFinder.find()){
+            		String channelName = null;
+            		
+            		//inputString = inputString.substring(1);
+            		//this.setChannelTopic(channelName, inputString);
+            		
+            		try{
+            			Matcher channelMatcher = inputCommandChannelPattern.matcher(inputString);
+            			String commandFromUser = stringCommandFinder.group().toLowerCase();
+            			
+            			String textFromCommand = inputString.substring(stringCommandFinder.end());
+            			
+            			if(channelMatcher.find())
+            				channelName = channelMatcher.group();
+            			
+            			if(commandFromUser.startsWith("/topic"))
+            				this.setChannelTopic(channelName, textFromCommand);
+            			else if(commandFromUser.startsWith("/j") || commandFromUser.startsWith("/join"))
+            				//System.err.println(channelName);
+            				channelTab.createNewTab(channelName, SingleTab.CHANNEL);
+            			//else if(commandFromUser.startsWith("/msg")) // FIX: legge inn dette?
+            			else if(commandFromUser.startsWith("/op")){
+            				Channel ch = event.getSession().getChannel(channelName);
+            				ch.op(textFromCommand);
+            			}
+            			else if(commandFromUser.startsWith("/deop")){
+            				Channel ch = event.getSession().getChannel(channelName);
+            				ch.deop(textFromCommand);
+            			}
+            			else if(commandFromUser.startsWith("/voice")){
+            				Channel ch = event.getSession().getChannel(channelName);
+            				ch.voice(textFromCommand);
+            			}
+            			else if(commandFromUser.startsWith("/devoice")){
+            				Channel ch = event.getSession().getChannel(channelName);
+            				ch.deVoice(textFromCommand);
+            			}
+            			else if(commandFromUser.startsWith("/mode")){
+            				Channel ch = event.getSession().getChannel(channelName);
+            				ch.mode(textFromCommand);
+            			}
+            			else if(commandFromUser.startsWith("/raw")){
+            				event.getSession().sayRaw(inputString);
+            			}
+            			else
+            				channelTab.updateStatusScreen("Y U NO PROVIDE CORRECT COMMAND");
+            			
+            		}catch(Exception e){
+            			System.err.println("Exception caught: " + e.getMessage());
+            		}
+            	}
+            }else{
+                channelTab.updateStatusScreen(inputString + "\n" + "Not connected to server tough");
             }
                 
                 

@@ -70,19 +70,21 @@ public class tabHandler extends JTabbedPane {
         /*
          * adding tab
          */
-        if(tabType == SingleTab.CHANNEL)
-        	st = new SingleTab(connection,Channel,this,SingleTab.CHANNEL);
-        else
-        	st = new SingleTab(connection,Channel,this,SingleTab.PRIVATE);
+        if(!Channel.isEmpty()){
+        	if(tabType == SingleTab.CHANNEL)
+        		st = new SingleTab(connection,Channel,this,SingleTab.CHANNEL);
+        	else
+        		st = new SingleTab(connection,Channel,this,SingleTab.PRIVATE);
         
-        this.addTab(Channel, null,st,"Does nothing" );
+        	this.addTab(Channel, null,st,"Does nothing" );
         
         
-        System.out.printf("newtab: "+Channel);
+        	//System.out.printf("newtab: "+Channel);
         
-        this.addTab(Channel,st);
-        int tabIndex = this.indexOfTab(Channel); 
-            
+        	this.addTab(Channel,st);
+        	int tabIndex = this.indexOfTab(Channel); 
+        	
+
         //debugging
         
         
@@ -108,6 +110,10 @@ public class tabHandler extends JTabbedPane {
         		connection.joinChannel(Channel);
         }catch(BadLocationException e){
         	System.err.println("System error" + e.getMessage());
+        }
+        
+        }else{
+        	this.updateStatusScreen("Blank name provided");
         }
 }
     public void updateTabScreen(String ch, String message) throws BadLocationException{
@@ -191,6 +197,10 @@ public class tabHandler extends JTabbedPane {
         st.voice(nick, mode);
     }
     
+    /*public void changeTopic(String newTopic, String channelName){
+    	SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+    	st.setC(newTopic);
+    }*/
     
 
     

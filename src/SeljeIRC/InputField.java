@@ -106,18 +106,4 @@ public class InputField extends JPanel {
     
     	
     }
-    
-    /**
-     * Sets the input Label next to the thingy
-     * @param channelName
-     */
-    
-    public void setInputLabel(String channelName){
-    	try{
-    		this.label.setText("Tst");
-    	}catch(Exception e){
-    		System.err.println(e.getCause() + " crashed and fuck you: " + e.getMessage());
-    	}
-    	
-    }
 }
