@@ -97,7 +97,7 @@ public class InputField extends JPanel {
         try{
         	switch(typeOfMessage){
     			case SingleTab.PRIVATE: connection.sayToPrivate(textToPost, channel); break;
-    			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break;        
+    			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break; 
     			default: connection.sayToServer(textToPost); break;
         	}
         }catch(BadLocationException e){

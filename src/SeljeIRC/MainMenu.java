@@ -3,10 +3,13 @@ package SeljeIRC;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
 
 /**
  *
@@ -69,11 +72,13 @@ public class MainMenu extends JMenuBar {
                
                if(connection.connectedToServer()){
                
-                   System.out.printf("creating new tab in mainmenunow");
                     
                String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
-                    
-                    channelTab.createNewTab(channel, SingleTab.CHANNEL);
+                    try {
+                        channelTab.createNewTab(channel, SingleTab.CHANNEL);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                    
                         
                }
@@ -122,7 +127,7 @@ public class MainMenu extends JMenuBar {
     public void createHelpMenu() {
         JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
         help.add(helpItem);
-        JMenuItem aboutItem = new JMenuItem("dont work");
+        JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"));
         help.add(aboutItem);
 
         //--------------Action listeners-----------------------------

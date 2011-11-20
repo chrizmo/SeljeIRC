@@ -102,7 +102,11 @@ public class ConnectionHandler implements IRCEventListener {
                 	String message = "<" + me.getNick() + ">" + " : " + me.getMessage();
                 	
                 	if(!channelTab.tabExists(userNick))
-                		channelTab.createNewTab(userNick, SingleTab.PRIVATE);
+                		try {
+                channelTab.createNewTab(userNick, SingleTab.PRIVATE);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
             try {
                 channelTab.updateTabScreen(userNick, message);
             } catch (BadLocationException ex) {
@@ -286,7 +290,7 @@ public class ConnectionHandler implements IRCEventListener {
          */
                 
         public void sayToServer(String whatToSay){
-                
+              
             if(connectedToServer()){
                 event.getSession().sayRaw(whatToSay);
             
@@ -337,6 +341,8 @@ public class ConnectionHandler implements IRCEventListener {
             event.getSession().getChannel(channel).part(channel);
             
         }
+        
+       
         public Session getCurrentSession()   {
             return event.getSession();
         }
