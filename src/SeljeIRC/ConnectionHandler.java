@@ -12,7 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.*;
 
+import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 import jerklib.Channel;
 import jerklib.ConnectionManager;
@@ -246,12 +248,16 @@ public class ConnectionHandler implements IRCEventListener {
                     channelTab.updateStatusScreen("-!-  server    : " + we.whoisServer() + " [" + we.whoisServerInfo() + "]");
                     channelTab.updateStatusScreen("-!- End of WHOIS");
                 }
+            
+                else if(e.getType() == Type.CHANNEL_LIST_EVENT)   {
+                	ChannelListEvent chEvt = (ChannelListEvent) e;
+                	channelTab.updateStatusScreen("Channel: " + chEvt.getChannelName() + " Users: " + chEvt.getNumberOfUser());
+                }
 
                 else    
-		{       // Prints data received from server
-                        System.out.print(e.getRawEventData());
-                        if(!e.getRawEventData().matches(".*(311|319|312|320|317|318).*")) //Do not print whois events marked as DEFAULT
-                        channelTab.updateStatusScreen(e.getType() + " " + e.getRawEventData());
+		{       // Prints data received from serve
+                        if(!e.getRawEventData().matches(".*(311|319|312|320|317|318|321|322|323).*")) //Do not print whois events marked as DEFAULT
+                        	channelTab.updateStatusScreen(e.getType() + " " + e.getRawEventData());
 		}
             
         }
@@ -431,6 +437,19 @@ public class ConnectionHandler implements IRCEventListener {
             manager.quit();
             channelTab.removeAllTabs();
             System.out.printf("Closing manager");
+        }
+        /**
+         * Get's all the channels from the server
+         * 
+         * @author Christer Vaskinn
+         * @note This function is really fucking stupid and using it on the major networks will get your ass K-lined(banned)
+         */
+        public void getAllTheChannelsFromServer(){
+        	if(this.connectedToServer()){
+        		channelTab.updateStatusScreen("List of available channer with users:");
+        		event.getSession().chanList();
+			}else
+        		channelTab.updateStatusScreen("Not connected to a server jackass!");
         }
         
         public void disconnectFromChannel(String channel){

@@ -72,18 +72,19 @@ public class tabHandler extends JTabbedPane {
          */
         if(!tabName.isEmpty()){
         	
-    		
-    		if(!tabName.startsWith("#")){		// Appends the hash if not provided
-    			StringBuilder stBuild = new StringBuilder();
-    			stBuild.insert(0, "#");
-    			stBuild.append(tabName);
-    			tabName = stBuild.toString();
-    		}
-        	
     		if(this.indexOfTab(tabName) < 0){			// Checks if tab exists, goes to tab if true
     		
-    			if(tabType == SingleTab.CHANNEL)			// Checks the tab type
-    				st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
+    			if(tabType == SingleTab.CHANNEL){			// Checks the tab type
+    	    		if(!tabName.startsWith("#")){		// Appends the hash if not provided
+    	    			StringBuilder stBuild = new StringBuilder();
+    	    			stBuild.insert(0, "#");
+    	    			stBuild.append(tabName);
+    	    			tabName = stBuild.toString();
+    	    		}
+    	        	
+    	    		st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
+    			}
+    				
     			else
     				st = new SingleTab(connection,tabName,this,SingleTab.PRIVATE);
         
