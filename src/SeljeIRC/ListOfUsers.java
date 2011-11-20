@@ -113,6 +113,18 @@ public class ListOfUsers extends JPanel {
         JMenu ctcp = new JMenu("CTCP");
         //JMenu dcc = new JMenu("DCC");
         JMenuItem slap = new JMenuItem(I18N.get("user.slap"));
+        slap.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String action = I18N.get("user.slap.start")+getSelectedUser()+I18N.get("user.slap.end");
+                chan.action(action);
+                try {
+                    tabObject.updateTabScreen(chan.getName(), "* "+connection.getCurrentSession().getNick()+ " "+action);
+                } catch (BadLocationException ex) {
+                }
+            }
+        });
         
         //Items for Control sub menu
         JMenuItem op = new JMenuItem("Op");
