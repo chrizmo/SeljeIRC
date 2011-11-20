@@ -217,6 +217,11 @@ public class tabHandler extends JTabbedPane {
     	SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
     	st.setC(newTopic);
     }*/
+
+    void changedNick(String oldNick, String newNick, String channelName)   {
+        SingleTab st = (SingleTab) this.getComponent(this.indexOfTab(channelName));
+        st.changeNick(oldNick, newNick);
+    }
     
 
     

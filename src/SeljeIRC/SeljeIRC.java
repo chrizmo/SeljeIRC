@@ -23,6 +23,7 @@ public class SeljeIRC extends JFrame{
         static tabHandler channelTabs; //JTabbedPane containing all tabs
         static InputField inputField;  //Standard Input field for each tab
         BorderLayout totalLayout; //TotalLayouts
+        static Colors colorSettings; // Colorsettings
         
         static ConnectionHandler connection;
         
@@ -36,6 +37,7 @@ public class SeljeIRC extends JFrame{
             
             channelTabs = new tabHandler();
             connection = new ConnectionHandler(channelTabs);
+            colorSettings = new Colors();
             
             /*
              * Layout of main contentPane
