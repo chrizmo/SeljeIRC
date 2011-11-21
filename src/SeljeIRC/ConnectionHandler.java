@@ -65,6 +65,10 @@ public class ConnectionHandler implements IRCEventListener {
             /*
              * created object
              */
+                
+                
+                
+                
         }
 	
 	public void connectIt(String server, String nicName) {

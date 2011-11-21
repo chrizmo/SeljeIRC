@@ -1,7 +1,11 @@
 package SeljeIRC;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -31,7 +35,10 @@ public class SeljeIRC extends JFrame{
         
         boolean isConnected;
 
-	public SeljeIRC() throws BadLocationException{
+	public SeljeIRC(String title) throws BadLocationException{
+            super(title);
+            
+       
             
             /*
              * Connection to server
@@ -69,8 +76,7 @@ public class SeljeIRC extends JFrame{
              */
             //TODO pass channelTab-object
                 
-            
-        
+   
                 
         /*
          * Basic operations on main contentPane
@@ -115,8 +121,9 @@ public static void main(String[] args) throws BadLocationException {
          * Setting up the mainframe, add only functionality related to .this
          */
         
+        
          try{
-             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
          }catch(Exception e){
              
          }
@@ -124,13 +131,15 @@ public static void main(String[] args) throws BadLocationException {
     
     
     
-        SeljeIRC mainFrame = new SeljeIRC();    
-        
+        SeljeIRC mainFrame = new SeljeIRC("SeljeIRC");
+            
+            
+            mainFrame.setVisible(false);
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             mainFrame.setBounds(0,0,screenSize.width, screenSize.height);
             //mainFrame.setSize(new Dimension(1200, 800));
             
-            mainFrame.setVisible(false);
+            
             mainFrame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
             
              SplashScreen splashScreen = new SplashScreen("logo2.jpg");
@@ -155,4 +164,25 @@ public static void main(String[] args) throws BadLocationException {
             mainFrame.setStatusFocus();
      
  }
+}
+class ContentPanel extends JPanel {
+  Image bgimage = null;
+
+  ContentPanel() {
+    MediaTracker mt = new MediaTracker(this);
+    bgimage = Toolkit.getDefaultToolkit().getImage("src/Images/logo_noframe.png");
+    mt.addImage(bgimage, 0);
+    try {
+      mt.waitForAll();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    int imwidth = bgimage.getWidth(null);
+    int imheight = bgimage.getHeight(null);
+    g.drawImage(bgimage, 1, 1, null);
+  }
 }
