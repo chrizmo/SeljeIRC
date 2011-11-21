@@ -291,6 +291,8 @@ public class ConnectionHandler implements IRCEventListener {
                     channelTab.updateStatusScreen("-!-  channels  : " + we.getChannelNames());
                     channelTab.updateStatusScreen("-!-  server    : " + we.whoisServer() + " [" + we.whoisServerInfo() + "]");
                     channelTab.updateStatusScreen("-!- End of WHOIS");
+                    if(we.isIdle()) System.out.println("idle");
+                    else System.out.println("not idle");
                 }
             
                 else if(e.getType() == Type.CHANNEL_LIST_EVENT)   {	// Lists all the channels from the servers with topics
@@ -306,6 +308,30 @@ public class ConnectionHandler implements IRCEventListener {
                         channelTab.updateTabScreen(chanName, "-!- " + setBy + " changed the topic of " + chanName + " to: " + topic );
                     } catch (BadLocationException ex) {
                     }
+                }
+                
+                else if (e.getType() == Type.AWAY_EVENT)   {
+                    AwayEvent aw = (AwayEvent) e;
+                    String awayUser = aw.getNick();
+                    String message = "-!- "+awayUser+" is away: ["+aw.getAwayMessage()+"]";
+                    int privTabIdx = channelTab.getIndexOfTab(awayUser);
+                    if (aw.getEventType() == AwayEvent.EventType.USER_IS_AWAY)   {
+                        channelTab.updateStatusScreen(message);
+                        if (privTabIdx > 0)   {
+                            try {
+                                channelTab.updateTabScreen(awayUser, message);
+                            } catch (BadLocationException ex) {
+                            }
+                        }
+                    }
+                    if (aw.isYou() && aw.getEventType() == AwayEvent.EventType.WENT_AWAY)   {
+                            channelTab.updateStatusScreen("-!- You have been marked as away");
+                    }
+                    
+                    if(aw.isYou() && aw.getEventType() == AwayEvent.EventType.RETURNED_FROM_AWAY)   {
+                            channelTab.updateStatusScreen("-!- You are no longer marked as away");
+                    }
+                    
                 }
 
                 else    
@@ -443,9 +469,16 @@ public class ConnectionHandler implements IRCEventListener {
             				Channel ch = event.getSession().getChannel(channelName);
             				ch.mode(textFromCommand);										
             			}
+                                else if (commandFromUser.startsWith("/away")){
+                                    if (!textFromCommand.equals(""))
+                                        event.getSession().setAway(textFromCommand);
+                                    else
+                                        event.getSession().unsetAway();
+                                }
             			else if(commandFromUser.startsWith("/raw")){						// Send Raw in the irc
             				event.getSession().sayRaw(inputString);
             			}
+
             			else if(commandFromUser.startsWith("/quit")){						// Quit from server
             				System.exit(0);
             			}
