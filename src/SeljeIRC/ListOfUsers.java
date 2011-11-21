@@ -333,8 +333,7 @@ public class ListOfUsers extends JPanel {
         }
         
     }
-        
-
+   
     
     /**
      * Fetches the user list from given channel.

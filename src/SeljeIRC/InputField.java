@@ -108,4 +108,7 @@ public class InputField extends JPanel {
     
     	
     }
+    public void setFocusOnField(){
+        inputField.requestFocus();
+    }
 }
