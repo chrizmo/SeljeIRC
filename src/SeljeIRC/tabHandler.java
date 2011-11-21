@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.List;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import javax.swing.text.BadLocationException;
 
@@ -22,7 +20,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
 	
     private static ConnectionHandler connection;
     private int curTabIndex = 0;
-    
+    private tabHandler tabhandler;
     /**
      * creates a tabhendler to handle all tabs in jtabbedpane
      * default creates a statustab
@@ -31,6 +29,8 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     
     public tabHandler() throws BadLocationException{
         super();
+        tabhandler = this;
+        
         SingleTab statusTab = new SingleTab(connection,"status",this,SingleTab.STATUS);
                               
                 
@@ -112,12 +112,26 @@ public class tabHandler extends JTabbedPane implements FocusListener {
          */
         
         int curSelected = this.getSelectedIndex();
-        int thisIndex = this.indexOfTab(ch);
+        final int thisIndex = this.indexOfTab(ch);
         try{
             if(thisIndex != curSelected && thisIndex != 0){
                 System.out.print("indexoftab= "+" "+ thisIndex +"curSelected = "+curSelected);
                 
-                this.setBackgroundAt(thisIndex, Color.CYAN);
+                class PrimeThread extends Thread {
+                     long minPrime;
+                     PrimeThread(long minPrime) {
+                         this.minPrime = minPrime;
+                     }
+
+                     public void run() {
+                        tabhandler.setBackgroundAt(thisIndex, Color.CYAN);
+                     }
+                 }
+                
+                PrimeThread p = new PrimeThread(143);
+                p.start();
+                
+                
                 //Icon icon = new ImageIcon("src/Images/attention-icon.png");
                 //this.setIconAt(thisIndex, icon);
                 
@@ -251,7 +265,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     @Override
     public void focusGained(FocusEvent fe) {
         int curSelected = this.getSelectedIndex();
-         this.setBackgroundAt(curSelected, Color.GRAY);
+         this.setBackgroundAt(curSelected, Color.lightGray);
          
         SingleTab st = (SingleTab) this.getComponent(curSelected+1);
         st.passFocusToField();
@@ -261,4 +275,5 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     public void focusLost(FocusEvent fe) {
         
     }
+    
 }

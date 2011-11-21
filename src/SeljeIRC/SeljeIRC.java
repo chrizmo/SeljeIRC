@@ -1,5 +1,7 @@
 package SeljeIRC;
 
+import com.nilo.plaf.nimrod.NimRODLookAndFeel;
+import com.nilo.plaf.nimrod.NimRODTheme;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,6 +11,8 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
@@ -119,16 +123,48 @@ public static void main(String[] args) throws BadLocationException {
     
         /*
          * Setting up the mainframe, add only functionality related to .this
-         */
+         *
         
         
+    
+         //NimRODTheme nt = new NimRODTheme();
+         
          try{
-             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+             UIManager.setLookAndFeel(new com.nilo.plaf.nimrod.NimRODLookAndFeel());
          }catch(Exception e){
              
          }
    
+    */
     
+        // GUL : Color(255,255,0)
+        // MØRKBRUN : Color(65,52,0)
+        // LYSEBRUN : Color(130,110,39)
+    
+        NimRODTheme nt = new NimRODTheme();
+        //nt.setPrimary(Color.green);
+        //nt.setPrimary1(Color.BLUE);
+        nt.setPrimary2(Color.black); // tabcolor and hover
+        nt.setPrimary3(Color.GRAY); // listbackground
+        //nt.setSecondary(Color.GREEN);
+        //nt.setSecondary1(Color.ORANGE); // border
+        //nt.setSecondary2(Color.PINK);
+        nt.setSecondary3(new Color(35,28,2));    // background
+        
+        
+        nt.setBlack(new Color(255,255,0)); //text
+        nt.setWhite(Color.black); //textfields
+        //nt.setBlack(Color.cyan);
+        
+        
+
+        NimRODLookAndFeel NimRODLF = new NimRODLookAndFeel();
+        NimRODLF.setCurrentTheme( nt);
+        try {
+            UIManager.setLookAndFeel( NimRODLF);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(SeljeIRC.class.getName()).log(Level.SEVERE, null, ex);
+        }
     
     
         SeljeIRC mainFrame = new SeljeIRC("SeljeIRC");
@@ -165,24 +201,4 @@ public static void main(String[] args) throws BadLocationException {
      
  }
 }
-class ContentPanel extends JPanel {
-  Image bgimage = null;
 
-  ContentPanel() {
-    MediaTracker mt = new MediaTracker(this);
-    bgimage = Toolkit.getDefaultToolkit().getImage("src/Images/logo_noframe.png");
-    mt.addImage(bgimage, 0);
-    try {
-      mt.waitForAll();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
-
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    int imwidth = bgimage.getWidth(null);
-    int imheight = bgimage.getHeight(null);
-    g.drawImage(bgimage, 1, 1, null);
-  }
-}
