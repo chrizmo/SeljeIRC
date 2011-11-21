@@ -39,6 +39,7 @@ public class SeljeIRC extends JFrame{
             channelTabs = new tabHandler();
             connection = new ConnectionHandler(channelTabs);
             colorSettings = new Colors();
+
             
             /*
              * Layout of main contentPane

@@ -91,16 +91,14 @@ public class StatusTab extends JPanel{
     
     public void updateScreen(String update) throws BadLocationException{
       // TODO Do we really need to throw things around?
-      // TODO Sort out how to accept the color as a parameter
-      // TODO Overload function som nick is in one color, message itself in another
       // Some stuff to define the colors
-      // TODO This is ugly, but will be fixed when Colors is done:
-      SimpleAttributeSet textColor = new SimpleAttributeSet();
-      StyleConstants.setFontFamily(textColor, "Courier New");
-      StyleConstants.setForeground(textColor, Color.BLUE);
-
       DateFormat dateFormat = new SimpleDateFormat("HH:mm");
       Date date = new Date();
+
+      SimpleAttributeSet textColor = new SimpleAttributeSet();
+      StyleConstants.setFontFamily(textColor, Colors.font);
+      StyleConstants.setForeground(textColor, Colors.statusColor);
+
 
       //screen.append("\n"+dateFormat.format(date) +" " +update);
       screen.getDocument().insertString(screen.getDocument().getLength() + 1,
