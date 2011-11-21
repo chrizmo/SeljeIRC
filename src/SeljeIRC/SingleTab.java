@@ -83,7 +83,7 @@ public class SingleTab extends JPanel{
             // Print message in gray
             StyleConstants.setForeground(color, Color.gray);
             screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "This application could be interpreted as an IRC-client", color);
+                    "This application could be interpreted as an IRC-client ", color);
         }    
             
             
@@ -132,7 +132,7 @@ public class SingleTab extends JPanel{
       StyleConstants.setFontFamily(color, "Courier New");
       StyleConstants.setForeground(color, Color.black);
       screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "\n"+dateFormat.format(date) +" " +update, color);
+                    "\n"+dateFormat.format(date) +" " +update+color, color);
       screen.setCaretPosition(screen.getDocument().getLength());
       
       
