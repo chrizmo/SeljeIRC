@@ -154,10 +154,10 @@ public static void main(String[] args) throws BadLocationException {
         //nt.setSecondary(Color.GREEN);
         //nt.setSecondary1(Color.ORANGE); // border
         //nt.setSecondary2(Color.PINK);
-        nt.setSecondary3(new Color(35,28,2));    // background
+        nt.setSecondary (new Color(35,28,2));    // background
         
         
-        nt.setBlack(new Color(255,255,0)); //text
+        nt.setBlack(Color.white); //text
         nt.setWhite(Color.black); //textfields
         //nt.setBlack(Color.cyan);
         

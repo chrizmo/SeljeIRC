@@ -45,6 +45,7 @@ public class ButtonTabComponent extends JPanel {
         add(label);
         //add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        label.setBackground(Color.black);
         
         //tab button
         JButton button = new TabButton();
@@ -102,9 +103,9 @@ public class ButtonTabComponent extends JPanel {
                 g2.translate(1, 1);
             }
             g2.setStroke(new BasicStroke(2));
-            g2.setColor(Color.BLACK);
+            g2.setColor(new Color(255,255,0));
             if (getModel().isRollover()) {
-                g2.setColor(Color.MAGENTA);
+                g2.setColor(Color.white);
             }
             int delta = 6;
             g2.drawLine(delta, delta, getWidth() - delta - 1, getHeight() - delta - 1);

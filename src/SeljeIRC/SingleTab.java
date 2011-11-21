@@ -55,7 +55,7 @@ public class SingleTab extends JPanel implements FocusListener {
          * TESTING BACKGROUND
          */
         MediaTracker mt = new MediaTracker(this);
-        bgimage = Toolkit.getDefaultToolkit().getImage("src/Images/logo_noframe.png");
+        bgimage = Toolkit.getDefaultToolkit().getImage("src/Images/ren_logo.png");
         mt.addImage(bgimage, 0);
         try {
           mt.waitForAll();
@@ -86,18 +86,17 @@ public class SingleTab extends JPanel implements FocusListener {
          */
       
          setLayout(bl);
-         setBackground(Color.darkGray);
             
         /*
          * Textarea
          */
         screen = new JTextPane();
             screen.setEditable(false);
-            screen.setBackground(Color.WHITE);
+            //screen.setBackground(Color.WHITE);
             /*
              * for alpha
              */
-            //screen.setBackground(new Color(0,0,0,225));
+            screen.setBackground(new Color(200,200,200,200));
             
         if(tabType == STATUS){
             SimpleAttributeSet color = new SimpleAttributeSet();
@@ -123,7 +122,7 @@ public class SingleTab extends JPanel implements FocusListener {
         //TODO set up the userlist model
         if(this.typeOfTab == SingleTab.CHANNEL){
         	listPanel = new ListOfUsers();
-            listPanel.setBackground(Color.GRAY);
+            listPanel.setBackground(Color.black);
         
             
         /*

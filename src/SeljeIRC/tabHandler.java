@@ -124,7 +124,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
                      }
 
                      public void run() {
-                        tabhandler.setBackgroundAt(thisIndex, Color.CYAN);
+                        tabhandler.setBackgroundAt(thisIndex, new Color(255,255,0));
                      }
                  }
                 
@@ -265,7 +265,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     @Override
     public void focusGained(FocusEvent fe) {
         int curSelected = this.getSelectedIndex();
-         this.setBackgroundAt(curSelected, Color.lightGray);
+         this.setBackgroundAt(curSelected, Color.black);
          
         SingleTab st = (SingleTab) this.getComponent(curSelected+1);
         st.passFocusToField();

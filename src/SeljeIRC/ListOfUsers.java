@@ -75,7 +75,7 @@ public class ListOfUsers extends JPanel {
         list.setLayoutOrientation(JList.VERTICAL);
         list.setFixedCellWidth(200);
         createPopup();
-        list.setBackground(Color.GRAY);
+        list.setBackground(Color.black);
         this.add(list);
     }
     
