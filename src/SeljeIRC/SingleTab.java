@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -49,11 +50,14 @@ public class SingleTab extends JPanel implements FocusListener {
     
     private InputField inputField;
     Image bgimage = null; //TESTING BACKGROUND
+    
+    Image img;
+    
     public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType) throws BadLocationException {
         super();
         /*
          * TESTING BACKGROUND
-         */
+         *
         MediaTracker mt = new MediaTracker(this);
         bgimage = Toolkit.getDefaultToolkit().getImage("src/Images/ren_logo.png");
         mt.addImage(bgimage, 0);
@@ -62,6 +66,15 @@ public class SingleTab extends JPanel implements FocusListener {
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
+        */
+        this.img = new ImageIcon("src/Images/ren_logo.png").getImage();
+        
+        Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
+        setPreferredSize(size);
+        setMinimumSize(size);
+        setMaximumSize(size);
+        setSize(size);
+        
     /*
      * 
      * STOP
@@ -146,6 +159,9 @@ public class SingleTab extends JPanel implements FocusListener {
         
         
     }
+    
+    
+    
     public int getType(){
         return typeOfTab;
     }
@@ -244,13 +260,11 @@ public class SingleTab extends JPanel implements FocusListener {
     public void passFocusToField(){
        inputField.setFocusOnField(); 
     }
-    
-    protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    int imwidth = bgimage.getWidth(null);
-    int imheight = bgimage.getHeight(null);
-    g.drawImage(bgimage, 1, 1, null);
-  }
+    /*
+    public void paintComponent(Graphics g) {
+        
+        g.drawImage(img, 0, 0, null);
+    }*/
     
     
     
