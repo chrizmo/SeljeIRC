@@ -289,9 +289,9 @@ public class ConnectionHandler implements IRCEventListener {
                     channelTab.updateStatusScreen("-!- End of WHOIS");
                 }
             
-                else if(e.getType() == Type.CHANNEL_LIST_EVENT)   {
+                else if(e.getType() == Type.CHANNEL_LIST_EVENT)   {	// Lists all the channels from the servers with topics
                 	ChannelListEvent chEvt = (ChannelListEvent) e;
-                	channelTab.updateStatusScreen("Channel: " + chEvt.getChannelName() + " Users: " + chEvt.getNumberOfUser());
+                	channelTab.updateStatusScreen("Channel: " + chEvt.getChannelName() + " Users: " + chEvt.getNumberOfUser() + " " + chEvt.getTopic());
                 }
                 else if (e.getType() == Type.TOPIC)   {
                     TopicEvent te = (TopicEvent) e;

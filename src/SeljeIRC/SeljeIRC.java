@@ -2,6 +2,7 @@ package SeljeIRC;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
@@ -38,6 +39,8 @@ public class SeljeIRC extends JFrame{
             
             channelTabs = new tabHandler();
             connection = new ConnectionHandler(channelTabs);
+            
+            
             colorSettings = new Colors();
             
             /*
@@ -97,6 +100,10 @@ public class SeljeIRC extends JFrame{
         public static ConnectionHandler returnConnection(){
             return connection;
         }
+        public void setStatusFocus(){
+            SingleTab st = (SingleTab) channelTabs.getComponent(1);
+            st.passFocusToField();
+        }
 
         
         
@@ -108,22 +115,44 @@ public static void main(String[] args) throws BadLocationException {
          * Setting up the mainframe, add only functionality related to .this
          */
         
-    SplashScreen splashScreen = new SplashScreen("logo2.jpg");
-    splashScreen.splash();
-    try {
-      Thread.sleep(0); //TODO: CHANGE BACK TO 3000
-    }
-    catch(InterruptedException ex) {
-      System.out.println(ex);
-    }
-    splashScreen.setVisible(false);
+         try{
+             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+         }catch(Exception e){
+             
+         }
+   
     
     
     
         SeljeIRC mainFrame = new SeljeIRC();    
-            mainFrame.setSize(new Dimension(1200, 800));
-            mainFrame.setVisible(true);
+        
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            mainFrame.setBounds(0,0,screenSize.width, screenSize.height);
+            //mainFrame.setSize(new Dimension(1200, 800));
+            
+            mainFrame.setVisible(false);
             mainFrame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+            
+             SplashScreen splashScreen = new SplashScreen("logo2.jpg");
+                splashScreen.splash();
+                //splashScreen.setVisible(false);
+            
+            
+            try {
+                  Thread.sleep(1000); //TODO: CHANGE BACK TO 3000
+                }
+                catch(InterruptedException ex) {
+                  System.out.println(ex);
+                }
+            splashScreen.setVisible(false)  ;
+            mainFrame.setVisible(true);
+            try {
+                  Thread.sleep(100); //gotta wait to set focus
+                }
+                catch(InterruptedException ex) {
+                  System.out.println(ex);
+                }
+            mainFrame.setStatusFocus();
      
  }
 }

@@ -47,6 +47,8 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         this.remove(0);
  //o = this.getComponents();       
         this.addTab(I18N.get("channeltab.status"), statusTab);
+        
+       
     }
     
     /*
@@ -121,7 +123,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
                 if(thisIndex != curSelected && thisIndex != 0){
                     System.out.print("indexoftab= "+" "+thisIndex + "curSelected = "+curSelected );
 
-                    this.setBackgroundAt(thisIndex, Color.blue);
+                    this.setBackgroundAt(thisIndex, Color.GREEN);
 
                 }
             }catch(Exception e){
@@ -219,7 +221,9 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     public void focusGained(FocusEvent fe) {
         int curSelected = this.getSelectedIndex();
          this.setBackgroundAt(curSelected, Color.GRAY);
-        
+         
+        SingleTab st = (SingleTab) this.getComponent(curSelected+1);
+        st.passFocusToField();
     }
 
     @Override
