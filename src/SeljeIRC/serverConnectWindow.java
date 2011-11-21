@@ -8,9 +8,13 @@ import javax.swing.*;
 
 import java.awt.event.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Collections;
 import java.util.Vector;
 import java.util.prefs.Preferences;
@@ -32,6 +36,7 @@ public class serverConnectWindow extends JFrame{
     static int openFrameCount = 0;
     ConnectionHandler connection = SeljeIRC.connection;
     private Preferences connectionPreferences;
+    private int startOfServerLine = 0;							// Used at beginning if server line in ini file
     private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     Vector<String> networkNames = new Vector<String>();			// List of networks in list
     Vector<String> serverNames = new Vector<String>();			// List of networks in list
@@ -159,6 +164,7 @@ public class serverConnectWindow extends JFrame{
             		subDropDown.setModel(new DefaultComboBoxModel(serverNames));
             		subDropDown.setSelectedItem(serverName);
             		
+            		writeServer(serverName,topDropDown.getSelectedItem().toString());
             	}
             	
             	
@@ -173,14 +179,16 @@ public class serverConnectWindow extends JFrame{
             
             changeSomething.addActionListener(new ActionListener(){
             	public void actionPerformed(ActionEvent evt){
+            		String newServerName;
             		try{
             			if(serverNames.size() > 0){		// Check if there are servers defined
             				int serverVectorPosition = serverNames.indexOf(subDropDown.getSelectedItem());
             				String serverName = serverNames.get(serverVectorPosition);
-            				serverName = JOptionPane.showInputDialog(serverConnectWindow.this,I18N.get("serverconnectwindow.addnewserver"),serverName);
-            				serverNames.setElementAt(serverName, serverVectorPosition);
+            				newServerName = JOptionPane.showInputDialog(serverConnectWindow.this,I18N.get("serverconnectwindow.addnewserver"),serverName);
+            				changeServer(serverName, newServerName);
+            				serverNames.setElementAt(newServerName, serverVectorPosition);
             				subDropDown.setModel(new DefaultComboBoxModel(serverNames));
-            				subDropDown.setSelectedItem(serverName);
+            				subDropDown.setSelectedItem(newServerName);
             			}
             		}catch(Exception e){
             			System.err.println("Error while adding: " + e.getMessage());
@@ -201,6 +209,7 @@ public class serverConnectWindow extends JFrame{
             		try{
             			if(serverNames.size() > 0){		// Check if there are servers defined
             				int serverVectorPosition = serverNames.indexOf(subDropDown.getSelectedItem());
+            				deleteServer(serverNames.get(serverVectorPosition));		// Delete from file
             				serverNames.remove(serverVectorPosition);
             				subDropDown.setModel(new DefaultComboBoxModel(serverNames));
             				if(serverVectorPosition > 0)	// Checks if the vector is zero 
@@ -503,6 +512,7 @@ public class serverConnectWindow extends JFrame{
    	 * @return Vector<String> list of servers
    	 */
    	public Vector<String> readServers(String networkName){
+   		int returnValue = 0;
 		BufferedReader brReader;
 		Vector<String> serverList = new Vector<String>();
 		String readFileLine = null;
@@ -512,10 +522,13 @@ public class serverConnectWindow extends JFrame{
 			while((readFileLine = brReader.readLine()) != null && !readFileLine.equals("[servers]")){} // Read down to line 
 	
 			while((readFileLine = brReader.readLine()) != null){
+				returnValue = Integer.parseInt(readFileLine.substring(1, readFileLine.indexOf("=")));		// Reads the first integer thing at start of string
 					if(readFileLine.endsWith(networkName)){
 						serverList.add(readFileLine.split(":")[1]);
 					}
-				}	
+				}
+			
+			this.startOfServerLine = returnValue;					// The number at the beginning of the string
 
 			brReader.close();
 			return serverList;
@@ -525,21 +538,131 @@ public class serverConnectWindow extends JFrame{
 		}
 		
 	}
+   	/**
+   	 * Adds changes to a server from the list to the server file.
+   	 * 
+   	 * This works by reading the old file and putting the contents in a new file. If a line contains
+   	 * the old server name that substring gets replaced with the new string 
+   	 * 
+   	 * @author Christer Vaskinn
+   	 * @since 0.1
+   	 * @param oldServerName	String with the old servername from the list
+   	 * @param newServerName String with the new servername to be put in the list
+   	 */
+   	private void changeServer(String oldServerName, String newServerName){
+   		File tempFile = new File("TemporaryFile.ini");		// The fileobject for the NEW file
+   		File serverFile = new File(this.SERVERFILE);		// The fileobject of the OLD file
+   		
+   		BufferedReader brReader;							// The object to be read from the file 
+   		BufferedWriter tmpFileWriter;						// The object to write to the new file
+   		String lineFromFile;								// The file read from the old file
+   		try{
+   			brReader = new BufferedReader(new FileReader(serverFile));
+   			tmpFileWriter = new BufferedWriter(new FileWriter(tempFile));
+   			
+   			
+   			if(serverFile.exists()){							// Checks if the old file exists
+   				while((lineFromFile = brReader.readLine()) != null){
+   					if(lineFromFile.contains(oldServerName)){
+   						lineFromFile = lineFromFile.replaceFirst(oldServerName, newServerName);
+   					}
+   						tmpFileWriter.write(lineFromFile);
+   						tmpFileWriter.newLine();
+   				}
+   				brReader.close();							// Closes both the files
+   				tmpFileWriter.close();
+   			
+   				serverFile.delete();						// Deletes the old file
+   				tempFile.renameTo(serverFile);				// Rename the old file to the new file
+   			}
+   		}catch(Exception ioe){								// Shit got real
+   			System.err.println("Error while deleting server from file" + ioe.getMessage());
+   		}
+   	}
+   	
+   	/**
+   	 * Deletes a server from the server list file
+   	 * 
+   	 * Works by writing contents of the serverfile line for line to a temporary file. 
+   	 * If a line contains the servername it get's ignored and the file continous writing the rest of the old files contents.
+   	 * The old file then gets deleted and the new file gets renamed to the old files name. 
+   	 *  
+   	 * @author Christer Vaskinn
+   	 * @since 0.1
+   	 * @param serverName String with the servername to delete
+   	 */
+   	
+   	private void deleteServer(String serverName){
+   		File tempFile = new File("TemporaryFile.ini");				// Fileobject for the new temporary file
+   		File serverFile = new File(this.SERVERFILE);				// Fileobject of the old serverfile to be read from
+   		
+   		BufferedReader brReader;									// BufferedReader to write line for line
+   		BufferedWriter tmpFileWriter;								// BufferedWriter to write to file
+   		String lineFromFile;										// Line read from the old file
+   		try{
+   			brReader = new BufferedReader(new FileReader(serverFile));
+   			tmpFileWriter = new BufferedWriter(new FileWriter(tempFile));
+   			
+   			while((lineFromFile = brReader.readLine()) != null){	// While the file has contents
+   				if(!lineFromFile.contains(serverName)){				// Checks if the read line contains servername
+   					tmpFileWriter.write(lineFromFile);				// If _NOT_ the line gets written to a new file
+   					tmpFileWriter.newLine();						// Create new line
+   				}
+   				
+   			}
+   			brReader.close();										// Closes both files
+   			tmpFileWriter.close();
+   				
+   			serverFile.delete();									// Delete the old file
+   			tempFile.renameTo(serverFile);							// Rename new file to old filename
+   			
+   		}catch(Exception ioe){										// Why would you care?
+   			System.err.println("Error while deleting server from file" + ioe.getMessage());
+   		}
+   	}
+   	/**
+   	 * Writes the server name added to the list
+   	 * 
+   	 * Just adds a line at the end of the file with an incremented n-number and network name
+   	 * 
+   	 * @author Christer Vaskinn
+   	 * @since 0.1
+   	 * @param serverName String with the servername to add to the list
+   	 * @param networkName String with the networkName to add to the end of the string
+   	 */
+   	private void writeServer(String serverName, String networkName){
+   		
+   		BufferedWriter brWriter;							// Buffered writerobject 
+   		String stringToWrite;								// The string to append to file
+   		
+   		try{
+   			stringToWrite = "n" + ++this.startOfServerLine + "=Random serverSERVER:" + serverName.toLowerCase() + ":6660-6667GROUP:" + networkName; // Construct the string to write, increment n-number
+   			brWriter = new BufferedWriter(new FileWriter(this.SERVERFILE, true)); 		// Create the writing object		
+   			brWriter.write(stringToWrite);												// Write the file to the file
+   			brWriter.newLine();															// A new line for pretty prettyness about pretty ponies. I'm fucking bored
+   			brWriter.close();															// Close the file 
+   		}catch(IOException ioe){														// This is not the hip place to be daddy'o
+   			System.err.println("Error while writing to file: " + ioe.getMessage());
+   		}
+   		
+   	}
     	
-    	/**
-    	 * Opens a file for reading purposes
+		/**
+    	 * Opens a file for reading purposes.
     	 * 
     	 * @param filename FileName of file to open
-    	 * @return A Buffered reader object to the file
+    	 * @return A Buffered reader object to the file, null if file doesn't exists
     	 * 
     	 *
     	 */ 
     	private BufferedReader openIniFile(String filename){
-    		
+    		BufferedReader brReader = null;					// The Reader object to return
     		try{
-    			BufferedReader brReader = new BufferedReader(new FileReader(filename));
-    			return brReader;
-    		}catch(FileNotFoundException fileException){
+    			File fileObj = new File(filename);			// The fileobject of the file to read
+    			if(fileObj.exists())						// If the file exits, create bufferedReader
+    				brReader = new BufferedReader(new FileReader(fileObj));
+    			return brReader;							// Wee
+    		}catch(FileNotFoundException fileException){	// Well why did this happen?
     			System.err.println("Error opening file: " + fileException.getMessage());
     			return null;
     		}
