@@ -13,6 +13,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.text.StyleConstants;
 
 
 /**
@@ -24,13 +25,13 @@ import javax.swing.JLabel;
 
 public class Colors {
 // Initiate colors to black:
-static Color statusColor; // = "foreground=java.awt.Color[r=0,g=0,b=0]";
-static Color nickColor;  // = "foreground=java.awt.Color[r=0,g=0,b=0]";
-static Color channelColor;  //= "foreground=java.awt.Color[r=0,g=0,b=0]";
-static Color highLightColor; // = "foreground=java.awt.Color[r=0,g=0,b=0]";
+public static Color statusColor = new Color(0, 0, 0);
+public static Color nickColor = new Color(0, 0, 0);
+public static Color channelColor = new Color(0, 0, 0);
+public static Color highLightColor = new Color(0, 0, 0);
 // family=Courier New foreground=java.awt.Color[r=128,g=128,b=128]
 // Initiate font to Courier new:
-static String font = "family=Courier New ";
+public static String font = "family=Courier New ";
 
 public Colors () {
 // Empty constructor
@@ -124,13 +125,12 @@ static void colorWindow () {
     gbc.gridheight = 1;
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(fontLabel, gbc);
-
     
     //get the local graphics environment
     GraphicsEnvironment graphicsEvn = GraphicsEnvironment.getLocalGraphicsEnvironment();
     //get all the available fonts
-    String availFonts[] = graphicsEvn.getAvailableFontFamilyNames();
-    JComboBox fontList = new JComboBox(availFonts);
+    final String availFonts[] = graphicsEvn.getAvailableFontFamilyNames();
+    final JComboBox fontList = new JComboBox(availFonts);
     gbc.insets=new Insets(2,2,2,2);
     gbc.gridx = 1;
     gbc.gridy = 1;
@@ -138,6 +138,18 @@ static void colorWindow () {
     gbc.gridheight = 1;
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(fontList, gbc);
+
+    JLabel fontSize = new JLabel("Font size");
+    gbc.insets = new Insets(2,2,2,2);
+    gbc.gridx = 1;
+    gbc.gridy = 2;
+    gbc.gridwidth = 1;
+    gbc.gridheight = 1;
+    gbc.fill = GridBagConstraints.BOTH;
+    colorLayout.setConstraints(fontSize, gbc);
+
+    final int fontZize[] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+    
 
     JButton OK = new JButton("OK");
     gbc.gridx = 0;
@@ -167,6 +179,7 @@ static void colorWindow () {
     colorBoxShit.add(fontLabel);
     colorBoxShit.add(cancel);
     colorBoxShit.add(fontList);
+    colorBoxShit.add(fontSize);
     colorBoxShit.pack();
     colorBoxShit.setVisible(true);
 
@@ -174,11 +187,6 @@ static void colorWindow () {
             OK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent faenEgETrott) {
            colorBoxShit.setVisible(false);
-           String status = "foreground=java.awt.Color[r=0,g=0,b=128]";
-           String nick= "foreground=java.awt.Color[r=0,g=127,b=0]";
-           String channel = "foreground=java.awt.Color[r=100,g=0,b=0]";
-           String highLight = "foreground=java.awt.Color[r=0,g=46,b=0]";
-           //setColors(status, nick, channel, highLight);
             }
         });
 
@@ -193,6 +201,7 @@ static void colorWindow () {
         statusColorButton.addActionListener(new ActionListener() {
           public void actionPerformed (ActionEvent StatuzColor) {
           statusColor = JColorChooser.showDialog(colorBoxShit, font, Color.BLACK);
+          System.out.println(statusColor);
           }
         });
 
@@ -216,7 +225,14 @@ static void colorWindow () {
           highLightColor = JColorChooser.showDialog(colorBoxShit, font, Color.BLACK);
           }
         });
-    
+
+    // Choose font:
+    fontList.addActionListener(new ActionListener() {
+          public void actionPerformed (ActionEvent setSelectedFont) {
+          int nr = fontList.getSelectedIndex();
+          font = availFonts[nr];
+          }
+        });
 }
 
    public static void main (String args[]) {
