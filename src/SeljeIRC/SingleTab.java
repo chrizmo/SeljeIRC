@@ -9,6 +9,12 @@ import java.awt.Color;
 
 import java.awt.Dimension;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +31,7 @@ import jerklib.Channel;
  *
  * @author wbserver
  */
-public class SingleTab extends JPanel{
+public class SingleTab extends JPanel implements FocusListener {
 	
 	final static public int STATUS = 0;
 	final static public int CHANNEL = 1;
@@ -41,16 +47,32 @@ public class SingleTab extends JPanel{
     private ListOfUsers listPanel;
     private int typeOfTab = 1;			// The type of this tab. Standard is channel
     
-    
-    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType) throws BadLocationException{
+    private InputField inputField;
+    Image bgimage = null; //TESTING BACKGROUND
+    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType) throws BadLocationException {
         super();
+        /*
+         * TESTING BACKGROUND
+         */
+        MediaTracker mt = new MediaTracker(this);
+        bgimage = Toolkit.getDefaultToolkit().getImage("src/Images/logo_noframe.png");
+        mt.addImage(bgimage, 0);
+        try {
+          mt.waitForAll();
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+    /*
+     * 
+     * STOP
+     */
+        
         
         typeOfTab = tabType;			// Sets the type of tab
         channel = ch;
         connection = con;
-        channelTab = ct;
+        channelTab = ct;    
         index = channelTab.indexOfComponent(this);
-        
         
         /*
          * Borderlayout containing textarea and userlist
@@ -71,7 +93,11 @@ public class SingleTab extends JPanel{
          */
         screen = new JTextPane();
             screen.setEditable(false);
-            screen.setBackground(Color.lightGray);
+            screen.setBackground(Color.WHITE);
+            /*
+             * for alpha
+             */
+            //screen.setBackground(new Color(0,0,0,225));
             
         if(tabType == STATUS){
             SimpleAttributeSet color = new SimpleAttributeSet();
@@ -88,6 +114,7 @@ public class SingleTab extends JPanel{
             
             
         JScrollPane textAreaScroller = new JScrollPane(screen);
+        textAreaScroller.setBackground(new Color(0,0,0,70));
         add(textAreaScroller,BorderLayout.CENTER );
         
         /*
@@ -113,10 +140,10 @@ public class SingleTab extends JPanel{
         	
         	
         } 
-        InputField inputField = new InputField(connection,channel,this.typeOfTab);
+        inputField = new InputField(connection,channel,this.typeOfTab);
         add(inputField,BorderLayout.SOUTH);
 
-        
+        passFocusToField();
         
         
     }
@@ -203,6 +230,30 @@ public class SingleTab extends JPanel{
     void changeNick(String oldNick, String newNick)   {
         listPanel.getListModel().changeNick(oldNick, newNick);
     }
+
+    
+    
+    @Override
+    public void focusGained(FocusEvent fe) {
+       inputField.setFocusOnField();
+    }
+
+    @Override
+    public void focusLost(FocusEvent fe) {
+        //throw new UnsupportedOperationException("Not supported yet.");
+    }
+    public void passFocusToField(){
+       inputField.setFocusOnField(); 
+    }
+    
+    protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    int imwidth = bgimage.getWidth(null);
+    int imheight = bgimage.getHeight(null);
+    g.drawImage(bgimage, 1, 1, null);
+  }
+    
+    
     
    
 }

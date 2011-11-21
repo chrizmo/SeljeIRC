@@ -16,6 +16,7 @@ public class ButtonTabComponent extends JPanel {
     private final tabHandler pane;
     private ConnectionHandler connection;
     int tabType;
+    JLabel label;
  
     public ButtonTabComponent(final tabHandler pane, ConnectionHandler con, int tt) {
         //unset default FlowLayout' gaps
@@ -30,7 +31,7 @@ public class ButtonTabComponent extends JPanel {
         setOpaque(false);
          
         //make JLabel read titles from JTabbedPane
-        JLabel label = new JLabel() {
+            label = new JLabel() {
             public String getText() {
                 int i = pane.indexOfTabComponent(ButtonTabComponent.this);
                 if (i != -1) {
@@ -44,6 +45,7 @@ public class ButtonTabComponent extends JPanel {
         add(label);
         //add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        
         //tab button
         JButton button = new TabButton();
         add(button);
@@ -127,5 +129,10 @@ public class ButtonTabComponent extends JPanel {
                 button.setBorderPainted(false);
             }
         }
+        
     };
+    public void notification(){
+            Icon icon = new ImageIcon("src/Images/attention-icon.png");
+            label.setIcon(icon);
+        }
 }

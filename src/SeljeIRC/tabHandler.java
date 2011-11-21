@@ -15,131 +15,152 @@ import jerklib.Channel;
  *  directly into the JTabbedPane
  * @author hallvardwestman
  */
-//TODO 
+
 public class tabHandler extends JTabbedPane implements FocusListener {
 	
-    /*
-     * indexing all tabs 
-     */
     private static ConnectionHandler connection;
-     
-    
-    
-    
     private int curTabIndex = 0;
-   
-    
-     
-    public tabHandler() throws BadLocationException{
-        super();
-        /* 
-         * what im doing?
-         */   
-        SingleTab statusTab = new SingleTab(connection,"status",this,SingleTab.STATUS);
-                
- //Object o = this.getComponents();               
-                
-        this.addTab(I18N.get("channeltab.status"), statusTab);
-// o = this.getComponents();       
-        ButtonTabComponent ctb = new ButtonTabComponent(this,connection,SingleTab.STATUS);
-        this.setTabComponentAt(0,ctb);
- //o = this.getComponents();       
-        this.remove(0);
- //o = this.getComponents();       
-        this.addTab(I18N.get("channeltab.status"), statusTab);
-    }
-    
-    /*
-     * only the statustab is created here, containing just jtextarea
-     */
-  
-    
+    private tabHandler tabhandler;
     /**
-     * add tabs for each channel
+     * creates a tabhendler to handle all tabs in jtabbedpane
+     * default creates a statustab
      * @throws BadLocationException 
      */
     
+    public tabHandler() throws BadLocationException{
+        super();
+        tabhandler = this;
+        
+        SingleTab statusTab = new SingleTab(connection,"status",this,SingleTab.STATUS);
+                              
+                
+        this.addTab(I18N.get("channeltab.status"), statusTab);
+        ButtonTabComponent ctb = new ButtonTabComponent(this,connection,SingleTab.STATUS);
+        this.setTabComponentAt(0,ctb);  
+        this.remove(0);    
+        this.addTab(I18N.get("channeltab.status"), statusTab);
+
+       
+    }
     
     /**
-     * 
-     * 
+     * Creates new channel-tab or private message-tab
+     * @param tabName
+     * @param tabType
+     * @param topic
+     * @throws BadLocationException 
      */
+    
     public void createNewTab(String tabName, int tabType, String topic) throws BadLocationException{
         SingleTab st;
         
         /*
-         * adding tab
+         * Creates correct object based on type
+         * TODO let statustab be created here?
          */
-        if(!tabName.isEmpty()){
-        	
-    		if(this.indexOfTab(tabName) < 0){			// Checks if tab exists, goes to tab if true
-    		
-    			if(tabType == SingleTab.CHANNEL){			// Checks the tab type
-    	    		if(!tabName.startsWith("#")){		// Appends the hash if not provided
-    	    			StringBuilder stBuild = new StringBuilder();
-    	    			stBuild.insert(0, "#");
-    	    			stBuild.append(tabName);
-    	    			tabName = stBuild.toString();
-    	    		}
-    	        	
-    	    		st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
-    			} else
-    				st = new SingleTab(connection,tabName,this,SingleTab.PRIVATE);
-                                
-                        
-                    
-                    addFocusListener(this);
-                        
-                        this.addTab(tabName,st);
-                        int tabIndex = this.indexOfTab(tabName); 
-                        /*
-                         * adding closebutton, not on statustab
-                         */
-                        if(tabType == SingleTab.CHANNEL || tabType == SingleTab.PRIVATE){
-                            ButtonTabComponent ctb = new ButtonTabComponent(this,connection,tabType);
-                            this.setTabComponentAt(tabIndex,ctb);
-                        }
-                            //checking whats in the jtabbedpane
-    		}else{
-                        this.updateTabScreen(tabName,topic);
-    		}
-    			this.setSelectedIndex(this.indexOfTab(tabName));
+        
+        if(tabType == SingleTab.CHANNEL){
+            st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
+        } else
+            st = new SingleTab(connection,tabName,this,SingleTab.PRIVATE);
+        
+        this.addTab(tabName,st);
+        int tabIndex = this.indexOfTab(tabName); 
+        
+        /*
+         * adding closebutton, not on statustab
+         */
+        
+        if(tabType == SingleTab.CHANNEL || tabType == SingleTab.PRIVATE){
+            ButtonTabComponent ctb = new ButtonTabComponent(this,connection,tabType);
+            this.setTabComponentAt(tabIndex,ctb);
         }
-      
-}
-    public void updateTabScreen(String ch, String message) throws BadLocationException{
-            
-            //System.out.print(message);
-            SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
-                st.updateScreen(message);
-            
-            
-            int curSelected = this.getSelectedIndex();
-            int thisIndex = this.indexOfTab(ch);
-            
-            try{
-                if(thisIndex != curSelected && thisIndex != 0){
-                    System.out.print("indexoftab= "+" "+thisIndex + "curSelected = "+curSelected );
+     
 
-                    this.setBackgroundAt(thisIndex, Color.blue);
-
-                }
-            }catch(Exception e){
-                //this is bullshit.
-            }
-   
+        /*
+         * setting this tab to be selected
+         * TODO should not be done if its privatemessge and user did not
+         * create it, should if he did
+         */
+        
+        addFocusListener(this);
+        this.setSelectedIndex(this.indexOfTab(tabName));
+        
     }
-    /*
-     * use this instead of indexoftab when you want the right component out and not just title
+    
+    /**
+     * You should know what your doing before touching this
+     * index of getcomponent needs to be different than setcomponent etc
+     * 
+     * The array containing all tabs contains a tabcontainer in index 0, and statustab in index 1 etc.
+     * this makes it difficult to operate on correct tabs
+     * @param channel and message to be displayed
      */
+    
+    public void updateTabScreen(String ch, String message) throws BadLocationException{
+        
+        /*
+         * getting SingleTab from tabhandler to update screen
+         */
+        
+        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
+        st.updateScreen(message);
+        
+        /*
+         * checks to see if tab is selected, if not notify user by flagging 
+         * this tab in GUI
+         */
+        
+        int curSelected = this.getSelectedIndex();
+        final int thisIndex = this.indexOfTab(ch);
+        try{
+            if(thisIndex != curSelected && thisIndex != 0){
+                System.out.print("indexoftab= "+" "+ thisIndex +"curSelected = "+curSelected);
+                
+                class PrimeThread extends Thread {
+                     long minPrime;
+                     PrimeThread(long minPrime) {
+                         this.minPrime = minPrime;
+                     }
+
+                     public void run() {
+                        tabhandler.setBackgroundAt(thisIndex, Color.CYAN);
+                     }
+                 }
+                
+                PrimeThread p = new PrimeThread(143);
+                p.start();
+                
+                
+                //Icon icon = new ImageIcon("src/Images/attention-icon.png");
+                //this.setIconAt(thisIndex, icon);
+                
+                
+            }
+        }catch(Exception e){
+            //this is bullshit.
+
+            System.out.print("nonono");
+        }
+    }
+    
+    /**
+      * use this instead of indexoftab when you want component returned
+      * use getIndexOf for title and such
+      * @param channel
+      */
+    
     public int getIndexOfTab(String ch){
             
             return this.indexOfTab(ch)+1;
     }
    
-    /*
-     * function overloaded
+    /**
+     * overloaded function for usage of list
+     * @author larserik
+     * @param channel, list and message to be displayed
      */
+    
     void updateTabScreen(String ch, List<String> message) throws BadLocationException {
   
         int tabIndex = this.indexOfTab(ch);
@@ -149,22 +170,42 @@ public class tabHandler extends JTabbedPane implements FocusListener {
 
     }
     
-    public void updateStatusScreen(String ch){
+    /**
+     * updates statustab with param
+     * //TODO merge with updateTabScreen
+     * @param update to be displayed
+     * 
+     */
+    
+    public void updateStatusScreen(String update){
      
         try{
-        	updateTabScreen("status",ch);
+        	updateTabScreen("status",update);
     	}catch(Exception e){
     		System.err.println("System error " + e.getMessage());
     	}
     }
     
+    /**
+     * sets connection to param
+     * Suspect not in use 
+     * //TODO check use
+     * @param ch 
+     */
+    
     public static void setConnection(ConnectionHandler ch){
         connection = ch;
     }
     
+    /**
+     * Cycles through all tabs except from statustab and removes from jtabbedpane
+     * 
+     * theTabProblem is affected here
+     */
+    
     public void removeAllTabs(){
         
-        for(int i = 1; i <= this.getTabCount(); i++){
+        for(int i = 2; i <= this.getTabCount(); i++){
             
             this.remove(i);
             
@@ -174,7 +215,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     // Checks if a certain tab exists
     public boolean tabExists(String ch){
        
-    	return((this.indexOfTab(ch) >= 0) ? true : false); //FIX: Sjekk om koden kan forberedres
+    	return((this.indexOfTab(ch) >= 0) ? true : false); //TODO Sjekk om koden kan forberedres
     	
     }
     
@@ -214,16 +255,25 @@ public class tabHandler extends JTabbedPane implements FocusListener {
        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.changeNick(oldNick, newNick);
     }
-
+    
+    /**
+     * Removes notification from tab when selected (focused)
+     * sends focus down to inputfield
+     * @param fe 
+     */
+    
     @Override
     public void focusGained(FocusEvent fe) {
         int curSelected = this.getSelectedIndex();
-         this.setBackgroundAt(curSelected, Color.GRAY);
-        
+         this.setBackgroundAt(curSelected, Color.lightGray);
+         
+        SingleTab st = (SingleTab) this.getComponent(curSelected+1);
+        st.passFocusToField();
     }
 
     @Override
     public void focusLost(FocusEvent fe) {
         
     }
+    
 }
