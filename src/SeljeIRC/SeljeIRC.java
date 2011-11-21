@@ -125,14 +125,19 @@ public static void main(String[] args) throws BadLocationException {
          * Setting up the mainframe, add only functionality related to .this
          *
         
-        
+        *
     
          //NimRODTheme nt = new NimRODTheme();
          
          try{
+
              UIManager.setLookAndFeel(new com.nilo.plaf.nimrod.NimRODLookAndFeel());
+
+             if(!System.getProperty("os.name").startsWith("Mac OS X"))	// Fuck you guys!
+            	 UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");	// Making the bitches ugly
+
          }catch(Exception e){
-             
+             System.err.println("I got big booty bitches: " + e.getMessage());
          }
    
     */

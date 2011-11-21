@@ -97,11 +97,18 @@ public class InputField extends JPanel {
         	switch(typeOfMessage){
     			case SingleTab.PRIVATE: connection.sayToPrivate(textToPost, channel); break;
     			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break; 
-    			default: connection.sayToServer(textToPost); break;
+    			default: 
+    				if(tabType == SingleTab.CHANNEL)
+    					connection.sayToServer(textToPost,channel);
+    				else
+    					connection.sayToServer(textToPost,null);
+    				break;
 
         	}
         }catch(BadLocationException e){
         	System.err.println("System error" + e.getMessage());
+        }catch(NullPointerException ex){
+        	System.err.println("Major fuck-up in input field: " + ex.getMessage());
         }
         
     	txtInputField.setText("");
