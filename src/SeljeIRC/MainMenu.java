@@ -101,8 +101,10 @@ public class MainMenu extends JMenuBar {
         JMenuItem settings = new JMenuItem("Settings");
         JMenuItem getChannels = new JMenuItem("Get channel list");
         JMenuItem colors = new JMenuItem("Colors");
+        JMenuItem changeNick = new JMenuItem("Change nick");
         edit.add(getChannels);
         edit.add(colors);
+        edit.add(changeNick);
         edit.add(settings);
         
         //--------------Action listeners-----------------------------
@@ -124,6 +126,16 @@ public class MainMenu extends JMenuBar {
         colors.addActionListener(new ActionListener() {
             public void actionPerformed (ActionEvent letsMakeSomeColors) {
                 Colors.colorWindow();
+            }
+        });
+        
+        changeNick.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String newNick = JOptionPane.showInputDialog("New nick");
+                if (newNick != null)
+                    connection.getCurrentSession().changeNick(newNick);
             }
         });
 

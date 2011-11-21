@@ -147,10 +147,6 @@ public class ConnectionHandler implements IRCEventListener {
                 }
             
                 else if(e.getType() == Type.NICK_CHANGE){
-                	//ErrorEvent no = (ErrorEvent) e;
-                	//String update = no.getErrorType().toString();
-                	//channelTab.updateStatusScreen("NickInUseBuddy");
-                    //channelTab.updateStatusScreen(update);
                     NickChangeEvent nce = (NickChangeEvent) e;
                     Iterator<Channel> i = e.getSession().getChannels().iterator();
                     String ch;
@@ -187,6 +183,11 @@ public class ConnectionHandler implements IRCEventListener {
                         Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 
+                }
+                
+                else if (e.getType() == Type.NICK_IN_USE)   {
+                    NickInUseEvent niu = (NickInUseEvent) e;
+                        channelTab.updateStatusScreen("-!- Nick "+niu.getInUseNick()+" is already in use!");
                 }
                 
                 else if (e.getType() == Type.JOIN)   {
@@ -469,7 +470,7 @@ public class ConnectionHandler implements IRCEventListener {
             				Channel ch = event.getSession().getChannel(channelName);
             				ch.mode(textFromCommand);										
             			}
-                                else if (commandFromUser.startsWith("/away")){
+                                else if (commandFromUser.startsWith("/away")){                                          // Set or unset away
                                     if (!textFromCommand.equals(""))
                                         event.getSession().setAway(textFromCommand);
                                     else
@@ -482,8 +483,11 @@ public class ConnectionHandler implements IRCEventListener {
             			else if(commandFromUser.startsWith("/quit")){						// Quit from server
             				System.exit(0);
             			}
+                                else if(commandFromUser.startsWith("/nick")){
+                                    event.getSession().changeNick(textFromCommand);
+                                }
             			else if(commandFromUser.startsWith("/help")){						// Help commands
-            				String allowedCommands = new String("Allowed commands: /help, /raw, /mode, /voice, /deop, /op, /j, /join, topic");
+            				String allowedCommands = new String("Allowed commands: /nick /away /help, /raw, /mode, /voice, /deop, /op, /j, /join, topic");
             				if(channelName != null)
             					channelTab.updateTabScreen(channelName, allowedCommands);
             				else
