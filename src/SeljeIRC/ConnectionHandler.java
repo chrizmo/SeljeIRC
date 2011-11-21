@@ -441,7 +441,7 @@ public class ConnectionHandler implements IRCEventListener {
             			
             			String textFromCommand = inputString.substring(stringCommandFinder.end());
             			
-            			if(channelMatcher.find() || channelName == null)		// Finds channel name in command
+            			if(channelMatcher.find())		// Finds channel name in command
             				channelName = channelMatcher.group();
             			
             			if(commandFromUser.startsWith("/topic"))				// Sets the channel topic
