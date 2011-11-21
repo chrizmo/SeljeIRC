@@ -25,10 +25,10 @@ import javax.swing.text.StyleConstants;
 
 public class Colors {
 // Initiate colors to black:
-public static Color statusColor; // = "foreground=java.awt.Color[r=0,g=0,b=0]";
-public static Color nickColor;  // = "foreground=java.awt.Color[r=0,g=0,b=0]";
-public static Color channelColor;  //= "foreground=java.awt.Color[r=0,g=0,b=0]";
-public static Color highLightColor; // = "foreground=java.awt.Color[r=0,g=0,b=0]";
+public static Color statusColor = new Color(0, 0, 0);
+public static Color nickColor = new Color(0, 0, 0);
+public static Color channelColor = new Color(0, 0, 0);
+public static Color highLightColor = new Color(0, 0, 0);
 // family=Courier New foreground=java.awt.Color[r=128,g=128,b=128]
 // Initiate font to Courier new:
 public static String font = "family=Courier New ";
@@ -201,6 +201,7 @@ static void colorWindow () {
         statusColorButton.addActionListener(new ActionListener() {
           public void actionPerformed (ActionEvent StatuzColor) {
           statusColor = JColorChooser.showDialog(colorBoxShit, font, Color.BLACK);
+          System.out.println(statusColor);
           }
         });
 

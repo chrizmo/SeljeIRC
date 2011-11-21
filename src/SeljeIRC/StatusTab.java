@@ -103,7 +103,6 @@ public class StatusTab extends JPanel{
       //screen.append("\n"+dateFormat.format(date) +" " +update);
       screen.getDocument().insertString(screen.getDocument().getLength() + 1,
                     "\n" + dateFormat.format(date) + " " + update, textColor);
-      System.out.println(textColor);
 
       // Auto-scroll
       screen.setCaretPosition(screen.getDocument().getLength());
