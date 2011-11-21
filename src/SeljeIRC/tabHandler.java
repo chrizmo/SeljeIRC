@@ -64,13 +64,26 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      * 
      * 
      */
-    public void createNewTab(String tabName, int tabType,String topic) throws BadLocationException{
+    public void createNewTab(String tabName, int tabType, String topic) throws BadLocationException{
         SingleTab st;
-       
         
-                    if(tabType == SingleTab.CHANNEL)			// Checks the tab type
-    				st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
-    			else
+        /*
+         * adding tab
+         */
+        if(!tabName.isEmpty()){
+        	
+    		if(this.indexOfTab(tabName) < 0){			// Checks if tab exists, goes to tab if true
+    		
+    			if(tabType == SingleTab.CHANNEL){			// Checks the tab type
+    	    		if(!tabName.startsWith("#")){		// Appends the hash if not provided
+    	    			StringBuilder stBuild = new StringBuilder();
+    	    			stBuild.insert(0, "#");
+    	    			stBuild.append(tabName);
+    	    			tabName = stBuild.toString();
+    	    		}
+    	        	
+    	    		st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
+    			} else
     				st = new SingleTab(connection,tabName,this,SingleTab.PRIVATE);
                                 
                         
@@ -87,8 +100,11 @@ public class tabHandler extends JTabbedPane implements FocusListener {
                             this.setTabComponentAt(tabIndex,ctb);
                         }
                             //checking whats in the jtabbedpane
-                    this.setSelectedIndex(tabIndex);
+    		}else{
                         this.updateTabScreen(tabName,topic);
+    		}
+    			this.setSelectedIndex(this.indexOfTab(tabName));
+        }
       
 }
     public void updateTabScreen(String ch, String message) throws BadLocationException{

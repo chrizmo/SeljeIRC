@@ -3,6 +3,7 @@ package SeljeIRC;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenu;
@@ -43,6 +44,8 @@ public class MainMenu extends JMenuBar {
         JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
         file.add(newChannel);
 
+
+        
         JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"));
         file.add(exitProgram);
 
@@ -96,12 +99,22 @@ public class MainMenu extends JMenuBar {
 
 
         JMenuItem settings = new JMenuItem("Settings");
+        JMenuItem getChannels = new JMenuItem("Get channel list");
         JMenuItem colors = new JMenuItem("Colors");
-        edit.add(settings);
+        edit.add(getChannels);
         edit.add(colors);
-
+        edit.add(settings);
+        
         //--------------Action listeners-----------------------------
 
+        getChannels.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent evt){
+        		if(JOptionPane.showConfirmDialog(MainMenu.this, "This is really dumb and you're gonna get your stupid ass banned!\nDo you still wanna do it?" ,"Are you retarded?",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION) //TODO: OVERSETT!
+        			connection.getAllTheChannelsFromServer();
+        	}
+        	
+        });
+        
         settings.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent nils) {
                  JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);
