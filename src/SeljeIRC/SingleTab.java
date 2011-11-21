@@ -9,6 +9,8 @@ import java.awt.Color;
 
 import java.awt.Dimension;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +27,7 @@ import jerklib.Channel;
  *
  * @author wbserver
  */
-public class SingleTab extends JPanel{
+public class SingleTab extends JPanel implements FocusListener {
 	
 	final static public int STATUS = 0;
 	final static public int CHANNEL = 1;
@@ -41,8 +43,8 @@ public class SingleTab extends JPanel{
     private ListOfUsers listPanel;
     private int typeOfTab = 1;			// The type of this tab. Standard is channel
     
-    
-    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType) throws BadLocationException{
+    private InputField inputField;
+    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType) throws BadLocationException {
         super();
         
         typeOfTab = tabType;			// Sets the type of tab
@@ -113,10 +115,10 @@ public class SingleTab extends JPanel{
         	
         	
         } 
-        InputField inputField = new InputField(connection,channel,this.typeOfTab);
+        inputField = new InputField(connection,channel,this.typeOfTab);
         add(inputField,BorderLayout.SOUTH);
 
-        
+        passFocusToField();
         
         
     }
@@ -175,6 +177,21 @@ public class SingleTab extends JPanel{
     
     void changeNick(String oldNick, String newNick)   {
         listPanel.getListModel().changeNick(oldNick, newNick);
+    }
+
+    
+    
+    @Override
+    public void focusGained(FocusEvent fe) {
+       inputField.setFocusOnField();
+    }
+
+    @Override
+    public void focusLost(FocusEvent fe) {
+        //throw new UnsupportedOperationException("Not supported yet.");
+    }
+    public void passFocusToField(){
+       inputField.setFocusOnField(); 
     }
     
    
