@@ -3,12 +3,14 @@ package SeljeIRC;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
 
 /**
  *
@@ -69,20 +71,14 @@ public class MainMenu extends JMenuBar {
                
                JOptionPane jop = new JOptionPane();
                
-               
-               
-               if(connection.connectedToServer()){
-               
-                   System.out.printf("creating new tab in mainmenunow");
-                    
                String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
-                    
-                    channelTab.createNewTab(channel, SingleTab.CHANNEL);
-                   
-                        
-               }
-               else
-                    channelTab.updateStatusScreen("Cant join when not connected");
+                 
+                    try {
+                       connection.joinChannel(channel);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+             
                
            } 
         });
@@ -136,7 +132,7 @@ public class MainMenu extends JMenuBar {
     public void createHelpMenu() {
         JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
         help.add(helpItem);
-        JMenuItem aboutItem = new JMenuItem("dont work");
+        JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"));
         help.add(aboutItem);
 
         //--------------Action listeners-----------------------------

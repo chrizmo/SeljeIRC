@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 
 
 /**
@@ -29,7 +30,7 @@ public class SeljeIRC extends JFrame{
         
         boolean isConnected;
 
-	public SeljeIRC(){
+	public SeljeIRC() throws BadLocationException{
             
             /*
              * Connection to server
@@ -101,8 +102,7 @@ public class SeljeIRC extends JFrame{
         
         
         
-        
-public static void main(String[] args) {
+public static void main(String[] args) throws BadLocationException {
     
         /*
          * Setting up the mainframe, add only functionality related to .this

@@ -106,13 +106,29 @@ public class ListOfUsers extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                openPrivateChat(getSelectedUser());
+                try {
+                    openPrivateChat(getSelectedUser());
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(ListOfUsers.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         JMenu control = new JMenu(I18N.get("user.control"));
         JMenu ctcp = new JMenu("CTCP");
         //JMenu dcc = new JMenu("DCC");
         JMenuItem slap = new JMenuItem(I18N.get("user.slap"));
+        slap.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String action = I18N.get("user.slap.start")+getSelectedUser()+I18N.get("user.slap.end");
+                chan.action(action);
+                try {
+                    tabObject.updateTabScreen(chan.getName(), "* "+connection.getCurrentSession().getNick()+ " "+action);
+                } catch (BadLocationException ex) {
+                }
+            }
+        });
         
         //Items for Control sub menu
         JMenuItem op = new JMenuItem("Op");
@@ -197,14 +213,14 @@ public class ListOfUsers extends JPanel {
      * @param userName The username to which the user wants to have a private conversation with
      * 
      */
-    private void openPrivateChat(String userName){
+    private void openPrivateChat(String userName) throws BadLocationException{
        if(connection.connectedToServer()){
     	   Matcher userModeMatcher = userModePattern.matcher(userName);		// Used for regex evaluation
     	   if(userModeMatcher.find())										// Checks for op or voice in username
     		   userName = userName.substring(1);							// Removes the symbol in front of username
     	   
     	   
-    	   tabObject.createNewTab(userName,SingleTab.PRIVATE);				// Create tab for PM
+    	   tabObject.createNewTab(userName,SingleTab.PRIVATE,null);				// Create tab for PM
         }else
         	tabObject.updateStatusScreen("Can't join when not connected"); //TODO: Legg til translation
     }
@@ -247,7 +263,11 @@ public class ListOfUsers extends JPanel {
         @Override
         public void mousePressed(MouseEvent me)   {
            	if(me.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker p� er seg selv (CHRISTER)
-        		openPrivateChat(list.getSelectedValue().toString());
+        		try {
+                openPrivateChat(list.getSelectedValue().toString());
+            } catch (BadLocationException ex) {
+                Logger.getLogger(ListOfUsers.class.getName()).log(Level.SEVERE, null, ex);
+            }
            	else	
            		Popup(me);
         }
