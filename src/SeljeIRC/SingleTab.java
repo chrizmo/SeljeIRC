@@ -83,7 +83,7 @@ public class SingleTab extends JPanel{
             // Print message in gray
             StyleConstants.setForeground(color, Color.gray);
             screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "This application could be interpreted as an IRC-client", color);
+                    "This application could be interpreted as an IRC-client ", color);
         }    
             
             
