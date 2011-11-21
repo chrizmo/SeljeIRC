@@ -53,6 +53,7 @@ public class SeljeIRC extends JFrame{
             
             
             colorSettings = new Colors();
+
             
             /*
              * Layout of main contentPane
