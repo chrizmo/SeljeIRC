@@ -9,17 +9,13 @@ import java.awt.Color;
 
 import java.awt.Dimension;
 
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -55,30 +51,7 @@ public class SingleTab extends JPanel implements FocusListener {
     
     public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType) throws BadLocationException {
         super();
-        /*
-         * TESTING BACKGROUND
-         *
-        MediaTracker mt = new MediaTracker(this);
-        bgimage = Toolkit.getDefaultToolkit().getImage("src/Images/ren_logo.png");
-        mt.addImage(bgimage, 0);
-        try {
-          mt.waitForAll();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        */
-        this.img = new ImageIcon("src/Images/ren_logo.png").getImage();
-        
-        Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
-        setPreferredSize(size);
-        setMinimumSize(size);
-        setMaximumSize(size);
-        setSize(size);
-        
-    /*
-     * 
-     * STOP
-     */
+       
         
         
         typeOfTab = tabType;			// Sets the type of tab
@@ -109,7 +82,7 @@ public class SingleTab extends JPanel implements FocusListener {
             /*
              * for alpha
              */
-            screen.setBackground(new Color(200,200,200,200));
+            screen.setBackground(Color.white);
             
         if(tabType == STATUS){
             SimpleAttributeSet color = new SimpleAttributeSet();
@@ -135,7 +108,7 @@ public class SingleTab extends JPanel implements FocusListener {
         //TODO set up the userlist model
         if(this.typeOfTab == SingleTab.CHANNEL){
         	listPanel = new ListOfUsers();
-            listPanel.setBackground(Color.black);
+            listPanel.setBackground(new Color(215,221,229));
         
             
         /*
@@ -260,11 +233,6 @@ public class SingleTab extends JPanel implements FocusListener {
     public void passFocusToField(){
        inputField.setFocusOnField(); 
     }
-    /*
-    public void paintComponent(Graphics g) {
-        
-        g.drawImage(img, 0, 0, null);
-    }*/
     
     
     

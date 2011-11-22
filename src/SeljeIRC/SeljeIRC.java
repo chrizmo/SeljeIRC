@@ -142,33 +142,9 @@ public static void main(String[] args) throws BadLocationException {
          }
    
     */
-    
-        // GUL : Color(255,255,0)
-        // MØRKBRUN : Color(65,52,0)
-        // LYSEBRUN : Color(130,110,39)
-    
-        NimRODTheme nt = new NimRODTheme();
-        //nt.setPrimary(Color.green);
-        //nt.setPrimary1(Color.BLUE);
-        nt.setPrimary2(Color.black); // tabcolor and hover
-        nt.setPrimary3(Color.GRAY); // listbackground
-        //nt.setSecondary(Color.GREEN);
-        //nt.setSecondary1(Color.ORANGE); // border
-        //nt.setSecondary2(Color.PINK);
-        nt.setSecondary (new Color(35,28,2));    // background
-        
-        
-        nt.setBlack(Color.white); //text
-        nt.setWhite(Color.black); //textfields
-        //nt.setBlack(Color.cyan);
-        
-        
-
-        NimRODLookAndFeel NimRODLF = new NimRODLookAndFeel();
-        NimRODLF.setCurrentTheme( nt);
         try {
-            UIManager.setLookAndFeel( NimRODLF);
-        } catch (UnsupportedLookAndFeelException ex) {
+            UIManager.getSystemLookAndFeelClassName();
+        } catch (Exception ex) {
             Logger.getLogger(SeljeIRC.class.getName()).log(Level.SEVERE, null, ex);
         }
     

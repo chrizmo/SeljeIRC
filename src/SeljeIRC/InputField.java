@@ -98,6 +98,8 @@ public class InputField extends JPanel {
     			case SingleTab.PRIVATE: connection.sayToPrivate(textToPost, channel); break;
     			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break; 
     			default: 
+                            
+                            System.out.print("entered default");
     				if(tabType == SingleTab.CHANNEL)
     					connection.sayToServer(textToPost,channel);
     				else

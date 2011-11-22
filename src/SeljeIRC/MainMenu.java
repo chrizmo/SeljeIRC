@@ -69,17 +69,20 @@ public class MainMenu extends JMenuBar {
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
                
+               if(connection.connectedToServer()){
                JOptionPane jop = new JOptionPane();
                
                String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
                  
                     try {
-                       connection.joinChannel(channel);
+                        connection.joinChannel(channel);
                     } catch (BadLocationException ex) {
                         Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-             
-               
+               }
+               else
+                   channelTab.updateStatusScreen("Gotta connect to server first");
+                 
            } 
         });
 
@@ -111,9 +114,14 @@ public class MainMenu extends JMenuBar {
 
         getChannels.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent evt){
+                    
+                    if(connection.connectedToServer()){
         		if(JOptionPane.showConfirmDialog(MainMenu.this, "This is really dumb and you're gonna get your stupid ass banned!\nDo you still wanna do it?" ,"Are you retarded?",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION) //TODO: OVERSETT!
         			connection.getAllTheChannelsFromServer();
-        	}
+                     }
+                   else
+                       channelTab.updateStatusScreen("Gotta connect to server first");
+               }
         	
         });
         
@@ -133,9 +141,13 @@ public class MainMenu extends JMenuBar {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
+                if(connection.connectedToServer()){
                 String newNick = JOptionPane.showInputDialog("New nick");
                 if (newNick != null)
                     connection.getCurrentSession().changeNick(newNick);
+                }
+                else
+                       channelTab.updateStatusScreen("Gotta connect to server first");
             }
         });
 
