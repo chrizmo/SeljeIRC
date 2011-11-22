@@ -34,7 +34,7 @@ import jerklib.Session;
 public class serverConnectWindow extends JFrame{
     
     static int openFrameCount = 0;
-    ConnectionHandler connection = SeljeIRC.connection;
+    ConnectionHandler connection = SeljeIRC.connectionHandlerObj;
     private Preferences connectionPreferences;
     private int startOfServerLine = 0;							// Used at beginning if server line in ini file
     private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
@@ -48,12 +48,12 @@ public class serverConnectWindow extends JFrame{
      * @param con ConnectionHandler object provided by main menu
      * 
      */
-    public serverConnectWindow(ConnectionHandler con){
+    public serverConnectWindow(){
         super(I18N.get("serverconnectwindow.connect"));		// Set header title
       
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);	// How to close window
         
-        connection = con;
+        connection = SeljeIRC.connectionHandlerObj;
         // Preferences
         try{
         	connectionPreferences = Preferences.userNodeForPackage(getClass());

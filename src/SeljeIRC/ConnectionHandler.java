@@ -40,21 +40,20 @@ public class ConnectionHandler implements IRCEventListener {
         private boolean hasConnected = false;
         private tabHandler channelTab;
         private Channel channelCommands;
-        
+        private static ConnectionHandler conHandler = new ConnectionHandler();
         
         /* Regular Expression patterns */
         private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+(\\s#\\w*)?");
         private Pattern inputCommandTextFinderPattern = Pattern.compile("(^/\\w+(\\s#\\w+)?\\s)([\\w\\s]+)?$");
         private Pattern inputCommandChannelPattern = Pattern.compile("#\\w+");	// Finds a channel name in pattern
+
         
-        
-        public ConnectionHandler(tabHandler ct){
+        private ConnectionHandler(){
  
         	try{
-        		channelTab = ct;
+        		channelTab = SeljeIRC.channelTabObj.getInstance();
 
             channelTab.setConnection(this);
-            
             
             //why? hallvard is asking
             //channelTab.createStatusTab();
@@ -70,7 +69,7 @@ public class ConnectionHandler implements IRCEventListener {
                 
                 
         }
-	
+	 
 	public void connectIt(String server, String nicName) {
 	
        
@@ -80,7 +79,6 @@ public class ConnectionHandler implements IRCEventListener {
 		Session session = manager.requestConnection(server);
 		session.addIRCEventListener(this);
 	}
-
 	
 	public void receiveEvent(IRCEvent e) {
 		
@@ -583,6 +581,10 @@ public class ConnectionHandler implements IRCEventListener {
             }
             return null;
         }
+
+		public static ConnectionHandler getInstance() {
+			return conHandler;
+		}
             
         
         
