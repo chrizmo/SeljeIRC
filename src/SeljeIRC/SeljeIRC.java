@@ -28,6 +28,8 @@ public class SeljeIRC extends JFrame{
    
 	private static final long serialVersionUID = 1L; //Serializeing
         
+        public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        
         MainMenu mainMenu;      //Standard Menu
         
 
@@ -60,7 +62,7 @@ public class SeljeIRC extends JFrame{
             /*
              * JTabbedPane containging all tabs
              */
-            
+            this.setBackground(new Color(224,224,224));
                 add(channelTabObj,BorderLayout.CENTER);    
                 
                 
@@ -149,7 +151,7 @@ public static void main(String[] args) throws BadLocationException {
             
             
             mainFrame.setVisible(false);
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            
             mainFrame.setBounds(0,0,screenSize.width, screenSize.height);
             //mainFrame.setSize(new Dimension(1200, 800));
             
