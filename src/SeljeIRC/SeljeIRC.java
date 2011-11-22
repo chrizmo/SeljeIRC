@@ -30,27 +30,23 @@ public class SeljeIRC extends JFrame{
         
         MainMenu mainMenu;      //Standard Menu
         
-        static tabHandler channelTabs; //JTabbedPane containing all tabs
+
+
         static InputField inputField;  //Standard Input field for each tab
         BorderLayout totalLayout; //TotalLayouts
         static Colors colorSettings; // Colorsettings
-        
-        static ConnectionHandler connection;
+       	
+        public static tabHandler channelTabObj; //JTabbedPane containing all tabs        
+        public static ConnectionHandler connectionHandlerObj;
         
         boolean isConnected;
 
 	public SeljeIRC(String title) throws BadLocationException{
             super(title);
             
-       
             
-            /*
-             * Connection to server
-             */
-            
-            channelTabs = new tabHandler();
-            connection = new ConnectionHandler(channelTabs);
-            
+            connectionHandlerObj = ConnectionHandler.getInstance();
+            channelTabObj = tabHandler.getInstance();
             
             colorSettings = new Colors();
 
@@ -65,7 +61,7 @@ public class SeljeIRC extends JFrame{
              * JTabbedPane containging all tabs
              */
             
-                add(channelTabs,BorderLayout.CENTER);    
+                add(channelTabObj,BorderLayout.CENTER);    
                 
                 
             
@@ -73,7 +69,7 @@ public class SeljeIRC extends JFrame{
              * Setting up the main contentPane menu
              * Passing channelTab-object for creation of new tabs
              */
-            mainMenu= new MainMenu(channelTabs,connection);
+            mainMenu= new MainMenu();
                 setJMenuBar(mainMenu);
             
             /*
@@ -95,7 +91,7 @@ public class SeljeIRC extends JFrame{
         {
         // your stuf here
            try{ 
-           connection.closeConnection(); 
+           connectionHandlerObj.closeConnection(); 
            }catch(Exception ex){
                System.out.printf("exception onclose");
            }
@@ -109,10 +105,10 @@ public class SeljeIRC extends JFrame{
         
     }
         public static ConnectionHandler returnConnection(){
-            return connection;
+            return connectionHandlerObj;
         }
         public void setStatusFocus(){
-            SingleTab st = (SingleTab) channelTabs.getComponent(1);
+            SingleTab st = (SingleTab) channelTabObj.getComponent(1);
             st.passFocusToField();
         }
 

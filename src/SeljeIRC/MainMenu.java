@@ -26,10 +26,8 @@ public class MainMenu extends JMenuBar {
     tabHandler channelTab;
     ConnectionHandler connection;
 
-    public MainMenu(tabHandler tab, ConnectionHandler con) {
+    public MainMenu() {
         super();
-        channelTab = tab;
-        connection = con;
         createFileMenu();
         createEditMenu();
         createHelpMenu();
@@ -39,6 +37,10 @@ public class MainMenu extends JMenuBar {
     }
 
     public void createFileMenu() {
+    	
+    	channelTab = SeljeIRC.channelTabObj.getInstance();
+    	connection = SeljeIRC.connectionHandlerObj.getInstance();
+    	
         JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"));
         file.add(newServer);
         JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
@@ -55,7 +57,7 @@ public class MainMenu extends JMenuBar {
 
             public void actionPerformed(ActionEvent ae) {
                 // Create and position connection window
-                serverConnectWindow scw = new serverConnectWindow(connection);
+                serverConnectWindow scw = new serverConnectWindow();
                 scw.setSize(new Dimension(400, 300));
                 scw.setLocationRelativeTo(null);
                 scw.pack();

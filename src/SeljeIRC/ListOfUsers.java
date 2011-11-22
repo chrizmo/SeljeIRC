@@ -38,8 +38,8 @@ public class ListOfUsers extends JPanel {
     JList list;
     Channel chan;
     JPopupMenu popup;
-    ConnectionHandler connection = SeljeIRC.connection;
-    tabHandler tabObject = SeljeIRC.channelTabs;
+    ConnectionHandler connection = SeljeIRC.connectionHandlerObj;
+    tabHandler tabObject = SeljeIRC.channelTabObj;
     
     private Pattern userModePattern = Pattern.compile("^[@|\\+]");		// The regex pattern used to find op and voice
     

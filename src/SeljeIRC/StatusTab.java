@@ -82,7 +82,7 @@ public class StatusTab extends JPanel{
        JScrollPane textAreaScroller = new JScrollPane(screen);
        add(textAreaScroller,BorderLayout.CENTER );
        
-       InputField inputField = new InputField(connection,null,SingleTab.STATUS);
+       InputField inputField = new InputField(null,SingleTab.STATUS);
        add(inputField,BorderLayout.SOUTH);
 
        

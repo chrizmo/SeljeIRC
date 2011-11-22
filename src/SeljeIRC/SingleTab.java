@@ -38,7 +38,7 @@ public class SingleTab extends JPanel implements FocusListener {
     private String channel;
 
     private JTextPane screen;
-    private ConnectionHandler connection;
+    private ConnectionHandler connection = SeljeIRC.connectionHandlerObj;
     private tabHandler channelTab;
     private int index;
     private ListOfUsers listPanel;
@@ -49,14 +49,14 @@ public class SingleTab extends JPanel implements FocusListener {
     
     Image img;
     
-    public SingleTab(ConnectionHandler con,String ch, tabHandler ct, int tabType) throws BadLocationException {
+    public SingleTab(String ch, tabHandler ct, int tabType){// throws BadLocationException {
         super();
        
         
         
         typeOfTab = tabType;			// Sets the type of tab
         channel = ch;
-        connection = con;
+        //connection = con;
         channelTab = ct;    
         index = channelTab.indexOfComponent(this);
         
@@ -89,12 +89,16 @@ public class SingleTab extends JPanel implements FocusListener {
             StyleConstants.setFontFamily(color, "Courier New");
             StyleConstants.setForeground(color, Color.black);
             // Print welcome-message in black:
-            screen.getDocument().insertString(screen.getDocument().getLength(),
+            try{
+            	screen.getDocument().insertString(screen.getDocument().getLength(),
                     "Welcome to SeljeIRC\n", color);
             // Print message in gray
-            StyleConstants.setForeground(color, Color.gray);
-            screen.getDocument().insertString(screen.getDocument().getLength(),
+            	StyleConstants.setForeground(color, Color.gray);
+            	screen.getDocument().insertString(screen.getDocument().getLength(),
                     "This application could be interpreted as an IRC-client ", color);
+            }catch(BadLocationException ex){
+            	System.err.println("System error: " + ex.getMessage());
+            }
         }    
             
             
@@ -125,7 +129,7 @@ public class SingleTab extends JPanel implements FocusListener {
         	
         	
         } 
-        inputField = new InputField(connection,channel,this.typeOfTab);
+        inputField = new InputField(channel,this.typeOfTab);
         add(inputField,BorderLayout.SOUTH);
 
         passFocusToField();
