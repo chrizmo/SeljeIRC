@@ -69,6 +69,7 @@ public class StatusTab extends JPanel{
                     "Welcome to SeljeIRC\n", color);
             // Print message in gray
             StyleConstants.setForeground(color, Color.gray);
+            
             screen.getDocument().insertString(screen.getDocument().getLength(),
                     "This application could be interpreted as an IRC-clientT "+color, color);
             screen.getDocument().insertString(screen.getDocument().getLength(),"hei "+color, color);
@@ -98,6 +99,7 @@ public class StatusTab extends JPanel{
       SimpleAttributeSet textColor = new SimpleAttributeSet();
       StyleConstants.setFontFamily(textColor, Colors.font);
       StyleConstants.setForeground(textColor, Colors.statusColor);
+      
 
 
       //screen.append("\n"+dateFormat.format(date) +" " +update);

@@ -4,8 +4,6 @@ package SeljeIRC;
 import java.awt.*;
 import javax.swing.*;
 
-//import com.sun.tools.hat.internal.model.Root;  The fuck is this?
-
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -307,7 +305,6 @@ public class serverConnectWindow extends JFrame{
          * 
          * Also saves configuration to file
          */
-        
         connect.addActionListener(new ActionListener() {	// Saves configuration to file and connects to server
          public void actionPerformed( ActionEvent e) {
              String s = subDropDown.getSelectedItem().toString();
@@ -476,7 +473,7 @@ public class serverConnectWindow extends JFrame{
         
     }
     /**
-     * Connects to servre
+     * Connects to server
      * 
      * @param channel String of channel to connect to
      * @deprecated 

@@ -10,3 +10,4 @@ build/*
 .metadata/*
 src/jerklib/examples/*
 mIRC.ini
+dist/*

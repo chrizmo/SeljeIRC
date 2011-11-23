@@ -1,6 +1,6 @@
 package SeljeIRC;
  
-import javax.swing.*;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
