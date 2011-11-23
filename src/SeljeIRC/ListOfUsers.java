@@ -28,8 +28,10 @@ import jerklib.Channel;
 import jerklib.events.modes.ModeAdjustment.Action;
 
 /**
- *
- * @author hallvardwestman
+ * Makes the panel that contains the nick list of every channel tab.
+ * @author Hallvard Westman
+ * @author Christer Vaskinn
+ * @author Lars Erik Pedersen
  */
 public class ListOfUsers extends JPanel {
     
@@ -43,14 +45,20 @@ public class ListOfUsers extends JPanel {
     
     private Pattern userModePattern = Pattern.compile("^[@|\\+]");		// The regex pattern used to find op and voice
     
+    /**
+     * Constructor, creats layout, sets listmodel and renderer
+     * @author Hallvard Westman
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     public ListOfUsers(){
         lm = new UserListModel();
-        lm.addListDataListener(new ListDataListener()   {
+        lm.addListDataListener(new ListDataListener()   {                       // Listens for changes is list, makes sure the size fits content
 
             @Override
             public void intervalAdded(ListDataEvent lde) {
                 list.setFixedCellWidth(200);
-                list.setVisibleRowCount(lm.getSize());
+                list.setVisibleRowCount(lm.getSize());                          // List is allways as high as the amount of users in it
             }
 
             @Override
@@ -75,9 +83,15 @@ public class ListOfUsers extends JPanel {
         this.add(list);
     }
     
+    /**
+     * Does the first initialization of the user list, when it's recived from the channel
+     * @param c Channel to fetch users from
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     public void updateList(Channel c)   {
         chan = c;
-        SwingUtilities.invokeLater(new Init());
+        SwingUtilities.invokeLater(new Init());         // Run a new thread for init
     }
     
     /**
@@ -88,55 +102,70 @@ public class ListOfUsers extends JPanel {
     private void createPopup() {
         popup = new JPopupMenu();
         
-        //Main menu items
-        JMenuItem whois = new JMenuItem(I18N.get("user.whois"));
+//--------------------------------------Main menu items----------------------------------
+        JMenuItem whois = new JMenuItem(I18N.get("user.whois"));        // Perform whois on selected user
+        JMenuItem query = new JMenuItem(I18N.get("user.query"));        // Opens a private chat
+        
+        JMenu control = new JMenu(I18N.get("user.control"));            // Actions for channel operators
+        JMenuItem op = new JMenuItem("Op");                                 // Make a user channel operator
+        JMenuItem deop = new JMenuItem("Deop");                             // Take operator rights away
+        JMenuItem voice = new JMenuItem("Voice");                           // Voice user
+        JMenuItem devoice = new JMenuItem("Devoice");                       // Devoice user
+        JMenuItem kick = new JMenuItem(I18N.get("user.kick"));              // Kick this user
+        JMenuItem kickWhy = new JMenuItem(I18N.get("user.kickwhy"));        // Kick, and tell him why
+        JMenuItem ban = new JMenuItem(I18N.get("user.ban"));                // Ban this user
+        JMenuItem kickBan = new JMenuItem(I18N.get("user.kickban"));        // Ban and kick him
+           
+        JMenu ctcp = new JMenu("CTCP");                                 // Various CTCP commands
+        JMenuItem ping = new JMenuItem("Ping");                             // Ping
+        JMenuItem version = new JMenuItem(I18N.get("user.version"));        // Get version of users IRC client
+        JMenuItem time = new JMenuItem(I18N.get("user.time"));              // Get system time from user
+        JMenuItem slap = new JMenuItem(I18N.get("user.slap"));          // Sends a /me action with a hardcoded text 
+        
+// ------------------------------------Action Listeneres for main menu items-------------
         whois.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                connection.getCurrentSession().whois(getSelectedUser());
+                connection.getCurrentSession().whois(getSelectedUser());        // Sends whois
             }
         });
-        JMenuItem query = new JMenuItem(I18N.get("user.query"));
+        
         query.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
                 try {
-                    openPrivateChat(getSelectedUser());
-                } catch (BadLocationException ex) {
-                    Logger.getLogger(ListOfUsers.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        JMenu control = new JMenu(I18N.get("user.control"));
-        JMenu ctcp = new JMenu("CTCP");
-        //JMenu dcc = new JMenu("DCC");
-        JMenuItem slap = new JMenuItem(I18N.get("user.slap"));
-        slap.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                String action = I18N.get("user.slap.start")+getSelectedUser()+I18N.get("user.slap.end");
-                chan.action(action);
-                try {
-                    tabObject.updateTabScreen(chan.getName(), "* "+connection.getCurrentSession().getNick()+ " "+action);
+                    openPrivateChat(getSelectedUser());                         // Open private chat
                 } catch (BadLocationException ex) {
                 }
             }
         });
         
-        //Items for Control sub menu
-        JMenuItem op = new JMenuItem("Op");
+        slap.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String action = I18N.get("user.slap.start")+getSelectedUser()+I18N.get("user.slap.end");        // /me action to send
+                chan.action(action);                                                                            // send it
+                try {
+                    tabObject.updateTabScreen(chan.getName(), "* "+connection.getCurrentSession().getNick()+ " "+action);   // print it in channel window
+                } catch (BadLocationException ex) {
+                }
+            }
+        });
+        
+//----------------------------------------Control sub menu items-------------------------
+        
         op.addActionListener(new ActionListener()   {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                chan.op(getSelectedUser());
+                chan.op(getSelectedUser());                     // Send mode change to channel
             }
             
         });
-        JMenuItem deop = new JMenuItem("Deop");
+        
         deop.addActionListener(new ActionListener()   {
 
             @Override
@@ -146,7 +175,7 @@ public class ListOfUsers extends JPanel {
             
         });
         
-        JMenuItem voice = new JMenuItem("Voice");
+        
         voice.addActionListener(new ActionListener()   {
 
             @Override
@@ -155,7 +184,7 @@ public class ListOfUsers extends JPanel {
             }
             
         });
-        JMenuItem devoice = new JMenuItem("Devoice");
+        
         devoice.addActionListener(new ActionListener()   {
 
             @Override
@@ -164,21 +193,18 @@ public class ListOfUsers extends JPanel {
             }
             
         });
-        JMenuItem kick = new JMenuItem(I18N.get("user.kick"));
-        kick.addActionListener(new KickListener());
-        JMenuItem kickWhy = new JMenuItem(I18N.get("user.kickwhy"));
-        kickWhy.addActionListener(new KickListener());
-        JMenuItem ban = new JMenuItem(I18N.get("user.ban"));
-        JMenuItem kickBan = new JMenuItem(I18N.get("user.kickban"));
         
-        //Items for CTCP sub menu
-        JMenuItem ping = new JMenuItem("Ping");
-        ping.addActionListener(new CtcpListener());
-        JMenuItem version = new JMenuItem(I18N.get("user.version"));
+        kick.addActionListener(new KickListener());     // Uses a inner class, since they are quite similar
+        kickWhy.addActionListener(new KickListener());
+        
+        
+//------------------------------------CTCP sub menu items--------------------------------
+        
+        ping.addActionListener(new CtcpListener());         // Uses a inner class, since they are quite similar
         version.addActionListener(new CtcpListener());
-        JMenuItem time = new JMenuItem(I18N.get("user.time"));
         time.addActionListener(new CtcpListener());
         
+        // Add all items of control sub menu
         control.add(op);
         control.add(deop);
         control.add(voice);
@@ -188,20 +214,22 @@ public class ListOfUsers extends JPanel {
         control.add(ban);
         control.add(kickBan);
         
+        // Add all items of CTCP sub menu
         ctcp.add(ping);
         ctcp.add(version);
         ctcp.add(time);
         
+        // Add all submenus and main menu items
         popup.add(whois);
         popup.add(query);
         popup.addSeparator();
         popup.add(control);
         popup.add(ctcp);
-        //popup.add(dcc);
         popup.addSeparator();
         popup.add(slap);
-        list.addMouseListener(new MouseEventListener());
+        list.addMouseListener(new MouseEventListener());        // Add mouse listener
     }
+    
     /**
      * Opens a private chat window with a user
      * @author Christer Vaskinn
@@ -224,10 +252,22 @@ public class ListOfUsers extends JPanel {
         	tabObject.updateStatusScreen("Can't join when not connected"); //TODO: Legg til translation
     }
     
+    /**
+     * Fetches the listmodel of the list
+     * @return The list model
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     public UserListModel getListModel()   {
         return lm;
     }
     
+    /**
+     * Gets nickname of the selected user in the nick list
+     * @return The nickname
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     private String getSelectedUser()   {
         String user = (String)list.getSelectedValue().toString();
         user = (user.startsWith("@") || user.startsWith("+")) ? user.substring(1) : user;
@@ -235,7 +275,7 @@ public class ListOfUsers extends JPanel {
     }
     
     /**
-     * Gets the selected item in the user list
+     * Gets the selected item in the user list, from where you actually clicked
      * @author Lars Erik Pedersen
      * @since 0.1
      * @param p The selected point on screen
@@ -255,20 +295,19 @@ public class ListOfUsers extends JPanel {
         
         /**
         * Listens for mouse pressed
-        * @author Lars Erik Pedersen
+        * @author Christer Vaskinn
         * @since 0.1
         * @param me event that triggered this function
         */
         @Override
         public void mousePressed(MouseEvent me)   {
-           	if(me.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker p� er seg selv (CHRISTER)
-        		try {
-                openPrivateChat(list.getSelectedValue().toString());
-            } catch (BadLocationException ex) {
-                Logger.getLogger(ListOfUsers.class.getName()).log(Level.SEVERE, null, ex);
-            }
-           	else	
-           		Popup(me);
+            if(me.getClickCount() == 2) // FIX: Legg til sjekk om den man dobbeltklikker p� er seg selv (CHRISTER)
+     		try {
+                   openPrivateChat(list.getSelectedValue().toString());
+                } catch (BadLocationException ex) {
+                }
+           else	
+             Popup(me);
         }
         
         /**
@@ -290,36 +329,55 @@ public class ListOfUsers extends JPanel {
         */
         private void Popup(MouseEvent me)   {
             if(me.isPopupTrigger())   {
-                ((JList)me.getComponent()).setSelectedIndex(getItem(me.getPoint()));
-                popup.show(me.getComponent(), me.getX(), me.getY());
+                ((JList)me.getComponent()).setSelectedIndex(getItem(me.getPoint()));    // Ensure the item clicked is paintes as selected
+                popup.show(me.getComponent(), me.getX(), me.getY());                    // Show popup menu where you clicked
             }
         }
-        
-        
+
     }
     
+    /**
+     * Inner class, listens for actions on the kick, and kickwhy menu items
+     * @author Lars Erik Pedersen
+     * @version 0.1
+     * @since 0.1
+     */
     class KickListener implements ActionListener   {
-
+        
+        /**
+         * Method called when you click on a menu item
+         * @param ae Event that triggered function
+         */
         @Override
         public void actionPerformed(ActionEvent ae) {
             String user = getSelectedUser();
             String myNick = connection.getCurrentSession().getNick();
-            if (ae.getActionCommand().equals(I18N.get("user.kickwhy")))   {
-                JOptionPane jop = new JOptionPane();
-                String why = jop.showInputDialog("Why do you kick?");   //TODO I18N
-                if (why == null) return;                                // No input, cancel
-                chan.kick(user, why);
+            if (ae.getActionCommand().equals(I18N.get("user.kickwhy")))   {     // Get what menu item was clicked
+                JOptionPane jop = new JOptionPane();                            // Will tell why user is kicked
+                String why = jop.showInputDialog("Why do you kick?");           //TODO I18N
+                if (why == null) return;                                        // No input, cancel
+                    chan.kick(user, why);
             }
-            else   {
+            else   {                                                            // No reason, sends nick as reason
                 chan.kick(user, user);
             }
-            if (lm.isOp(myNick))
+            if (lm.isOp(myNick))                                                // Only remove victim from nick list, if you are a operator
                 lm.removeUser(user);
         }
     }
     
+    /**
+     * Inner class, listens for actions in the CTCP sub menu
+     * @author Lars Erik Pedersen
+     * @version 0.1
+     * @since 0.1
+     */
     class CtcpListener implements ActionListener   {
-
+        
+        /**
+         * Method called when you click on a menu item
+         * @param ae Event that triggered function
+         */
         @Override
         public void actionPerformed(ActionEvent ae) {
             String user = getSelectedUser();

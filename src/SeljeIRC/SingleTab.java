@@ -244,26 +244,66 @@ public class SingleTab extends JPanel implements FocusListener {
       screen.setCaretPosition(screen.getDocument().getLength());
 
     }
+    
+    /**
+     * Updates userlist of a channel tab
+     * @param c Channel to get updates from
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     void updateUserList(Channel c) {
         listPanel.updateList(c);
     }
     
+    /**
+     * Adds a newly joined user to the userlist
+     * @param n Nick name of joined user
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     void newUserJoined(String n)   {
         listPanel.getListModel().addUserToList(n);
     }
     
+    /**
+     * Removes a parted user from the userlist
+     * @param n Nick name of parted user
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     void userLeft(String n)   {
         listPanel.getListModel().removeUser(n);
     }
     
+    /**
+     * Reflects a +o or -o mode change in the userlist
+     * @param n Nick name of "victim"
+     * @param mode True = given op, false = given deop
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     void op(String n, boolean mode)   {
         listPanel.getListModel().op(n, mode);
     }
     
+    /**
+     * Refelcts a +v or -v mode change in the userlist
+     * @param n Nick name of "victim"
+     * @param mode  True = given voice, false = given devoice
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     void voice(String n, boolean mode)   {
         listPanel.getListModel().voice(n, mode);
     }
     
+    /**
+     * Pass a nick change to the userlist
+     * @param oldNick User's old nick
+     * @param newNick User's new nick
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     void changeNick(String oldNick, String newNick)   {
         listPanel.getListModel().changeNick(oldNick, newNick);
     }
