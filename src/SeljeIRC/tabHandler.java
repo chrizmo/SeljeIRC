@@ -151,6 +151,53 @@ public class tabHandler extends JTabbedPane implements FocusListener {
             System.out.print("nonono");
         }
     }
+
+    public void updateTabScreen(String ch, String message, Color theColor) throws BadLocationException{
+
+        /*
+         * getting SingleTab from tabhandler to update screen
+         */
+
+        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
+        st.updateScreen(message, theColor);
+
+        /*
+         * checks to see if tab is selected, if not notify user by flagging
+         * this tab in GUI
+         */
+
+        int curSelected = this.getSelectedIndex();
+        final int thisIndex = this.indexOfTab(ch);
+        try{
+            if(thisIndex != curSelected && thisIndex != 0){
+                System.out.print("indexoftab= "+" "+ thisIndex +"curSelected = "+curSelected);
+
+                class PrimeThread extends Thread {
+                     long minPrime;
+                     PrimeThread(long minPrime) {
+                         this.minPrime = minPrime;
+                     }
+
+                     public void run() {
+                        tabHandlerObj.setBackgroundAt(thisIndex, new Color(171,231,255));
+                     }
+                 }
+
+                PrimeThread p = new PrimeThread(143);
+                p.start();
+
+
+                //Icon icon = new ImageIcon("src/Images/attention-icon.png");
+                //this.setIconAt(thisIndex, icon);
+
+
+            }
+        }catch(Exception e){
+            //this is bullshit.
+
+            System.out.print("nonono");
+        }
+    }
     
     /**
      * Sets the topic for the channel
@@ -199,6 +246,15 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      
         try{
         	updateTabScreen(I18N.get("channeltab.status"),update);	// Bug med at den krasjer med 18N greien
+    	}catch(Exception e){
+    		System.err.println("System error: " + e.getMessage());
+    	}
+    }
+
+    public void updateStatusScreen(String update, Color theColor){
+
+        try{
+        	updateTabScreen(I18N.get("channeltab.status"),update, theColor);	// Bug med at den krasjer med 18N greien
     	}catch(Exception e){
     		System.err.println("System error: " + e.getMessage());
     	}
@@ -293,5 +349,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     public void focusLost(FocusEvent fe) {
         
     }
+
+
     
 }

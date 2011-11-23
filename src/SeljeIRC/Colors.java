@@ -24,13 +24,13 @@ import javax.swing.text.StyleConstants;
  */
 
 public class Colors {
-// Initiate colors to black:
-public static Color statusColor;    // = new Color(0, 0, 0);
-public static Color nickColor;      //= new Color(0, 0, 0);
-public static Color channelColor;   //= new Color(0, 0, 0);
-public static Color highLightColor; //= new Color(0, 0, 0);
-public static String font;
-public static int fontSize;
+// Initiate colors to black, and font and size:
+public static Color statusColor = new Color(0, 0, 0);
+public static Color nickColor = new Color(0, 0, 0);
+public static Color channelColor = new Color(0, 0, 0);
+public static Color highLightColor = new Color(0, 0, 0);
+public static String font = "Serif";
+public static int fontSize = 12;
 
 public Colors () {
 // Empty constructor

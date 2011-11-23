@@ -188,59 +188,39 @@ public class SingleTab extends JPanel implements FocusListener {
         return typeOfTab;
     }
     public void updateScreen(String update) throws BadLocationException{
-      DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-      Date date = new Date();
-
       SimpleAttributeSet color = new SimpleAttributeSet();
       StyleConstants.setFontFamily(color, Colors.font);
       StyleConstants.setForeground(color, Colors.statusColor);
-      String colorZ = "foreground=java.awt."+Colors.statusColor+" "+Colors.font;
-
-
       screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "\n"+dateFormat.format(date) +" " +update, color);
+                    " " +update, color);
       screen.setCaretPosition(screen.getDocument().getLength());
     }
     
     public void updateScreen(List<String> update) throws BadLocationException{
-      DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-      Date date = new Date();
-
       SimpleAttributeSet color = new SimpleAttributeSet();
       StyleConstants.setFontFamily(color, Colors.font);
       StyleConstants.setForeground(color, Colors.statusColor);
-      String colorZ = "foreground=java.awt."+Colors.statusColor+" "+Colors.font;
-
-
       screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "\n"+dateFormat.format(date) +" " +update, color);
+                    " " +update, color);
       screen.setCaretPosition(screen.getDocument().getLength());
     }
 
     void updateScreen(String update, Color theColor) throws BadLocationException {
-      DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-      Date date = new Date();   
-
       SimpleAttributeSet color = new SimpleAttributeSet();
       StyleConstants.setFontFamily(color, Colors.font);
-
       StyleConstants.setForeground(color, theColor);
-      screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "\n"+dateFormat.format(date) +" " +update, color);
+      StyleConstants.setFontSize(color, Colors.fontSize);
+      screen.getDocument().insertString(screen.getDocument().getLength()," " +update, color);
       screen.setCaretPosition(screen.getDocument().getLength());
 
     }
 
     void updateScreen(List<String> update, Color theColor) throws BadLocationException {
-      DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-      Date date = new Date();
-
       SimpleAttributeSet color = new SimpleAttributeSet();
       StyleConstants.setFontFamily(color, Colors.font);
-
       StyleConstants.setForeground(color, theColor);
       screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "\n"+dateFormat.format(date) +" " +update, color);
+                    " " +update, color);
       screen.setCaretPosition(screen.getDocument().getLength());
 
     }
