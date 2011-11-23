@@ -371,7 +371,7 @@ public class ConnectionHandler implements IRCEventListener {
            
         }
         
-        public void createPrivateChat(String userName){
+        public void createPrivateChat(String userName){ // TODO: CHRISTER delete thos
         	if(connectedToServer()){
         		//event.getSession();
         	}else

@@ -200,7 +200,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      */
     
     public static void setConnection(ConnectionHandler ch){
-        //SeljeIRC.connectionHandlerObj = ch; //TODOx,gnfgb
+        SeljeIRC.connectionHandlerObj = ch; //TODOx,gnfgb
     }
     
     /**
