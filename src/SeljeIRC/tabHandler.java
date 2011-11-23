@@ -33,8 +33,10 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      */
     
     private tabHandler() {//throws BadLocationException{
-        super();        
-        SingleTab statusTab = new SingleTab("status",this,SingleTab.STATUS);		// Whis the krasjer nŒ begynner jeg Œ lure
+        super();     
+        
+        
+        SingleTab statusTab = new SingleTab("status",this,SingleTab.STATUS,null);		// Whis the krasjer nï¿½ begynner jeg ï¿½ lure
                               
                 
         this.addTab(I18N.get("channeltab.status"), statusTab);
@@ -66,9 +68,9 @@ public class tabHandler extends JTabbedPane implements FocusListener {
          */
         
         if(tabType == SingleTab.CHANNEL){
-            st = new SingleTab(tabName,this,SingleTab.CHANNEL);
+            st = new SingleTab(tabName,this,SingleTab.CHANNEL,topic);
         } else
-            st = new SingleTab(tabName,this,SingleTab.PRIVATE);
+            st = new SingleTab(tabName,this,SingleTab.PRIVATE,null);
         
         this.addTab(tabName,st);
         int tabIndex = this.indexOfTab(tabName); 
@@ -130,7 +132,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
                      }
 
                      public void run() {
-                        tabHandlerObj.setBackgroundAt(thisIndex, new Color(255,255,0));
+                        tabHandlerObj.setBackgroundAt(thisIndex, new Color(171,231,255));
                      }
                  }
                 
@@ -148,6 +150,16 @@ public class tabHandler extends JTabbedPane implements FocusListener {
 
             System.out.print("nonono");
         }
+    }
+    
+    /**
+     * Sets the topic for the channel
+     */
+    public void passTopic(String ch,String topic){
+        
+        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
+        st.setTopic(topic);
+        
     }
     
     /**
@@ -271,7 +283,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     @Override
     public void focusGained(FocusEvent fe) {
         int curSelected = this.getSelectedIndex();
-         this.setBackgroundAt(curSelected, Color.black);
+         this.setBackgroundAt(curSelected, new Color(250,250,250));
          
         SingleTab st = (SingleTab) this.getComponent(curSelected+1);
         st.passFocusToField();

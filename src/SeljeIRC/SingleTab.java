@@ -9,17 +9,16 @@ import java.awt.Color;
 
 import java.awt.Dimension;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -49,36 +48,12 @@ public class SingleTab extends JPanel implements FocusListener {
     private int typeOfTab = 1;			// The type of this tab. Standard is channel
     
     private InputField inputField;
-    Image bgimage = null; //TESTING BACKGROUND
+    public JTextPane topicField;
+    private JButton setTopicButton;
     
-    Image img;
-    
-    public SingleTab(String ch, tabHandler ct, int tabType){// throws BadLocationException {
+    public SingleTab(String ch, tabHandler ct, int tabType,String topic){// throws BadLocationException {
         super();
-        /*
-         * TESTING BACKGROUND
-         *
-        MediaTracker mt = new MediaTracker(this);
-        bgimage = Toolkit.getDefaultToolkit().getImage("src/Images/ren_logo.png");
-        mt.addImage(bgimage, 0);
-        try {
-          mt.waitForAll();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        */
-        this.img = new ImageIcon("src/Images/ren_logo.png").getImage();
-        
-        Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
-        setPreferredSize(size);
-        setMinimumSize(size);
-        setMaximumSize(size);
-        setSize(size);
-        
-    /*
-     * 
-     * STOP
-     */
+       
         
         
         typeOfTab = tabType;			// Sets the type of tab
@@ -86,6 +61,8 @@ public class SingleTab extends JPanel implements FocusListener {
         //connection = con;
         channelTab = ct;    
         index = channelTab.indexOfComponent(this);
+        
+        
         
         /*
          * Borderlayout containing textarea and userlist
@@ -99,17 +76,59 @@ public class SingleTab extends JPanel implements FocusListener {
          */
       
          setLayout(bl);
-            
+         
+         /**
+          * Topicfield
+          * TODO refactor out?
+          */
+         
+         if(tabType == CHANNEL){
+             topicField = new JTextPane();
+             if(topic != null)
+             topicField.setText(topic);
+             else
+             topicField.setText("No topic set for this channel, press over here to set one!");
+             topicField.setSize(1,1);
+             
+             
+             topicField.setBackground(new Color(224,224,224));
+             //topicField.
+             topicField.setVisible(true);
+             //add(topicField,BorderLayout.NORTH);
+             
+             setTopicButton = new JButton("Set Topic");
+             
+             setTopicButton.addActionListener(new ActionListener() {
+                JOptionPane jop = new JOptionPane();
+                public void actionPerformed(ActionEvent ae) {
+                    
+                    String topic = jop.showInputDialog("what the topic is?");
+                    channelTab.updateStatusScreen("updating topic");
+                    connection.setChannelTopic(channel,topic);
+
+                }
+             });
+             
+             JPanel topicPanel = new JPanel();
+             BorderLayout tl = new BorderLayout();
+             topicPanel.setLayout(tl);
+             
+             topicPanel.add(topicField,BorderLayout.CENTER);
+             topicPanel.add(setTopicButton,BorderLayout.EAST);
+             add(topicPanel,BorderLayout.NORTH);
+         }
+         
         /*
          * Textarea
          */
-        screen = new JTextPane();
+        
+         screen = new JTextPane();
             screen.setEditable(false);
             //screen.setBackground(Color.WHITE);
             /*
              * for alpha
              */
-            screen.setBackground(new Color(200,200,200,200));
+            screen.setBackground(Color.white);
             
         if(tabType == STATUS){
             SimpleAttributeSet color = new SimpleAttributeSet();
@@ -130,7 +149,6 @@ public class SingleTab extends JPanel implements FocusListener {
             
             
         JScrollPane textAreaScroller = new JScrollPane(screen);
-        textAreaScroller.setBackground(new Color(0,0,0,70));
         add(textAreaScroller,BorderLayout.CENTER );
         
         /*
@@ -139,7 +157,7 @@ public class SingleTab extends JPanel implements FocusListener {
         //TODO set up the userlist model
         if(this.typeOfTab == SingleTab.CHANNEL){
         	listPanel = new ListOfUsers();
-            listPanel.setBackground(Color.black);
+            listPanel.setBackground(new Color(215,221,229));
         
             
         /*
@@ -264,12 +282,10 @@ public class SingleTab extends JPanel implements FocusListener {
     public void passFocusToField(){
        inputField.setFocusOnField(); 
     }
-    /*
-    public void paintComponent(Graphics g) {
-        
-        g.drawImage(img, 0, 0, null);
-    }*/
     
+    public void setTopic(String topic){
+        topicField.setText(topic);
+    }
     
     
    

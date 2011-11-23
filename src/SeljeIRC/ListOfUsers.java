@@ -2,7 +2,6 @@
 package SeljeIRC;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,9 +20,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -75,7 +71,7 @@ public class ListOfUsers extends JPanel {
         list.setLayoutOrientation(JList.VERTICAL);
         list.setFixedCellWidth(200);
         createPopup();
-        list.setBackground(Color.black);
+        list.setBackground(new Color(215,221,229));
         this.add(list);
     }
     
@@ -219,8 +215,11 @@ public class ListOfUsers extends JPanel {
     	   if(userModeMatcher.find())										// Checks for op or voice in username
     		   userName = userName.substring(1);							// Removes the symbol in front of username
     	   
-    	   
-    	   tabObject.createNewTab(userName,SingleTab.PRIVATE,null);				// Create tab for PM
+    	   if(!tabObject.tabExists(userName)){
+                tabObject.createNewTab(userName,SingleTab.PRIVATE,null);				// Create tab for PM
+           }
+           else
+               tabObject.setSelectedIndex(tabObject.indexOfTab(userName));
         }else
         	tabObject.updateStatusScreen("Can't join when not connected"); //TODO: Legg til translation
     }

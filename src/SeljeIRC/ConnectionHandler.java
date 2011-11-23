@@ -162,9 +162,10 @@ public class ConnectionHandler implements IRCEventListener {
                     // Print topic for channel:
                     JoinCompleteEvent jce = (JoinCompleteEvent) e;
                     String ch = jce.getChannel().getName();
-                    String message = ("-!- Topic for " +ch +": "+jce.getChannel().getTopic());
+                    String message = jce.getChannel().getTopic();
                     try {
                         channelTab.createNewTab(ch,SingleTab.CHANNEL, message);
+                        
                     } catch (BadLocationException ex) {
                     }
 
@@ -302,8 +303,14 @@ public class ConnectionHandler implements IRCEventListener {
                     TopicEvent te = (TopicEvent) e;
                     String chanName = te.getChannel().getName();
                     String setBy = te.getSetBy();
+                    String[] subSt = setBy.split("~");
+                    Date setAt = te.getSetWhen();
+                    DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss zZ");
+                    setBy = subSt[0];
                     String topic = te.getTopic();
                     try {
+                        
+                        channelTab.passTopic(chanName,topic+ " Set By : "+setBy+" at "+df.format(setAt));
                         channelTab.updateTabScreen(chanName, "-!- " + setBy + " changed the topic of " + chanName + " to: " + topic );
                     } catch (BadLocationException ex) {
                     }
@@ -390,6 +397,7 @@ public class ConnectionHandler implements IRCEventListener {
         	if(channelName != null){
         			Channel ircChannel =  event.getSession().getChannel(channelName);
         			ircChannel.setTopic(channelTopic);
+                                
         	}else{
         		channelTab.updateStatusScreen("Channel name not provided");
         	}
