@@ -298,7 +298,7 @@ public class serverConnectWindow extends JFrame{
         
         connect.addActionListener(new ActionListener() {//TODO: Legg til connectionsjekk (Christer)
          public void actionPerformed( ActionEvent e)// TODO: Legg til bekreftelse om reconnect -"
-            { // Get server and nick, and run the connection // HUSK � SLETTE ALLE TABS
+            { // Get server and nick, and run the connection // HUSK å SLETTE ALLE TABS
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
           
@@ -464,7 +464,7 @@ public class serverConnectWindow extends JFrame{
         
     }
     /**
-     * Connects to servre
+     * Connects to server
      * 
      * @param channel String of channel to connect to
      * @deprecated 

@@ -25,14 +25,12 @@ import javax.swing.text.StyleConstants;
 
 public class Colors {
 // Initiate colors to black:
-public static Color statusColor = new Color(0, 0, 0);
-public static Color nickColor = new Color(0, 0, 0);
-public static Color channelColor = new Color(0, 0, 0);
-public static Color highLightColor = new Color(0, 0, 0);
-// family=Courier New foreground=java.awt.Color[r=128,g=128,b=128]
-// Initiate font to Courier new:
-public static String font = "family=Courier New ";
-public static int fontSize = 12;
+public static Color statusColor;    // = new Color(0, 0, 0);
+public static Color nickColor;      //= new Color(0, 0, 0);
+public static Color channelColor;   //= new Color(0, 0, 0);
+public static Color highLightColor; //= new Color(0, 0, 0);
+public static String font;
+public static int fontSize;
 
 public Colors () {
 // Empty constructor
@@ -127,10 +125,10 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(fontLabel, gbc);
     
-    //get the local graphics environment
+    // Get the local graphics environment
     GraphicsEnvironment graphicsEvn = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
-    //get all the available fonts
+    // Get all the available fonts
     final String availFonts[] = graphicsEvn.getAvailableFontFamilyNames();
     final JComboBox fontList = new JComboBox(availFonts);
     
@@ -213,7 +211,6 @@ static void colorWindow () {
         statusColorButton.addActionListener(new ActionListener() {
           public void actionPerformed (ActionEvent StatuzColor) {
           statusColor = JColorChooser.showDialog(colorBoxShit, font, Color.BLACK);
-          System.out.println(statusColor);
           }
         });
 
@@ -226,14 +223,14 @@ static void colorWindow () {
 
         // Choose channel-color:
         channelColorButton.addActionListener(new ActionListener() {
-          public void actionPerformed (ActionEvent StatuzColor) {
+          public void actionPerformed (ActionEvent chColor) {
           channelColor = JColorChooser.showDialog(colorBoxShit, font, Color.BLACK);
           }
         });
 
         // Choose highlight-color:
         highLightColorButton.addActionListener(new ActionListener() {
-          public void actionPerformed (ActionEvent StatuzColor) {
+          public void actionPerformed (ActionEvent hilightColor) {
           highLightColor = JColorChooser.showDialog(colorBoxShit, font, Color.BLACK);
           }
         });
@@ -241,16 +238,16 @@ static void colorWindow () {
     // Choose font:
     fontList.addActionListener(new ActionListener() {
           public void actionPerformed (ActionEvent setSelectedFont) {
-          int nr = fontList.getSelectedIndex();
-          font = availFonts[nr];
+          int fnr = fontList.getSelectedIndex();
+          font = availFonts[fnr];
           }
         });
 
     // Choose fontsize:
     setFontSize.addActionListener(new ActionListener() {
           public void actionPerformed (ActionEvent setTheFontSize) {
-          int nr = setFontSize.getSelectedIndex();
-          fontSize = nr;
+          int snr = setFontSize.getSelectedIndex();
+          fontSize = snr;
           }
         });
 }
@@ -258,6 +255,4 @@ static void colorWindow () {
    public static void main (String args[]) {
     Colors colorsAndFontsAndShit = new Colors ();
     }
-
-   
 }

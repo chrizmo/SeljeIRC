@@ -198,7 +198,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     public void updateStatusScreen(String update){
      
         try{
-        	updateTabScreen(I18N.get("channeltab.status"),update);					// Bug med at den krasjer med 18N greien
+        	updateTabScreen(I18N.get("channeltab.status"),update);	// Bug med at den krasjer med 18N greien
     	}catch(Exception e){
     		System.err.println("System error: " + e.getMessage());
     	}
