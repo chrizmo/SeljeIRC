@@ -26,8 +26,10 @@ import jerklib.Session;
 
 
 /**
+ * Creates the interface and functionality to administer and create connections to a IRC server
  * 
- * @author SljeIRC
+ * 
+ * @author SeljeCorp
  * @since 0.1
  */
 //
@@ -43,11 +45,13 @@ public class serverConnectWindow extends JFrame{
     private Session ircSession; 
     
     /**
+     * 
      * Creates the connection window for the user
+     * 
      * @since 0.1
      * @param con ConnectionHandler object provided by main menu
-     * 
      */
+    
     public serverConnectWindow(){
         super(I18N.get("serverconnectwindow.connect"));		// Set header title
       
@@ -85,11 +89,13 @@ public class serverConnectWindow extends JFrame{
         // The server menus
         topDropDown.setSelectedItem(new String(connectionPreferences.get("lastnetwork", "")));
         serverNames = (Vector<String>)readServers(topDropDown.getSelectedItem().toString()); // Getting servers for element one
+        Collections.sort(serverNames);															// Sorts elements after aditions
         final JComboBox subDropDown = new JComboBox(new DefaultComboBoxModel(serverNames));
         subDropDown.setSelectedItem(connectionPreferences.get("lastserver",""));
-        //TODO: Choose last server (Christer)
         
-
+        /**
+         * Implements the actionlisteners for the network names	 
+         */
         topDropDown.addActionListener (new ActionListener(){
         	public void actionPerformed(ActionEvent evt){
         		serverNames.clear();
@@ -159,8 +165,9 @@ public class serverConnectWindow extends JFrame{
             	public void actionPerformed(ActionEvent evt){
             		String serverName = new String();
             		
-            		serverName = JOptionPane.showInputDialog(serverConnectWindow.this,"dettefunker heller ikke for hallvard");
+            		serverName = JOptionPane.showInputDialog(serverConnectWindow.this,I18N.get("serverconnectwindow.addnewserver"));
             		serverNames.add(serverName);
+            		Collections.sort(serverNames);															// Sorts elements after aditions
             		subDropDown.setModel(new DefaultComboBoxModel(serverNames));
             		subDropDown.setSelectedItem(serverName);
             		
@@ -187,6 +194,7 @@ public class serverConnectWindow extends JFrame{
             				newServerName = JOptionPane.showInputDialog(serverConnectWindow.this,I18N.get("serverconnectwindow.addnewserver"),serverName);
             				changeServer(serverName, newServerName);
             				serverNames.setElementAt(newServerName, serverVectorPosition);
+            				Collections.sort(serverNames);															// Sorts elements after change
             				subDropDown.setModel(new DefaultComboBoxModel(serverNames));
             				subDropDown.setSelectedItem(newServerName);
             			}
@@ -221,11 +229,11 @@ public class serverConnectWindow extends JFrame{
             	}
             	
             });
-            
+            /*
             JButton sortSomething = new JButton(I18N.get("serverconnectwindow.sort"));
             sortSomething.setName("SORT");
             gbc.gridy=3;
-            rightLayout.setConstraints(sortSomething,gbc);
+            rightLayout.setConstraints(sortSomething,gbc); // TODO: CHRISTER slett dette
             rightPanel.add(sortSomething);
             
             sortSomething.addActionListener(new ActionListener(){
@@ -254,7 +262,7 @@ public class serverConnectWindow extends JFrame{
 					return tVector;
 				}
             });
-            
+            */
         gbc.fill=GridBagConstraints.NONE;
         gbc.gridx=3;
         gbc.gridy=0;
@@ -294,11 +302,14 @@ public class serverConnectWindow extends JFrame{
         totalLayout.setConstraints(connect,gbc);
         add(connect);
         
+        /**
+         * ActionListener for the connect button, connects to the IRC server
+         * 
+         * Also saves configuration to file
+         */
         
-        
-        connect.addActionListener(new ActionListener() {//TODO: Legg til connectionsjekk (Christer)
-         public void actionPerformed( ActionEvent e)// TODO: Legg til bekreftelse om reconnect -"
-            { // Get server and nick, and run the connection // HUSK � SLETTE ALLE TABS
+        connect.addActionListener(new ActionListener() {	// Saves configuration to file and connects to server
+         public void actionPerformed( ActionEvent e) {
              String s = subDropDown.getSelectedItem().toString();
              String n = nicNameField.getText();
           
@@ -387,11 +398,12 @@ public class serverConnectWindow extends JFrame{
         JLabel invisibleLabel = new JLabel(I18N.get("serverconnectwindow.invisible"));
         invisiblePanel.add(invisibleBox);
         invisiblePanel.add(invisibleLabel);
-        
+
+        /* TODO: Just remove this shit       
         gbc.gridy=8;
         totalLayout.setConstraints(invisiblePanel,gbc);
         add(invisiblePanel); 
-        
+ */       
         
         /* bottom buttons
          * 
@@ -407,7 +419,7 @@ public class serverConnectWindow extends JFrame{
         
             /* --- Bottom Actionlisteners --- */
                         
-            okButton.addActionListener(new ActionListener(){ //TODO: Legg til brukernavnsjekk (CHRISTER)
+            okButton.addActionListener(new ActionListener(){ 
             	public void actionPerformed(ActionEvent actEvt){ // Saves configuration to file
             		
             		if(!connection.connectedToServer()){

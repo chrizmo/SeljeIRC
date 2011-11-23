@@ -18,7 +18,7 @@ import jerklib.ConnectionManager;
 import jerklib.Profile;
 import jerklib.Session;
 import jerklib.events.*;
-import jerklib.events.IRCEvent.Type;
+import jerklib.events.IRCEvent.*;
 import jerklib.events.modes.ModeAdjustment;
 import jerklib.events.modes.ModeAdjustment.Action;
 import jerklib.events.modes.ModeEvent;
@@ -82,9 +82,8 @@ public class ConnectionHandler implements IRCEventListener {
 	
 	public void receiveEvent(IRCEvent e) {
 		
-            event = e;
+            //event = e;
             //channelTab.updateStatusScreen("Event :"+e.getType().toString());
-            
             if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
 			
@@ -378,7 +377,7 @@ public class ConnectionHandler implements IRCEventListener {
            
         }
         
-        public void createPrivateChat(String userName){ // TODO: CHRISTER delete thos
+        public void createPrivateChat(String userName){
         	if(connectedToServer()){
         		//event.getSession();
         	}else
@@ -598,4 +597,3 @@ public class ConnectionHandler implements IRCEventListener {
         
 	
 } // End of public class ConnectionHandler	
-
