@@ -5,7 +5,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
- * Used for rendering the nick list for every channel. Each list contains {@link UserListModel.User] objects.
+ * Used for rendering the nick list for every channel. Each list contains {@link UserListModel.User} objects.
  * @author larserik
  * @version 0.1
  * @since 0.1
