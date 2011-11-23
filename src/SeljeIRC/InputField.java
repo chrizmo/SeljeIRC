@@ -24,15 +24,15 @@ public class InputField extends JPanel {
     private String channel;
     private int tabType;
     
-    ConnectionHandler connection;
+    private static ConnectionHandler connection = SeljeIRC.connectionHandlerObj.getInstance();
     
     private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+");
 
-    public InputField(ConnectionHandler con, String cha, int TabType){
+    public InputField(String cha, int TabType){
         super();
         channel = cha;
-        connection = con;
-        tabType = TabType;
+        //connection = con;				// Removed
+        this.tabType = TabType;					// Sets the tabtype to int provided from constructor
         //FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
@@ -92,12 +92,17 @@ public class InputField extends JPanel {
     	
         if(inputCommandFinder.find())
         	typeOfMessage = SingleTab.STATUS;
-    	
+    														// TODO: Make it purty
+        if(this.connection == null)							// Checks if the object got initiated correctly
+    		this.connection = SeljeIRC.connectionHandlerObj.getInstance();			// IT didn't
+        
         try{
         	switch(typeOfMessage){
     			case SingleTab.PRIVATE: connection.sayToPrivate(textToPost, channel); break;
     			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break; 
     			default: 
+                            
+                            System.out.print("entered default");
     				if(tabType == SingleTab.CHANNEL)
     					connection.sayToServer(textToPost,channel);
     				else

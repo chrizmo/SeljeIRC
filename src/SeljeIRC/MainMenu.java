@@ -26,10 +26,8 @@ public class MainMenu extends JMenuBar {
     tabHandler channelTab;
     ConnectionHandler connection;
 
-    public MainMenu(tabHandler tab, ConnectionHandler con) {
+    public MainMenu() {
         super();
-        channelTab = tab;
-        connection = con;
         createFileMenu();
         createEditMenu();
         createHelpMenu();
@@ -39,6 +37,10 @@ public class MainMenu extends JMenuBar {
     }
 
     public void createFileMenu() {
+    	
+    	channelTab = SeljeIRC.channelTabObj.getInstance();
+    	connection = SeljeIRC.connectionHandlerObj.getInstance();
+    	
         JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"));
         file.add(newServer);
         JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
@@ -55,7 +57,7 @@ public class MainMenu extends JMenuBar {
 
             public void actionPerformed(ActionEvent ae) {
                 // Create and position connection window
-                serverConnectWindow scw = new serverConnectWindow(connection);
+                serverConnectWindow scw = new serverConnectWindow();
                 scw.setSize(new Dimension(400, 300));
                 scw.setLocationRelativeTo(null);
                 scw.pack();
@@ -69,17 +71,20 @@ public class MainMenu extends JMenuBar {
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
                
+               if(connection.connectedToServer()){
                JOptionPane jop = new JOptionPane();
                
                String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
                  
                     try {
-                       connection.joinChannel(channel);
+                        connection.joinChannel(channel);
                     } catch (BadLocationException ex) {
                         Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-             
-               
+               }
+               else
+                   channelTab.updateStatusScreen("Gotta connect to server first");
+                 
            } 
         });
 
@@ -111,9 +116,14 @@ public class MainMenu extends JMenuBar {
 
         getChannels.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent evt){
+                    
+                    if(connection.connectedToServer()){
         		if(JOptionPane.showConfirmDialog(MainMenu.this, "This is really dumb and you're gonna get your stupid ass banned!\nDo you still wanna do it?" ,"Are you retarded?",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION) //TODO: OVERSETT!
         			connection.getAllTheChannelsFromServer();
-        	}
+                     }
+                   else
+                       channelTab.updateStatusScreen("Gotta connect to server first");
+               }
         	
         });
         
@@ -133,9 +143,13 @@ public class MainMenu extends JMenuBar {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
+                if(connection.connectedToServer()){
                 String newNick = JOptionPane.showInputDialog("New nick");
                 if (newNick != null)
                     connection.getCurrentSession().changeNick(newNick);
+                }
+                else
+                       channelTab.updateStatusScreen("Gotta connect to server first");
             }
         });
 

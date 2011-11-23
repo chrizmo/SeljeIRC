@@ -40,21 +40,20 @@ public class ConnectionHandler implements IRCEventListener {
         private boolean hasConnected = false;
         private tabHandler channelTab;
         private Channel channelCommands;
-        
+        private static ConnectionHandler conHandler = new ConnectionHandler();
         
         /* Regular Expression patterns */
         private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+(\\s#\\w*)?");
         private Pattern inputCommandTextFinderPattern = Pattern.compile("(^/\\w+(\\s#\\w+)?\\s)([\\w\\s]+)?$");
         private Pattern inputCommandChannelPattern = Pattern.compile("#\\w+");	// Finds a channel name in pattern
+
         
-        
-        public ConnectionHandler(tabHandler ct){
+        private ConnectionHandler(){
  
         	try{
-        		channelTab = ct;
+        		channelTab = SeljeIRC.channelTabObj.getInstance();
 
             channelTab.setConnection(this);
-            
             
             //why? hallvard is asking
             //channelTab.createStatusTab();
@@ -70,7 +69,7 @@ public class ConnectionHandler implements IRCEventListener {
                 
                 
         }
-	
+	 
 	public void connectIt(String server, String nicName) {
 	
        
@@ -80,7 +79,6 @@ public class ConnectionHandler implements IRCEventListener {
 		Session session = manager.requestConnection(server);
 		session.addIRCEventListener(this);
 	}
-
 	
 	public void receiveEvent(IRCEvent e) {
 		
@@ -164,9 +162,10 @@ public class ConnectionHandler implements IRCEventListener {
                     // Print topic for channel:
                     JoinCompleteEvent jce = (JoinCompleteEvent) e;
                     String ch = jce.getChannel().getName();
-                    String message = ("-!- Topic for " +ch +": "+jce.getChannel().getTopic());
+                    String message = jce.getChannel().getTopic();
                     try {
                         channelTab.createNewTab(ch,SingleTab.CHANNEL, message);
+                        
                     } catch (BadLocationException ex) {
                     }
 
@@ -304,8 +303,14 @@ public class ConnectionHandler implements IRCEventListener {
                     TopicEvent te = (TopicEvent) e;
                     String chanName = te.getChannel().getName();
                     String setBy = te.getSetBy();
+                    String[] subSt = setBy.split("~");
+                    Date setAt = te.getSetWhen();
+                    DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss zZ");
+                    setBy = subSt[0];
                     String topic = te.getTopic();
                     try {
+                        
+                        channelTab.passTopic(chanName,topic+ " Set By : "+setBy+" at "+df.format(setAt));
                         channelTab.updateTabScreen(chanName, "-!- " + setBy + " changed the topic of " + chanName + " to: " + topic );
                     } catch (BadLocationException ex) {
                     }
@@ -392,6 +397,7 @@ public class ConnectionHandler implements IRCEventListener {
         	if(channelName != null){
         			Channel ircChannel =  event.getSession().getChannel(channelName);
         			ircChannel.setTopic(channelTopic);
+                                
         	}else{
         		channelTab.updateStatusScreen("Channel name not provided");
         	}
@@ -583,6 +589,10 @@ public class ConnectionHandler implements IRCEventListener {
             }
             return null;
         }
+
+		public static ConnectionHandler getInstance() {
+			return conHandler;
+		}
             
         
         

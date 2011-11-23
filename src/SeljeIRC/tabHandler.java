@@ -7,8 +7,8 @@ import java.awt.event.FocusListener;
 import java.util.List;
 import javax.swing.JTabbedPane;
 import javax.swing.text.BadLocationException;
-
 import jerklib.Channel;
+
 
 /**
  *  This object is containing all tabs, they are modelled as panels added
@@ -18,30 +18,38 @@ import jerklib.Channel;
 
 public class tabHandler extends JTabbedPane implements FocusListener {
 	
-    private static ConnectionHandler connection;
+    //private static ConnectionHandler connection = SeljeIRC.connection;
     private int curTabIndex = 0;
-    private tabHandler tabhandler;
+    private static tabHandler tabHandlerObj = new tabHandler();
+
+    
+    
+    
+    
     /**
      * creates a tabhendler to handle all tabs in jtabbedpane
      * default creates a statustab
      * @throws BadLocationException 
      */
     
-    public tabHandler() throws BadLocationException{
-        super();
-        tabhandler = this;
+    private tabHandler() {//throws BadLocationException{
+        super();     
         
-        SingleTab statusTab = new SingleTab(connection,"status",this,SingleTab.STATUS);
+        
+        SingleTab statusTab = new SingleTab("status",this,SingleTab.STATUS,null);		// Whis the krasjer n� begynner jeg � lure
                               
                 
         this.addTab(I18N.get("channeltab.status"), statusTab);
-        ButtonTabComponent ctb = new ButtonTabComponent(this,connection,SingleTab.STATUS);
+        ButtonTabComponent ctb = new ButtonTabComponent(this,SeljeIRC.connectionHandlerObj,SingleTab.STATUS);
         this.setTabComponentAt(0,ctb);  
         this.remove(0);    
         this.addTab(I18N.get("channeltab.status"), statusTab);
 
-       
     }
+    
+	public static synchronized tabHandler getInstance() {
+		return tabHandlerObj;
+	}
     
     /**
      * Creates new channel-tab or private message-tab
@@ -60,9 +68,9 @@ public class tabHandler extends JTabbedPane implements FocusListener {
          */
         
         if(tabType == SingleTab.CHANNEL){
-            st = new SingleTab(connection,tabName,this,SingleTab.CHANNEL);
+            st = new SingleTab(tabName,this,SingleTab.CHANNEL,topic);
         } else
-            st = new SingleTab(connection,tabName,this,SingleTab.PRIVATE);
+            st = new SingleTab(tabName,this,SingleTab.PRIVATE,null);
         
         this.addTab(tabName,st);
         int tabIndex = this.indexOfTab(tabName); 
@@ -72,7 +80,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
          */
         
         if(tabType == SingleTab.CHANNEL || tabType == SingleTab.PRIVATE){
-            ButtonTabComponent ctb = new ButtonTabComponent(this,connection,tabType);
+            ButtonTabComponent ctb = new ButtonTabComponent(this,SeljeIRC.connectionHandlerObj,tabType);
             this.setTabComponentAt(tabIndex,ctb);
         }
      
@@ -124,7 +132,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
                      }
 
                      public void run() {
-                        tabhandler.setBackgroundAt(thisIndex, new Color(255,255,0));
+                        tabHandlerObj.setBackgroundAt(thisIndex, new Color(171,231,255));
                      }
                  }
                 
@@ -142,6 +150,16 @@ public class tabHandler extends JTabbedPane implements FocusListener {
 
             System.out.print("nonono");
         }
+    }
+    
+    /**
+     * Sets the topic for the channel
+     */
+    public void passTopic(String ch,String topic){
+        
+        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
+        st.setTopic(topic);
+        
     }
     
     /**
@@ -180,9 +198,9 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     public void updateStatusScreen(String update){
      
         try{
-        	updateTabScreen("status",update);
+        	updateTabScreen(I18N.get("channeltab.status"),update);					// Bug med at den krasjer med 18N greien
     	}catch(Exception e){
-    		System.err.println("System error " + e.getMessage());
+    		System.err.println("System error: " + e.getMessage());
     	}
     }
     
@@ -194,7 +212,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      */
     
     public static void setConnection(ConnectionHandler ch){
-        connection = ch;
+        SeljeIRC.connectionHandlerObj = ch; //TODOx,gnfgb
     }
     
     /**
@@ -265,7 +283,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     @Override
     public void focusGained(FocusEvent fe) {
         int curSelected = this.getSelectedIndex();
-         this.setBackgroundAt(curSelected, Color.black);
+         this.setBackgroundAt(curSelected, new Color(250,250,250));
          
         SingleTab st = (SingleTab) this.getComponent(curSelected+1);
         st.passFocusToField();

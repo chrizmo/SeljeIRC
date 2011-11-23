@@ -24,7 +24,7 @@ public class UserListModel extends DefaultListModel {
         else   {
             insert(newUser);                                // Insert user
         }
-        fireContentsChanged(this, 0, size());
+        fireContentsChanged(this, 0, size());               // Redraw list
     }
     
     /**
@@ -34,9 +34,9 @@ public class UserListModel extends DefaultListModel {
      * @param s Nick that shall be removed
      */
     public void removeUser(String s)   {
-        User tmp = getUser(s);              // Gets the user object with given nick
-        super.removeElement(tmp);           // Remove it
-        fireContentsChanged(this, 0, size());
+        User tmp = getUser(s);                      // Gets the user object with given nick
+        super.removeElement(tmp);                   // Remove it
+        fireContentsChanged(this, 0, size());       // Redraw list
     }
     
     /**
@@ -49,21 +49,21 @@ public class UserListModel extends DefaultListModel {
     public void op(String s, boolean o)   {                 // Will allways be called after the complete userlist is initialized
         User tmp = getUser(s);                              // Fetch user with nickname s
         if (tmp != null)   {                                // User is in list
-            if (tmp.voice && o)   {
+            if (tmp.voice && o)   {                             // Sorting goes crazy if the user is both op and voice.....
                 tmp.setVoice(false);                            // DIRTY, Temporarly remove voice, to avoid sorting error
                 tmp.setOp(o);                                   // Set the op mode
                 removeElement(tmp);                             // Delete it from list
                 insert(tmp);                                    // Insert it on its new place
                 tmp.setVoice(true);                             // DIRTY, Give him the voice back...
             }
-            else   {
-                tmp.setOp(o);
-                removeElement(tmp);
-                insert(tmp);
+            else   {                                        // Only op set, no problem :)
+                tmp.setOp(o);                               // Set the op bit
+                removeElement(tmp);                         // Remove user from list
+                insert(tmp);                                // Put him back in the right position
             }
-            fireContentsChanged(this, 0, size());
+            fireContentsChanged(this, 0, size());           // Redraw table
         }
-        else System.out.println("User " + s + " not in list");
+        else System.out.println("User " + s + " not in list");  // For debugging, shall never occur!
         
     }
     
@@ -74,19 +74,20 @@ public class UserListModel extends DefaultListModel {
      * @param s Nick to be voiced/devoiced
      * @param v voice or devoice
      */
-    public void voice(String s, boolean v)   {              // As above
-        User tmp = getUser(s);
+    public void voice(String s, boolean v)   {              // See above comments
+        User tmp = getUser(s);  
         if (tmp != null)   {
-            if (tmp.op)   {             // Shall not rearrange list, if a op gets voice
+            if (tmp.op)   {                                 // Shall not rearrange list, if a op gets voice
                 tmp.setVoice(v);
-                return;
             }
-            tmp.setVoice(v);
-            removeElement(tmp);
-            insert(tmp);
-            fireContentsChanged(this, 0, size());
+            else   {
+                tmp.setVoice(v);                            // Regular user gets or loses voice
+                removeElement(tmp);                         // Remove user
+                insert(tmp);                                // Put him back in the right position
+                fireContentsChanged(this, 0, size());       // Redraw
+            }
         }
-        else System.out.println("User " + s + " not in list");
+        else System.out.println("User " + s + " not in list");  // For debugging, shall never occur!
     }
     
     /**
@@ -97,12 +98,12 @@ public class UserListModel extends DefaultListModel {
      */
     private void insert(User n)   {
         int i;
-        for (i = 0; i < size(); i++)   {            // Iterate through all users
+        for (i = 0; i < size(); i++)   {                // Iterate through all users
             User userInList = (User)elementAt(i);       // Pick user
             if (userInList.compareTo(n) <= 0)   {       // Continue until current user is "bigger" than the new user
                 continue;
             }
-            insertElementAt(n, i);                      // InserT the new user where the current user was
+            insertElementAt(n, i);                      // Insert the new user where the current user was
             return;                                     // No need for more searching after user is added
         }
         super.addElement(n);                            // New user was the "biggest" insert at the bottom
@@ -116,28 +117,49 @@ public class UserListModel extends DefaultListModel {
      * @since 0.1
      */
     private User getUser(String s)   {
-        User tmp = new User(s, false, false);       // Create a User object with give nick, to fetch from list
+        User tmp = new User(s, false, false);       // Create a User object with given nick, to fetch from list
         int i = indexOf(tmp);                       // Gets the index of that user
         if (i != -1 ) return (User)elementAt(i);    // The user is in the list
         else return null;                           // The user is not in the list
     }
-
+    
+    /**
+     * Changes the nick of a user in the list
+     * @param oldNick The user's old nick
+     * @param newNick The user's new nick
+     * @author Lars Erik Pedersen
+     * @since 0.1
+     */
     public void changeNick(String oldNick, String newNick) {
-        User tmp = getUser(oldNick);
-        removeUser(oldNick);
-        tmp.nick = newNick;
-        insert(tmp);
-        if (tmp.op) op(newNick, true);
-        else if (tmp.voice) voice(newNick, true);
-        fireContentsChanged(this, 0, size());
+        User tmp = getUser(oldNick);                // Fetch user object
+        removeUser(oldNick);                        // Remove him
+        tmp.nick = newNick;                         // Change nick
+        insert(tmp);                                // Put him back at right position
+        if (tmp.op) op(newNick, true);              // If he is op, make sure he still is
+        else if (tmp.voice) voice(newNick, true);   // Same for voice
+        fireContentsChanged(this, 0, size());       // Redraw
     }
 
+    /**
+     * Checks wether a user is channel operator or not
+     * @param user Nickname of the user you want to check
+     * @return True if user is operator, otherwise false
+     * @author Lars Erik Pederseb
+     * @since 0.1
+     */
     public boolean isOp(String user) {
         if (getUser(user).op) return true;
         else return false;
     }
 
-    boolean isVoice(String user) {
+    /**
+     * Checks wether a user is voiced or not
+     * @param user Nickname of the user you want to check
+     * @return True if user is voiced, otherwise false
+     * @author Lars Erik Pederseb
+     * @since 0.1
+     */
+    public boolean isVoice(String user) {
         if (getUser(user).voice) return true;
         else return false;
     }
@@ -154,7 +176,7 @@ public class UserListModel extends DefaultListModel {
         boolean voice;
         
         /**
-         * Constructor, creates a user with nickname av channel modes
+         * Constructor, creates a user with nickname and channel modes
          * @author Lars Erik Pedersen
          * @since 0.1
          * @param n Nickname
@@ -178,7 +200,7 @@ public class UserListModel extends DefaultListModel {
         }
         
         /**
-         * Set voic mode
+         * Set voice mode
          * @author Lars Erik Pedersen
          * @since 0.1
          * @param v True = Voice, Flase = devoice
@@ -221,7 +243,7 @@ public class UserListModel extends DefaultListModel {
         /**
          * Checks if to Users are equal. Uses the nickname, because that will be uniqe for every User.
          * @author Lars Erik Pedersen
-         * @param o Either a User or a String.
+         * @param o Object to be compared with
          * @return True if the Users are equal, false if they're not.
          * @since 0.1
          */
@@ -230,14 +252,14 @@ public class UserListModel extends DefaultListModel {
             if (o instanceof User)   {                  // Compared with another User object
                 return nick.equals(((User)o).nick);
             }
-            else if (o instanceof String) {             // Compare with a String
+            else if (o instanceof String) {             // Compared with a String
                 return nick.equals((String)o);
             }  
             else return false;                          // Compared with an illegal object
         }
         
         /**
-         * Returns the literal User
+         * Returns the literal string of the User object
          * @author Lars Erik Pedersen
          * @since 0.1
          * @return Username with op or voice prefixed
@@ -246,7 +268,7 @@ public class UserListModel extends DefaultListModel {
         public String toString()   {
             StringBuilder s = new StringBuilder();
             s.append( (op) ? "@" : "" );
-            s.append( (voice && !op) ? "+" : "" );
+            s.append( (voice && !op) ? "+" : "" );      // Dont show both a @ and a +
             s.append(nick);
             return s.toString();
         }

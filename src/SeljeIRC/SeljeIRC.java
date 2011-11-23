@@ -28,29 +28,27 @@ public class SeljeIRC extends JFrame{
    
 	private static final long serialVersionUID = 1L; //Serializeing
         
+        public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        
         MainMenu mainMenu;      //Standard Menu
         
-        static tabHandler channelTabs; //JTabbedPane containing all tabs
+
+
         static InputField inputField;  //Standard Input field for each tab
         BorderLayout totalLayout; //TotalLayouts
         static Colors colorSettings; // Colorsettings
-        
-        static ConnectionHandler connection;
+       	
+        public static tabHandler channelTabObj; //JTabbedPane containing all tabs        
+        public static ConnectionHandler connectionHandlerObj;
         
         boolean isConnected;
 
 	public SeljeIRC(String title) throws BadLocationException{
             super(title);
             
-       
             
-            /*
-             * Connection to server
-             */
-            
-            channelTabs = new tabHandler();
-            connection = new ConnectionHandler(channelTabs);
-            
+            connectionHandlerObj = ConnectionHandler.getInstance();
+            channelTabObj = tabHandler.getInstance();
             
             colorSettings = new Colors();
 
@@ -64,8 +62,8 @@ public class SeljeIRC extends JFrame{
             /*
              * JTabbedPane containging all tabs
              */
-            
-                add(channelTabs,BorderLayout.CENTER);    
+            this.setBackground(new Color(224,224,224));
+                add(channelTabObj,BorderLayout.CENTER);    
                 
                 
             
@@ -73,7 +71,7 @@ public class SeljeIRC extends JFrame{
              * Setting up the main contentPane menu
              * Passing channelTab-object for creation of new tabs
              */
-            mainMenu= new MainMenu(channelTabs,connection);
+            mainMenu= new MainMenu();
                 setJMenuBar(mainMenu);
             
             /*
@@ -95,7 +93,7 @@ public class SeljeIRC extends JFrame{
         {
         // your stuf here
            try{ 
-           connection.closeConnection(); 
+           connectionHandlerObj.closeConnection(); 
            }catch(Exception ex){
                System.out.printf("exception onclose");
            }
@@ -109,10 +107,10 @@ public class SeljeIRC extends JFrame{
         
     }
         public static ConnectionHandler returnConnection(){
-            return connection;
+            return connectionHandlerObj;
         }
         public void setStatusFocus(){
-            SingleTab st = (SingleTab) channelTabs.getComponent(1);
+            SingleTab st = (SingleTab) channelTabObj.getComponent(1);
             st.passFocusToField();
         }
 
@@ -142,33 +140,9 @@ public static void main(String[] args) throws BadLocationException {
          }
    
     */
-    
-        // GUL : Color(255,255,0)
-        // MØRKBRUN : Color(65,52,0)
-        // LYSEBRUN : Color(130,110,39)
-    
-        NimRODTheme nt = new NimRODTheme();
-        //nt.setPrimary(Color.green);
-        //nt.setPrimary1(Color.BLUE);
-        nt.setPrimary2(Color.black); // tabcolor and hover
-        nt.setPrimary3(Color.GRAY); // listbackground
-        //nt.setSecondary(Color.GREEN);
-        //nt.setSecondary1(Color.ORANGE); // border
-        //nt.setSecondary2(Color.PINK);
-        nt.setSecondary (new Color(35,28,2));    // background
-        
-        
-        nt.setBlack(Color.white); //text
-        nt.setWhite(Color.black); //textfields
-        //nt.setBlack(Color.cyan);
-        
-        
-
-        NimRODLookAndFeel NimRODLF = new NimRODLookAndFeel();
-        NimRODLF.setCurrentTheme( nt);
         try {
-            UIManager.setLookAndFeel( NimRODLF);
-        } catch (UnsupportedLookAndFeelException ex) {
+            UIManager.getSystemLookAndFeelClassName();
+        } catch (Exception ex) {
             Logger.getLogger(SeljeIRC.class.getName()).log(Level.SEVERE, null, ex);
         }
     
@@ -177,7 +151,7 @@ public static void main(String[] args) throws BadLocationException {
             
             
             mainFrame.setVisible(false);
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            
             mainFrame.setBounds(0,0,screenSize.width, screenSize.height);
             //mainFrame.setSize(new Dimension(1200, 800));
             
