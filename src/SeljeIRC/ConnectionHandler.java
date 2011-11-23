@@ -304,11 +304,13 @@ public class ConnectionHandler implements IRCEventListener {
                     String chanName = te.getChannel().getName();
                     String setBy = te.getSetBy();
                     String[] subSt = setBy.split("~");
+                    Date setAt = te.getSetWhen();
+                    DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss zZ");
                     setBy = subSt[0];
                     String topic = te.getTopic();
                     try {
                         
-                        channelTab.passTopic(chanName,topic+ " Set By : "+setBy);
+                        channelTab.passTopic(chanName,topic+ " Set By : "+setBy+" at "+df.format(setAt));
                         channelTab.updateTabScreen(chanName, "-!- " + setBy + " changed the topic of " + chanName + " to: " + topic );
                     } catch (BadLocationException ex) {
                     }
