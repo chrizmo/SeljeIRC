@@ -83,7 +83,7 @@ public class ConnectionHandler implements IRCEventListener {
 	
 	public void receiveEvent(IRCEvent e) {
 		
-            //event = e;
+            event = e;
             //channelTab.updateStatusScreen("Event :"+e.getType().toString());
             if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
