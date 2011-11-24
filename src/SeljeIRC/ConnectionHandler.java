@@ -57,7 +57,7 @@ public class ConnectionHandler implements IRCEventListener {
             channelTab.setConnection(this);
             
         	}catch(Exception e){
-                 System.err.println(dateFormat.format(date)+" "+I18N.get("connection.systemerror") + e.getMessage());
+                 System.err.println(dateFormat.format(date)+I18N.get("connection.systemerror") + e.getMessage());
         	}
             /*
              * created object
@@ -75,7 +75,7 @@ public class ConnectionHandler implements IRCEventListener {
 	public void connectIt(String server, String nicName) {
 	
        
-            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.trying"), Colors.statusColor);
+            channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.trying"), Colors.statusColor);
             manager = new ConnectionManager(new Profile(nicName));
 	
             Session session = manager.requestConnection(server);
@@ -97,17 +97,22 @@ public class ConnectionHandler implements IRCEventListener {
             if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
 			
-              channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connect.success"), Colors.statusColor);
+              channelTab.updateStatusScreen(stdOutputPrefix()+" "+I18N.get("connect.success"), Colors.statusColor);
               hasConnected = true;
 		}
             else if(e.getType() == Type.CHANNEL_MESSAGE){
             // Print channel-messages in channel-tab
             MessageEvent me = (MessageEvent) e;
             String ch = me.getChannel().getName();
+            String who = me.getNick();
+            if (channelTab.isOp(who,ch))
+                who = "@"+who;
+            else if (channelTab.isVoice(who,ch))
+                who = "+"+who;
                     
             try {
-                channelTab.updateTabScreen(ch, "\n"+dateFormat.format(date), Colors.channelColor);
-                channelTab.updateTabScreen(ch, " <"+me.getNick()+">", Colors.nickColor);
+                channelTab.updateTabScreen(ch, stdOutputPrefix(), Colors.channelColor);
+                channelTab.updateTabScreen(ch, "<"+who+">", Colors.nickColor);
                 channelTab.updateTabScreen(ch, me.getMessage(), Colors.channelColor);
             } catch (BadLocationException ex) {
                 Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -126,7 +131,7 @@ public class ConnectionHandler implements IRCEventListener {
                     Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                       }
                 try {
-                 channelTab.updateTabScreen("\n"+dateFormat.format(date)+" "+userNick, message);
+                 channelTab.updateTabScreen(stdOutputPrefix()+userNick, message);
                     } catch (BadLocationException ex) {
                     Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -136,15 +141,15 @@ public class ConnectionHandler implements IRCEventListener {
             NoticeEvent no = (NoticeEvent) e;
                         
             String update = no.getNoticeMessage().toString();
-            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+update, Colors.statusColor);
+            channelTab.updateStatusScreen(stdOutputPrefix()+update, Colors.statusColor);
             }
 
             else if(e.getType() == Type.ERROR){
             ErrorEvent no = (ErrorEvent) e;
             String update = no.getErrorType().toString();
-            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+update, Colors.statusColor);
+            channelTab.updateStatusScreen(stdOutputPrefix()+update, Colors.statusColor);
             //TODO REMOVE
-            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.errordata") + e.getRawEventData(), Colors.statusColor);
+            channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.errordata") + e.getRawEventData(), Colors.statusColor);
             }
             
             else if(e.getType() == Type.NICK_CHANGE){
@@ -155,7 +160,7 @@ public class ConnectionHandler implements IRCEventListener {
                    ch = i.next().getName();
                    channelTab.changedNick(nce.getOldNick(), nce.getNewNick(), ch);
                    try {
-                          channelTab.updateTabScreen("\n"+dateFormat.format(date)+" "+ch, "-!- " + nce.getOldNick() + I18N.get("connection.knownas") + nce.getNewNick(), Colors.channelColor);
+                          channelTab.updateTabScreen(stdOutputPrefix()+ch, "-!- " + nce.getOldNick() + I18N.get("connection.knownas") + nce.getNewNick(), Colors.channelColor);
                         } catch (BadLocationException ex) {
                           }
                     }
@@ -180,7 +185,7 @@ public class ConnectionHandler implements IRCEventListener {
                 List<String> message = nle.getNicks();
                 channelTab.fetchUsers(ch, e.getSession().getChannel(ch));
                 try {
-                      channelTab.updateTabScreen(ch, "\n"+dateFormat.format(date)+" "+I18N.get("connection.userl") + message, Colors.channelColor);
+                      channelTab.updateTabScreen(ch, stdOutputPrefix()+I18N.get("connection.userl") + message, Colors.channelColor);
                     } catch (BadLocationException ex) {
                       Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -189,14 +194,14 @@ public class ConnectionHandler implements IRCEventListener {
                 
             else if (e.getType() == Type.NICK_IN_USE)   {
                     NickInUseEvent niu = (NickInUseEvent) e;
-                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" -!- Nick "+niu.getInUseNick()+ I18N.get("connection.nickinuse"), Colors.statusColor);
+                    channelTab.updateStatusScreen(stdOutputPrefix()+" -!- Nick "+niu.getInUseNick()+ I18N.get("connection.nickinuse"), Colors.statusColor);
                 }
                 
             else if (e.getType() == Type.JOIN)   {
                     JoinEvent je = (JoinEvent) e;
                     String nick = je.getNick();
                     try {
-                        channelTab.updateTabScreen(je.getChannelName(), "\n"+dateFormat.format(date)+" -!- " + nick + I18N.get("channel.userjoin"), Colors.channelColor);
+                        channelTab.updateTabScreen(je.getChannelName(), stdOutputPrefix()+" -!- " + nick + I18N.get("channel.userjoin"), Colors.channelColor);
                     }   catch (BadLocationException ex) {
                     Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -206,16 +211,14 @@ public class ConnectionHandler implements IRCEventListener {
             else if (e.getType() == Type.PART)   {
                     PartEvent pe = (PartEvent) e;
                     String nick = pe.getWho();
+                    String myNick = event.getSession().getNick();
+                    if(!nick.equalsIgnoreCase(myNick)){
                     
-                    if(!nick.equalsIgnoreCase(event.getSession().getNick())){
-                    
-                    try {
-                        channelTab.updateTabScreen(pe.getChannelName(), "\n"+dateFormat.format(date)+" -!- " + nick + I18N.get("channel.userleft"), Colors.channelColor );
-                    } catch (BadLocationException ex) {
-                        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                            channelTab.userLeft(nick, pe.getChannelName());
-                        
+                        try {
+                            channelTab.updateTabScreen(pe.getChannelName(), stdOutputPrefix()+"-!- " + nick + I18N.get("channel.userleft"), Colors.channelColor );
+                        } catch (BadLocationException ex) {
+                        }
+                        channelTab.userLeft(nick, pe.getChannelName());                        
                     }
                 }
 
@@ -253,7 +256,7 @@ public class ConnectionHandler implements IRCEventListener {
                             else
                                 message = strModes.toString() + "]";
                             try {
-                                channelTab.updateTabScreen(ch, "\n"+dateFormat.format(date)+" "+message, Colors.channelColor);
+                                channelTab.updateTabScreen(ch, stdOutputPrefix()+message, Colors.channelColor);
                             } catch (BadLocationException ex) {
                             }
                         }                            
@@ -262,19 +265,21 @@ public class ConnectionHandler implements IRCEventListener {
                 
                 else if (e.getType() == Type.CTCP_EVENT)   {
                     CtcpEvent ce = (CtcpEvent) e;
+                    String ch = ce.getChannel().getName();
+                    
                     if(ce.getCtcpString().equals("VERSION"))   {
                         ce.getSession().notice(ce.getNick(), "\001"+"VERSION SeljeIRC v0.1"+"\001");
-                        channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" Version requested from "+ce.getNick(), Colors.statusColor);
+                        channelTab.updateStatusScreen(stdOutputPrefix()+" Version requested from "+ce.getNick(), Colors.statusColor);
                     }
                     else if(ce.getCtcpString().contains("PING"))   {
-                         channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" PING from "+ce.getNick(), Colors.statusColor);
+                         channelTab.updateStatusScreen(stdOutputPrefix()+" PING from "+ce.getNick(), Colors.statusColor);
                         ce.getSession().notice(ce.getNick(), "\001"+ce.getCtcpString()+"\001");
                     }
                     else if(ce.getCtcpString().contains("TIME"))   {
                         DateFormat df = new SimpleDateFormat("EEE d MMM yyyy HH:mm:ss Z");
-                        Date date = new Date();
-                        ce.getSession().notice(ce.getNick(), "\001"+"TIME "+df.format(date)+"\001");
-                         channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" TIME from "+ce.getNick(), Colors.statusColor);
+                        Date d = new Date();
+                        ce.getSession().notice(ce.getNick(), "\001"+"TIME "+df.format(d)+"\001");
+                         channelTab.updateStatusScreen("\n"+dateFormat.format(d)+" TIME from "+ce.getNick(), Colors.statusColor);
                     }
                     else if (ce.getCtcpString().contains("ACTION"))   {
                         try {
@@ -287,18 +292,17 @@ public class ConnectionHandler implements IRCEventListener {
                 
                 else if(e.getType() == Type.WHOIS_EVENT)   {
                     WhoisEvent we = (WhoisEvent) e;
-                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" -!- " + we.getUser() + " [" + we.getHost() + "]", Colors.statusColor);
-                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.ircname") + we.getRealName(), Colors.statusColor);
-                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.channels") + we.getChannelNames(), Colors.statusColor);
-                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.server") + we.whoisServer() + " [" + we.whoisServerInfo() + "]", Colors.statusColor);
-                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.endwhois"), Colors.statusColor);
-                    if(we.isIdle()) channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.idle"), Colors.statusColor);
-                    else channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.notidle"), Colors.statusColor);
+                    channelTab.updateStatusScreen(stdOutputPrefix()+"-!- " + we.getUser() + " [" + we.getHost() + "]", Colors.statusColor);
+                    channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.ircname") + we.getRealName(), Colors.statusColor);
+                    channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.channels") + we.getChannelNames(), Colors.statusColor);
+                    channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.server") + we.whoisServer() + " [" + we.whoisServerInfo() + "]", Colors.statusColor);
+                    if(we.isIdle()) channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.idle"), Colors.statusColor);
+                    channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.endwhois"), Colors.statusColor);                    
                 }
             
                 else if(e.getType() == Type.CHANNEL_LIST_EVENT)   {	// Lists all the channels from the servers with topics
                 	ChannelListEvent chEvt = (ChannelListEvent) e;
-                	channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.channel") + chEvt.getChannelName() + I18N.get("connection.users") + chEvt.getNumberOfUser() + " " + chEvt.getTopic(), Colors.statusColor);
+                	channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.channel") + chEvt.getChannelName() + I18N.get("connection.users") + chEvt.getNumberOfUser() + " " + chEvt.getTopic(), Colors.statusColor);
                 }
                 else if (e.getType() == Type.TOPIC)   {
                     TopicEvent te = (TopicEvent) e;
@@ -312,7 +316,7 @@ public class ConnectionHandler implements IRCEventListener {
                     try {
                         
                         channelTab.passTopic(chanName,topic+" "+ I18N.get("connection.setby")+" " +setBy+ " "+I18N.get("connection.at") +" "+df.format(setAt));
-                        channelTab.updateTabScreen(chanName, "\n"+dateFormat.format(date)+" -!- " +" "+setBy+" " + I18N.get("connection.changedtopic") +" "+chanName +" "+ I18N.get("connection.to") +" "+ topic, Colors.statusColor);
+                        channelTab.updateTabScreen(chanName, stdOutputPrefix()+"-!- " +" "+setBy+" " + I18N.get("connection.changedtopic") +" "+chanName +" "+ I18N.get("connection.to") +" "+ topic, Colors.statusColor);
                     } catch (BadLocationException ex) {
                     }
                 }
@@ -320,23 +324,23 @@ public class ConnectionHandler implements IRCEventListener {
                 else if (e.getType() == Type.AWAY_EVENT)   {
                     AwayEvent aw = (AwayEvent) e;
                     String awayUser = aw.getNick();
-                    String message = "-!- "+awayUser+ I18N.get("connection.isaway")+aw.getAwayMessage()+"]";
+                    String message = "-!- "+awayUser+" "+ I18N.get("connection.isaway")+aw.getAwayMessage()+"]";
                     int privTabIdx = channelTab.getIndexOfTab(awayUser);
                     if (aw.getEventType() == AwayEvent.EventType.USER_IS_AWAY)   {
-                        channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+message, Colors.statusColor);
+                        channelTab.updateStatusScreen(stdOutputPrefix()+message, Colors.statusColor);
                         if (privTabIdx > 0)   {
                             try {
-                                channelTab.updateTabScreen("\n"+dateFormat.format(date)+" "+awayUser, message, Colors.statusColor);
+                                channelTab.updateTabScreen(stdOutputPrefix()+awayUser, message, Colors.statusColor);
                             } catch (BadLocationException ex) {
                             }
                         }
                     }
                     if (aw.isYou() && aw.getEventType() == AwayEvent.EventType.WENT_AWAY)   {
-                            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.setaway"), Colors.statusColor);
+                            channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.setaway"), Colors.statusColor);
                     }
                     
                     if(aw.isYou() && aw.getEventType() == AwayEvent.EventType.RETURNED_FROM_AWAY)   {
-                            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.notawayanymore"), Colors.statusColor);
+                            channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.notawayanymore"), Colors.statusColor);
                     }
                     
                 }
@@ -346,7 +350,7 @@ public class ConnectionHandler implements IRCEventListener {
                 else    
 		{       // Prints data received from server
                         if(!e.getRawEventData().matches(".*(311|319|312|320|317|318|321|322|323).*")) //Do not print whois events marked as DEFAULT
-                        	channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
+                        	channelTab.updateStatusScreen(stdOutputPrefix()+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
 		}
             
         }
@@ -370,20 +374,20 @@ public class ConnectionHandler implements IRCEventListener {
                             channel = stBuild.toString();
                     }
                 
-                if(channel  != ""){
+                if(!channel.equals((""))){
                     
-                        String ch = reWriteChannel(channel);
-                        if(ch == null){
+                        //String ch = reWriteChannel(channel);
+                        if(!channelTab.tabExists(channel)){
                             event.getSession().join(channel);
                         }
                         else{
-                            channelTab.setSelectedIndex(channelTab.indexOfTab(ch));
+                            channelTab.setSelectedIndex(channelTab.indexOfTab(channel));
                         }
                 }else
-                  channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.writeplease"), Colors.statusColor);
+                  channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.writeplease"), Colors.statusColor);
             }
             else
-                channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.notconnected"), Colors.statusColor);
+                channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.notconnected"), Colors.statusColor);
            
         }
         
@@ -396,7 +400,7 @@ public class ConnectionHandler implements IRCEventListener {
         	if(connectedToServer()){
         		//event.getSession();
         	}else
-        		channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.connectfirst"), Colors.statusColor);
+        		channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.connectfirst"), Colors.statusColor);
         }
         
         /**
@@ -413,7 +417,7 @@ public class ConnectionHandler implements IRCEventListener {
         			ircChannel.setTopic(channelTopic);
                                 
         	}else{
-        		channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.nochannel"), Colors.statusColor);
+        		channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.nochannel"), Colors.statusColor);
         	}
         }
 
@@ -459,7 +463,7 @@ public class ConnectionHandler implements IRCEventListener {
         	if(connectedToServer()){
         		
             	Matcher stringCommandFinder = inputCommandFinderPattern.matcher(inputString);  // Finds command and possible channel name
-            	channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+inputString, Colors.statusColor);			// Updates statusscreen with the command (no matter what command);
+            	channelTab.updateStatusScreen(stdOutputPrefix()+inputString, Colors.statusColor);			// Updates statusscreen with the command (no matter what command);
             	
             	if(stringCommandFinder.find()){						// Checks the matcher for commands
             		
@@ -517,21 +521,21 @@ public class ConnectionHandler implements IRCEventListener {
             			else if(commandFromUser.startsWith("/help")){						// Help commands
             				String allowedCommands = I18N.get("connection.allowedcommands");
             				if(channelName != null)
-            					channelTab.updateTabScreen("\n"+dateFormat.format(date)+" "+channelName, allowedCommands, Colors.channelColor);
+            					channelTab.updateTabScreen(stdOutputPrefix()+channelName, allowedCommands, Colors.channelColor);
             				else
-            					channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+allowedCommands, Colors.statusColor);
+            					channelTab.updateStatusScreen(stdOutputPrefix()+allowedCommands, Colors.statusColor);
             			}
             			else if(commandFromUser.startsWith("/disconnect")){					// Disconnect from server
             				this.closeConnection();
             			}
             			else
-            				channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.whyusostupid"), Colors.statusColor);
+            				channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.whyusostupid"), Colors.statusColor);
             			
             		}catch(Exception e){
-            			channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.exception") + e.getMessage(), Colors.statusColor);
+            			channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.exception") + e.getMessage(), Colors.statusColor);
             		}
             } else {														// If not connected to server
-                channelTab.updateStatusScreen(dateFormat.format(date)+" "+inputString + "\n" +dateFormat.format(date)+" "+I18N.get("connection.notconnected"), Colors.statusColor);
+                channelTab.updateStatusScreen(stdOutputPrefix()+inputString + stdOutputPrefix()+I18N.get("connection.notconnected"), Colors.statusColor);
 
             }
         } 
@@ -545,17 +549,21 @@ public class ConnectionHandler implements IRCEventListener {
          * @since 0.4
          */
         public void sayToChannel(String whatToSay,String channel) throws BadLocationException{
-            
+            String myNick = event.getSession().getNick();
+            if (channelTab.isOp(myNick,channel))
+                myNick = "@"+myNick;
+            else if (channelTab.isVoice(myNick,channel))
+                myNick = "+"+myNick;
             try{
             	event.getSession().sayChannel(whatToSay,event.getSession().getChannel(channel));
             /*
              * just so you see what you write
              */
-            	channelTab.updateTabScreen(channel, "\n"+dateFormat.format(date), Colors.channelColor);
-                channelTab.updateTabScreen(channel, " <"+event.getSession().getNick()+"> ", Colors.nickColor);
+            	channelTab.updateTabScreen(channel, stdOutputPrefix(), Colors.channelColor);
+                channelTab.updateTabScreen(channel, "<"+myNick+"> ", Colors.nickColor);
                 channelTab.updateTabScreen(channel, whatToSay, Colors.channelColor);
             }catch(BadLocationException ex){
-            	System.err.println(I18N.get("\n"+dateFormat.format(date)+" "+"connection.privmsgerror") + ex.getMessage());
+            	System.err.println(I18N.get(stdOutputPrefix()+"connection.privmsgerror") + ex.getMessage());
             }
             
         }
@@ -570,7 +578,7 @@ public class ConnectionHandler implements IRCEventListener {
         	try{
         		event.getSession().sayPrivate(nickName, whatToSay);
         	
-        		channelTab.updateTabScreen(nickName, "\n"+dateFormat.format(date)+" <"+event.getSession().getNick()+"> " +whatToSay, Colors.channelColor);
+        		channelTab.updateTabScreen(nickName, stdOutputPrefix()+" <"+event.getSession().getNick()+"> " +whatToSay, Colors.channelColor);
         	}catch(Exception ex){
         		System.err.println("\n"+dateFormat.format(date)+" "+I18N.get("connection.privmsgerror") + ex.getMessage());
         	}
@@ -594,10 +602,10 @@ public class ConnectionHandler implements IRCEventListener {
          */
         public void getAllTheChannelsFromServer(){
         	if(this.connectedToServer()){
-        		channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.list"), Colors.statusColor);
+        		channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.list"), Colors.statusColor);
         		event.getSession().chanList();
 			}else
-        		channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.notconnected"), Colors.statusColor);
+        		channelTab.updateStatusScreen(stdOutputPrefix()+I18N.get("connection.notconnected"), Colors.statusColor);
         }
         
 	/**
@@ -628,25 +636,7 @@ public class ConnectionHandler implements IRCEventListener {
             
         }
         
-
-	/**
-         * Not sure what this does but... Ask Nils.
-	 * @author Nils
-	 * @param ch The channel
-	 */
-        public String reWriteChannel(String ch){
-            
-            List<Channel> l = event.getSession().getChannels();
-            Iterator<Channel> i = l.iterator();
-            String ls;
-            while(i.hasNext())   {
-                ls = i.next().getName();
-                if(ls.equalsIgnoreCase(ch))
-                    return ls;
-            }
-            return null;
-        }
-	
+        
 	/**
          * Returns the current connectionhandler
 	 * @author Nils
@@ -654,8 +644,14 @@ public class ConnectionHandler implements IRCEventListener {
 	 * @version 2
 	 */ 
 	public static ConnectionHandler getInstance() {
-			return conHandler;
-		}
+            return conHandler;
+        }
+        
+        private String stdOutputPrefix()   {
+            Date d = new Date();
+            DateFormat df = new SimpleDateFormat("HH:mm");
+            return "\n"+df.format(d)+" ";
+        }
             
         
         

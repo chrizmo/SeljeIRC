@@ -331,6 +331,16 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         st.changeNick(oldNick, newNick);
     }
     
+    boolean isOp(String nick, String ch)   {
+        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
+        return st.isOp(nick);
+    }
+    
+    boolean isVoice(String nick, String ch)   {
+        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
+        return st.isVoice(nick);
+    }
+    
     /**
      * Removes notification from tab when selected (focused)
      * sends focus down to inputfield
@@ -340,7 +350,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     @Override
     public void focusGained(FocusEvent fe) {
         int curSelected = this.getSelectedIndex();
-         this.setBackgroundAt(curSelected, new Color(250,250,250));
+        this.setBackgroundAt(curSelected, new Color(250,250,250));
          
         SingleTab st = (SingleTab) this.getComponent(curSelected+1);
         st.passFocusToField();

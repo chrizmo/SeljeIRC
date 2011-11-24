@@ -89,7 +89,6 @@ public class MainMenu extends JMenuBar {
                
                if(connection.connectedToServer()){
                JOptionPane jop = new JOptionPane();
-               
                String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
                  
                     try {

@@ -5,9 +5,6 @@ import com.nilo.plaf.nimrod.NimRODTheme;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -24,60 +21,47 @@ import javax.swing.text.BadLocationException;
  */
 
 public class SeljeIRC extends JFrame{
-  
-   
-	private static final long serialVersionUID = 1L; //Serializeing
-        
-        public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        
-        MainMenu mainMenu;      //Standard Menu
-        
+
+    private static final long serialVersionUID = 1L; //Serializeing        
+    MainMenu mainMenu;      //Standard Menu
+    static InputField inputField;  //Standard Input field for each tab
+    BorderLayout totalLayout; //TotalLayouts
+    static Colors colorSettings; // Colorsettings
+    public static tabHandler channelTabObj; //JTabbedPane containing all tabs        
+    public static ConnectionHandler connectionHandlerObj;    
+    boolean isConnected;
+
+    public SeljeIRC(String title) throws BadLocationException{
+        super(title);
+
+        connectionHandlerObj = ConnectionHandler.getInstance();
+        channelTabObj = tabHandler.getInstance();
+        colorSettings = new Colors();
 
 
-        static InputField inputField;  //Standard Input field for each tab
-        BorderLayout totalLayout; //TotalLayouts
-        static Colors colorSettings; // Colorsettings
-       	
-        public static tabHandler channelTabObj; //JTabbedPane containing all tabs        
-        public static ConnectionHandler connectionHandlerObj;
-        
-        boolean isConnected;
+        /*
+         * Layout of main contentPane
+         */
+        totalLayout = new BorderLayout();
+            setLayout(totalLayout);
 
-	public SeljeIRC(String title) throws BadLocationException{
-            super(title);
-            
-            
-            connectionHandlerObj = ConnectionHandler.getInstance();
-            channelTabObj = tabHandler.getInstance();
-            
-            colorSettings = new Colors();
+        /*
+         * JTabbedPane containging all tabs
+         */
+        this.setBackground(new Color(224,224,224));
+            add(channelTabObj,BorderLayout.CENTER);    
 
-            
-            /*
-             * Layout of main contentPane
-             */
-            totalLayout = new BorderLayout();
-                setLayout(totalLayout);
-            
-            /*
-             * JTabbedPane containging all tabs
-             */
-            this.setBackground(new Color(224,224,224));
-                add(channelTabObj,BorderLayout.CENTER);    
-                
-                
-            
-            /*
-             * Setting up the main contentPane menu
-             * Passing channelTab-object for creation of new tabs
-             */
-            mainMenu= new MainMenu();
-                setJMenuBar(mainMenu);
-            
-            /*
-             * Inputfield that should be taking all input
-             */
-            //TODO pass channelTab-object
+        /*
+         * Setting up the main contentPane menu
+         * Passing channelTab-object for creation of new tabs
+         */
+        mainMenu= new MainMenu();
+            setJMenuBar(mainMenu);
+
+        /*
+         * Inputfield that should be taking all input
+         */
+        //TODO pass channelTab-object
                 
    
                 
@@ -87,25 +71,23 @@ public class SeljeIRC extends JFrame{
         setVisible(true);
         pack();
         
-        this.addWindowListener(new WindowAdapter()
-        {
-        public void windowClosing(WindowEvent e)
-        {
-        // your stuff here
-           try{ 
-           connectionHandlerObj.closeConnection(); 
-           }catch(Exception ex){
-               System.out.printf("exception onclose");
-           }
-            
-        //System.exit(0);
-        }
+
+        this.addWindowListener(new WindowAdapter()   {
+            public void windowClosing(WindowEvent e)   {
+        
+                try{ 
+                    connectionHandlerObj.closeConnection(); 
+                }catch(Exception ex){
+                    System.out.printf("exception onclose");
+                }
+            }
         });
         
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
     }
+
 
         /**
          * Returns current connectionHandlerObject
@@ -121,10 +103,8 @@ public class SeljeIRC extends JFrame{
         }
 
         
-        
-        
-        
-public static void main(String[] args) throws BadLocationException {
+  
+    public static void main(String[] args) throws BadLocationException {
     
         /*
          * Setting up the mainframe, add only functionality related to .this
@@ -153,38 +133,30 @@ public static void main(String[] args) throws BadLocationException {
         }
     
     
-        SeljeIRC mainFrame = new SeljeIRC("SeljeIRC");
-            
-            
-            mainFrame.setVisible(false);
-            
-            mainFrame.setBounds(0,0,screenSize.width, screenSize.height);
-            //mainFrame.setSize(new Dimension(1200, 800));
-            
-            
-            mainFrame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
-            
-             SplashScreen splashScreen = new SplashScreen("logo2.jpg");
-                splashScreen.splash();
-                //splashScreen.setVisible(false);
-            
-            
-            try {
-                  Thread.sleep(1000); //TODO: CHANGE BACK TO 3000
-                }
-                catch(InterruptedException ex) {
-                  System.out.println(ex);
-                }
-            splashScreen.setVisible(false)  ;
-            mainFrame.setVisible(true);
-            try {
-                  Thread.sleep(100); //gotta wait to set focus
-                }
-                catch(InterruptedException ex) {
-                  System.out.println(ex);
-                }
-            mainFrame.setStatusFocus();
+        SeljeIRC mainFrame = new SeljeIRC("SeljeIRC");    
+        mainFrame.setVisible(false);
+        mainFrame.setBounds(0,0,1200, 800);
+        mainFrame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+
+        SplashScreen splashScreen = new SplashScreen("logo2.jpg");
+        splashScreen.splash();
+        
+        try {
+              Thread.sleep(1000); //TODO: CHANGE BACK TO 3000
+            }
+            catch(InterruptedException ex) {
+              System.out.println(ex);
+            }
+        splashScreen.setVisible(false)  ;
+        mainFrame.setVisible(true);
+        try {
+              Thread.sleep(100); //gotta wait to set focus
+            }
+            catch(InterruptedException ex) {
+              System.out.println(ex);
+            }
+        mainFrame.setStatusFocus();
      
- }
+    }
 }
 
