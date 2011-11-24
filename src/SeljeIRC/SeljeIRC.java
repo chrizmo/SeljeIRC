@@ -68,8 +68,9 @@ public class SeljeIRC extends JFrame{
         /*
          * Basic operations on main contentPane
          */
-        setVisible(true);
         pack();
+        setVisible(true);
+        
         
 
         this.addWindowListener(new WindowAdapter()   {
