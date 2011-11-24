@@ -35,56 +35,19 @@ public static int fontSize = 12;
 public Colors () {
 // Empty constructor
 }
-/******************************************************************************/
-/* Return color and font: */
 
-static String getStatus( String args []) {
-    return font+statusColor;
-}
-// Return Nickcolor and font:
-static String getNick( String args []) {
-    return font+nickColor;
-}
-// Return Channelcolor and font:
-static String getChannel( String args []) {
-    return font+channelColor;
-}
-// Return hilightcolor and font:
-static String getHighlight( String args []) {
-    return font+highLightColor;
-}
 
-/******************************************************************************/
-/* Set colors: */
-
-static void setColors (String status, String nick, String channel, String highLight) {
-    //statusColor = status;
-    //nickColor = nick;
-    //channelColor = channel;
-    //highLightColor = highLight;
-}
-
-/******************************************************************************/
-/* Set fonts: */
-
-static void setFonts (String newFont) {
-    font = newFont;
-}
-
-/******************************************************************************/
-
-// Color-window
-
+// Color-window:
 static void colorWindow () {
     // Set up layout for window
     final GridBagLayout colorLayout = new GridBagLayout();
-    final JFrame colorBoxShit = new JFrame("Colors");
+    final JFrame colorBoxShit = new JFrame(I18N.get("colors.andfonts"));
     colorBoxShit.setPreferredSize(new Dimension(400,250));
     colorBoxShit.setLayout(colorLayout);
     final GridBagConstraints gbc = new GridBagConstraints();
 
     // Buttons
-    JButton statusColorButton = new JButton("Status Color");
+    JButton statusColorButton = new JButton(I18N.get("colors.status"));
     gbc.gridx = 0;
     gbc.gridy = 0;
     gbc.gridwidth = 1;
@@ -92,7 +55,7 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(statusColorButton, gbc);
 
-    JButton nickColorButton = new JButton("Nick Color");
+    JButton nickColorButton = new JButton(I18N.get("colors.nickcolor"));
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.gridwidth = 1;
@@ -100,7 +63,7 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(nickColorButton, gbc);
 
-    JButton channelColorButton = new JButton("Channel Color");
+    JButton channelColorButton = new JButton(I18N.get("colors.channelcolor"));
     gbc.gridx = 0;
     gbc.gridy = 2;
     gbc.gridwidth = 1;
@@ -108,7 +71,7 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(channelColorButton, gbc);
 
-    JButton highLightColorButton = new JButton("Highlight Color");
+    JButton highLightColorButton = new JButton(I18N.get("colors.highlight"));
     gbc.gridx = 0;
     gbc.gridy = 3;
     gbc.gridwidth = 1;
@@ -116,7 +79,7 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(highLightColorButton, gbc);
 
-    JLabel fontLabel = new JLabel("Fonts");
+    JLabel fontLabel = new JLabel(I18N.get("colors.fonts"));
     gbc.insets=new Insets(2,2,2,2);
     gbc.gridx = 1;
     gbc.gridy = 0;
@@ -140,7 +103,7 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(fontList, gbc);
 
-    final JLabel fontSizeLabel = new JLabel("Font size");
+    final JLabel fontSizeLabel = new JLabel(I18N.get("colors.fontsize"));
     gbc.insets = new Insets(2,2,2,2);
     gbc.gridx = 1;
     gbc.gridy = 2;
@@ -159,7 +122,7 @@ static void colorWindow () {
     
     
 
-    JButton OK = new JButton("OK");
+    JButton OK = new JButton(I18N.get("colors.OK"));
     gbc.insets = new Insets(4,4,4,4);
     gbc.gridx = 0;
     gbc.gridy = 6;
@@ -168,16 +131,13 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.NONE;
     colorLayout.setConstraints(OK, gbc);
 
-    JButton cancel = new JButton("Cancel");
+    JButton cancel = new JButton(I18N.get("colors.cancel"));
     gbc.gridx = 1;
     gbc.gridy = 6;
     gbc.gridwidth = 1;
     gbc.gridheight = 2;
     gbc.fill = GridBagConstraints.NONE;
     colorLayout.setConstraints(cancel, gbc);
-
-
-
 
     // Add 'em:
     colorBoxShit.add(OK);

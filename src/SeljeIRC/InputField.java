@@ -102,7 +102,7 @@ public class InputField extends JPanel {
     			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break; 
     			default: 
                             
-                            System.out.print("entered default");
+                            System.out.print(I18N.get("inputfield.default"));
     				if(tabType == SingleTab.CHANNEL)
     					connection.sayToServer(textToPost,channel);
     				else
@@ -111,9 +111,9 @@ public class InputField extends JPanel {
 
         	}
         }catch(BadLocationException e){
-        	System.err.println("System error" + e.getMessage());
+        	System.err.println(I18N.get("connection.systemerror") + e.getMessage());
         }catch(NullPointerException ex){
-        	System.err.println("Major fuck-up in input field: " + ex.getMessage());
+        	System.err.println(I18N.get("inputfield.majorfuckup") + ex.getMessage());
         }
         
     	txtInputField.setText("");

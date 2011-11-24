@@ -247,7 +247,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         try{
         	updateTabScreen(I18N.get("channeltab.status"),update);	// Bug med at den krasjer med 18N greien
     	}catch(Exception e){
-    		System.err.println("System error: " + e.getMessage());
+    		System.err.println(I18N.get("connection.systemerror") + e.getMessage());
     	}
     }
 
@@ -256,7 +256,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         try{
         	updateTabScreen(I18N.get("channeltab.status"),update, theColor);	// Bug med at den krasjer med 18N greien
     	}catch(Exception e){
-    		System.err.println("System error: " + e.getMessage());
+    		System.err.println(I18N.get("connection.systemerror") + e.getMessage());
     	}
     }
     

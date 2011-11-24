@@ -58,7 +58,7 @@ public class serverConnectWindow extends JFrame{
         try{
         	connectionPreferences = Preferences.userNodeForPackage(getClass());
         }catch(NullPointerException e){
-        	System.err.println("Error in preferences: " + e.getCause());
+        	System.err.println(I18N.get("serverconnectwindow.preferror") + e.getCause());
         }
         
         
@@ -145,7 +145,7 @@ public class serverConnectWindow extends JFrame{
             //addbutton
             
             JButton addSomething = new JButton(I18N.get("serverconnectwindow.add"));
-            addSomething.setName("ADD");
+            addSomething.setName(I18N.get("serverconnectwindow.add"));
             gbc.fill=GridBagConstraints.HORIZONTAL;
             gbc.gridx=0;
             gbc.gridy=0;
@@ -159,7 +159,7 @@ public class serverConnectWindow extends JFrame{
             	public void actionPerformed(ActionEvent evt){
             		String serverName = new String();
             		
-            		serverName = JOptionPane.showInputDialog(serverConnectWindow.this,"dettefunker heller ikke for hallvard");
+            		serverName = JOptionPane.showInputDialog(serverConnectWindow.this, I18N.get("serverconnectwindow.add"));
             		serverNames.add(serverName);
             		subDropDown.setModel(new DefaultComboBoxModel(serverNames));
             		subDropDown.setSelectedItem(serverName);
@@ -173,7 +173,7 @@ public class serverConnectWindow extends JFrame{
             //changbutton
             JButton changeSomething = new JButton(I18N.get("serverconnectwindow.change"));
             gbc.gridy=1;
-            changeSomething.setName("CHANGE");
+            changeSomething.setName(I18N.get("serverconnectwindow.change"));
             rightLayout.setConstraints(changeSomething,gbc);
             rightPanel.add(changeSomething);
             
@@ -191,14 +191,14 @@ public class serverConnectWindow extends JFrame{
             				subDropDown.setSelectedItem(newServerName);
             			}
             		}catch(Exception e){
-            			System.err.println("Error while adding: " + e.getMessage());
+            			System.err.println(I18N.get("serverconnectwindow.adderror") + e.getMessage());
             		}
             		
             	}
             });
             
             JButton deleteSomething = new JButton(I18N.get("serverconnectwindow.delete"));
-            deleteSomething.setName("REMOVE");
+            deleteSomething.setName(I18N.get("serverconnectwindow.change"));
             gbc.gridy=2;
             rightLayout.setConstraints(deleteSomething,gbc);
             rightPanel.add(deleteSomething);
@@ -216,14 +216,14 @@ public class serverConnectWindow extends JFrame{
             					subDropDown.setSelectedIndex(serverVectorPosition - 1);
             			}
             		}catch(Exception e){
-            			System.err.println("Error while deleting server: " + e.getMessage());
+            			System.err.println(I18N.get("serverconnectwindow.delerror") + e.getMessage());
             		}
             	}
             	
             });
             
             JButton sortSomething = new JButton(I18N.get("serverconnectwindow.sort"));
-            sortSomething.setName("SORT");
+            sortSomething.setName(I18N.get("serverconnectwindow.sort"));
             gbc.gridy=3;
             rightLayout.setConstraints(sortSomething,gbc);
             rightPanel.add(sortSomething);
@@ -238,7 +238,7 @@ public class serverConnectWindow extends JFrame{
             				subDropDown.setSelectedItem(selectedServer);
             			}
             		}catch(Exception e){
-            			System.err.println("Error while sorting" + e.getMessage());
+            			System.err.println(I18N.get("serverconnectwindow.sorterror") + e.getMessage());
             		}
             	}
 
@@ -248,7 +248,7 @@ public class serverConnectWindow extends JFrame{
 						Collections.sort(tVector);
 					
 					}catch(Exception e){
-						System.err.println("Error while sorting" + e.getMessage());
+						System.err.println(I18N.get("serverconnectwindow.sorterror") + e.getMessage());
 					}
 					
 					return tVector;
@@ -422,7 +422,7 @@ public class serverConnectWindow extends JFrame{
             
             helpButton.addActionListener(new ActionListener(){
             	public void actionPerformed(ActionEvent actEvt){
-            		JOptionPane.showMessageDialog(serverConnectWindow.this, "The buttons, they do NOTHING!");
+            		JOptionPane.showMessageDialog(serverConnectWindow.this, I18N.get("serverconnectwindow.buttons"));
             	}
             });
             
@@ -501,7 +501,7 @@ public class serverConnectWindow extends JFrame{
 			brReader.close();
 			return networkList;
 		}catch(IOException ioe){
-			System.err.println("Error while reading network: " + ioe.getMessage());
+			System.err.println(I18N.get("serverconnectwindow.neterror") + ioe.getMessage());
 			return null;
 		}
 		
@@ -533,7 +533,7 @@ public class serverConnectWindow extends JFrame{
 			brReader.close();
 			return serverList;
 		}catch(IOException ioe){
-			System.err.println("Error while reading network: " + ioe.getMessage());
+			System.err.println(I18N.get("serverconnectwindow.neterror") + ioe.getMessage());
 			return null;
 		}
 		
@@ -576,7 +576,7 @@ public class serverConnectWindow extends JFrame{
    				tempFile.renameTo(serverFile);				// Rename the old file to the new file
    			}
    		}catch(Exception ioe){								// Shit got real
-   			System.err.println("Error while deleting server from file" + ioe.getMessage());
+   			System.err.println(I18N.get("serverconnectwindow.delfilerror") + ioe.getMessage());
    		}
    	}
    	
@@ -617,7 +617,7 @@ public class serverConnectWindow extends JFrame{
    			tempFile.renameTo(serverFile);							// Rename new file to old filename
    			
    		}catch(Exception ioe){										// Why would you care?
-   			System.err.println("Error while deleting server from file" + ioe.getMessage());
+   			System.err.println(I18N.get("serverconnectwindow.delfilerror") + ioe.getMessage());
    		}
    	}
    	/**
@@ -642,7 +642,7 @@ public class serverConnectWindow extends JFrame{
    			brWriter.newLine();															// A new line for pretty prettyness about pretty ponies. I'm fucking bored
    			brWriter.close();															// Close the file 
    		}catch(IOException ioe){														// This is not the hip place to be daddy'o
-   			System.err.println("Error while writing to file: " + ioe.getMessage());
+   			System.err.println(I18N.get("serverconnectwindow.writeerror") + ioe.getMessage());
    		}
    		
    	}
@@ -663,7 +663,7 @@ public class serverConnectWindow extends JFrame{
     				brReader = new BufferedReader(new FileReader(fileObj));
     			return brReader;							// Wee
     		}catch(FileNotFoundException fileException){	// Well why did this happen?
-    			System.err.println("Error opening file: " + fileException.getMessage());
+    			System.err.println(I18N.get("serverconnectwindow.openerror") + fileException.getMessage());
     			return null;
     		}
     	

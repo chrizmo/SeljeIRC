@@ -87,7 +87,7 @@ public class SingleTab extends JPanel implements FocusListener {
              if(topic != null)
              topicField.setText(topic);
              else
-             topicField.setText("No topic set for this channel, press over here to set one!");
+             topicField.setText(I18N.get("singletab.settopic"));
              topicField.setSize(1,1);
              
              
@@ -96,14 +96,14 @@ public class SingleTab extends JPanel implements FocusListener {
              topicField.setVisible(true);
              //add(topicField,BorderLayout.NORTH);
              
-             setTopicButton = new JButton("Set Topic");
+             setTopicButton = new JButton(I18N.get("singletab.topic"));
              
              setTopicButton.addActionListener(new ActionListener() {
                 JOptionPane jop = new JOptionPane();
                 public void actionPerformed(ActionEvent ae) {
                     
-                    String topic = jop.showInputDialog("what the topic is?");
-                    channelTab.updateStatusScreen("updating topic");
+                    String topic = jop.showInputDialog(I18N.get("singletab.whattopic"));
+                    channelTab.updateStatusScreen(I18N.get("singletab.updatetopic"));
                     connection.setChannelTopic(channel,topic);
 
                 }
@@ -137,13 +137,13 @@ public class SingleTab extends JPanel implements FocusListener {
             // Print welcome-message in black:
             try{
             	screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "Welcome to SeljeIRC\n", color);
+                    I18N.get("singletab.welcome"), color);
             // Print message in gray
             	StyleConstants.setForeground(color, Color.gray);
             	screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "This application could be interpreted as an IRC-client ", color);
+                    I18N.get("singletab.couldbeirc"), color);
             }catch(BadLocationException ex){
-            	System.err.println("System error: " + ex.getMessage());
+            	System.err.println(I18N.get("connection.systemerror") + ex.getMessage());
             }
         }    
             

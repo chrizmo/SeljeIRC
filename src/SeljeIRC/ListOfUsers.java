@@ -249,7 +249,7 @@ public class ListOfUsers extends JPanel {
            else
                tabObject.setSelectedIndex(tabObject.indexOfTab(userName));
         }else
-        	tabObject.updateStatusScreen("Can't join when not connected"); //TODO: Legg til translation
+        	tabObject.updateStatusScreen(I18N.get("user.notconnected")); //TODO: Legg til translation
     }
     
     /**
@@ -354,7 +354,7 @@ public class ListOfUsers extends JPanel {
             String myNick = connection.getCurrentSession().getNick();
             if (ae.getActionCommand().equals(I18N.get("user.kickwhy")))   {     // Get what menu item was clicked
                 JOptionPane jop = new JOptionPane();                            // Will tell why user is kicked
-                String why = jop.showInputDialog("Why do you kick?");           //TODO I18N
+                String why = jop.showInputDialog(I18N.get("user.whykick"));           //TODO I18N
                 if (why == null) return;                                        // No input, cancel
                     chan.kick(user, why);
             }
@@ -426,7 +426,7 @@ public class ListOfUsers extends JPanel {
                 }
             }
             catch (Exception e)   {             // Some exception..
-                System.out.println("Not able to fetch users yet");
+                System.out.println(I18N.get("user.notusersyet"));
                 SwingUtilities.invokeLater(new Init());                 // Try againg later
             }
         }

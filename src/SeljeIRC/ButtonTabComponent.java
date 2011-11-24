@@ -25,7 +25,7 @@ public class ButtonTabComponent extends JPanel {
        
         connection = con;
         if (pane == null) {
-            throw new NullPointerException("TabbedPane is null");
+            throw new NullPointerException(I18N.get("btc.null"));
         }
         this.pane = pane;
         setOpaque(false);
@@ -58,7 +58,7 @@ public class ButtonTabComponent extends JPanel {
         public TabButton() {
             int size = 17;
             setPreferredSize(new Dimension(size, size));
-            setToolTipText("close this tab");
+            setToolTipText(I18N.get("btc.closetab"));
             //Make the button looks the same for all Laf's
             setUI(new BasicButtonUI());
             //Make it transparent
