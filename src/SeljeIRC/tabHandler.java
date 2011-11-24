@@ -27,7 +27,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     
     
     /**
-     * creates a tabhendler to handle all tabs in jtabbedpane
+     * creates a tabhandler to handle all tabs in jtabbedpane
      * default creates a statustab
      * @throws BadLocationException 
      */
@@ -102,7 +102,8 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      * 
      * The array containing all tabs contains a tabcontainer in index 0, and statustab in index 1 etc.
      * this makes it difficult to operate on correct tabs
-     * @param channel and message to be displayed
+     * @param ch The channel
+     * @param message The message to be displayed
      */
     
     public void updateTabScreen(String ch, String message) throws BadLocationException{
@@ -112,7 +113,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
          */
         
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
-        st.updateScreen(message);
+        st.updateScreen(message, Colors.statusColor);
         
         /*
          * checks to see if tab is selected, if not notify user by flagging 
@@ -212,7 +213,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     /**
       * use this instead of indexoftab when you want component returned
       * use getIndexOf for title and such
-      * @param channel
+      * @param ch The channel
       */
     
     public int getIndexOfTab(String ch){
@@ -231,7 +232,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         int tabIndex = this.indexOfTab(ch);
         System.out.printf("updatetab: "+tabIndex);
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
-        st.updateScreen(message);
+        st.updateScreen(message, Colors.statusColor);
 
     }
     

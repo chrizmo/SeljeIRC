@@ -1,6 +1,5 @@
 package SeljeIRC;
  
-import java.awt.Color;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,14 +27,15 @@ import jerklib.listeners.IRCEventListener;
  * 
  * @author Jon Arne Westgaard
  * @author Lars Erik Pedersen
+ * @version 0.67
+ * @since 0.1
  *
- * Connects to server
+ * Takes care of the entire connection to an IRC-server
  */
 
 
 public class ConnectionHandler implements IRCEventListener {
 	private ConnectionManager manager;
-        
         private IRCEvent event = null;
         private boolean hasConnected = false;
         private tabHandler channelTab;
@@ -56,31 +56,40 @@ public class ConnectionHandler implements IRCEventListener {
 
             channelTab.setConnection(this);
             
-            //why? hallvard is asking
-            //channelTab.createStatusTab();
-            
         	}catch(Exception e){
-        		System.err.println(dateFormat.format(date)+" "+I18N.get("connection.systemerror") + e.getMessage());
+                 System.err.println(dateFormat.format(date)+" "+I18N.get("connection.systemerror") + e.getMessage());
         	}
             /*
              * created object
              */
-                
-                
-                
-                
         }
 	 
+	/**
+         * Connects to an IRC-server
+	 * @author Lars Erik Pedersen
+	 * @author Jon Arne Westgaard
+	 * @version 0.3
+	 * @param server The server to connect to
+         * @param nicName Nickname to use
+	 */
 	public void connectIt(String server, String nicName) {
 	
        
-		channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.trying"), Colors.statusColor);
-		manager = new ConnectionManager(new Profile(nicName));
+            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.trying"), Colors.statusColor);
+            manager = new ConnectionManager(new Profile(nicName));
 	
-		Session session = manager.requestConnection(server);
-		session.addIRCEventListener(this);
+            Session session = manager.requestConnection(server);
+            session.addIRCEventListener(this);
 	}
 	
+	/**
+         * Receives the different types of IRC-events, and performs actions based on these events
+	 * @author Lars Erik Pedersen
+	 * @author Jon Arne Westgaard
+	 * @version 0.3
+	 * @since 0.1
+	 * @param e The IRCEvent
+	 */
 	public void receiveEvent(IRCEvent e) {
 		
             event = e;
@@ -88,16 +97,13 @@ public class ConnectionHandler implements IRCEventListener {
             if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
 			
-                  channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connect.success"), Colors.statusColor);
-                  hasConnected = true;
-                        
-
-
+              channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connect.success"), Colors.statusColor);
+              hasConnected = true;
 		}
-                else if(e.getType() == Type.CHANNEL_MESSAGE){
-                   // Print channel-messages in channel-tab
-                    MessageEvent me = (MessageEvent) e;
-                    String ch = me.getChannel().getName();
+            else if(e.getType() == Type.CHANNEL_MESSAGE){
+            // Print channel-messages in channel-tab
+            MessageEvent me = (MessageEvent) e;
+            String ch = me.getChannel().getName();
                     
             try {
                 channelTab.updateTabScreen(ch, "\n"+dateFormat.format(date), Colors.channelColor);
@@ -108,100 +114,96 @@ public class ConnectionHandler implements IRCEventListener {
             }
                 }
             
-                else if(e.getType() == Type.PRIVATE_MESSAGE){
-                	MessageEvent me = (MessageEvent) e;
-                	String userNick = me.getNick();
-                	String message = "<" + me.getNick() + ">" + " : " + me.getMessage();
+            else if(e.getType() == Type.PRIVATE_MESSAGE){
+                MessageEvent me = (MessageEvent) e;
+                String userNick = me.getNick();
+                String message = "<" + me.getNick() + ">" + " : " + me.getMessage();
                 	
-                	if(!channelTab.tabExists(userNick))
-                		try {
-                             channelTab.createNewTab(userNick, SingleTab.PRIVATE,null);
-                        } catch (BadLocationException ex) {
-                            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        try {
-                            channelTab.updateTabScreen("\n"+dateFormat.format(date)+" "+userNick, message);
-                        } catch (BadLocationException ex) {
-                            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+            if(!channelTab.tabExists(userNick))
+                try {
+                 channelTab.createNewTab(userNick, SingleTab.PRIVATE,null);
+                    } catch (BadLocationException ex) {
+                    Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                      }
+                try {
+                 channelTab.updateTabScreen("\n"+dateFormat.format(date)+" "+userNick, message);
+                    } catch (BadLocationException ex) {
+                    Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
-                            }
-                else if(e.getType() == Type.NOTICE){
-                        NoticeEvent no = (NoticeEvent) e;
-                        
-                        String update = no.getNoticeMessage().toString();
-                        channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+update, Colors.statusColor);
                 }
-                else if(e.getType() == Type.ERROR){
-                    
+            else if(e.getType() == Type.NOTICE){
+            NoticeEvent no = (NoticeEvent) e;
                         
-                        ErrorEvent no = (ErrorEvent) e;
-                        	
-                        String update = no.getErrorType().toString();
-                        
-                        channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+update, Colors.statusColor);
-                         //TODO REMOVE
-                        channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.errordata") + e.getRawEventData(), Colors.statusColor);
-                        
-                }
+            String update = no.getNoticeMessage().toString();
+            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+update, Colors.statusColor);
+            }
+
+            else if(e.getType() == Type.ERROR){
+            ErrorEvent no = (ErrorEvent) e;
+            String update = no.getErrorType().toString();
+            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+update, Colors.statusColor);
+            //TODO REMOVE
+            channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.errordata") + e.getRawEventData(), Colors.statusColor);
+            }
             
-                else if(e.getType() == Type.NICK_CHANGE){
-                    NickChangeEvent nce = (NickChangeEvent) e;
-                    Iterator<Channel> i = e.getSession().getChannels().iterator();
-                    String ch;
-                    while (i.hasNext())   {                                // If the user that changed nick is in several channels
-                        ch = i.next().getName();
-                        channelTab.changedNick(nce.getOldNick(), nce.getNewNick(), ch);
-                        try {
-                            channelTab.updateTabScreen("\n"+dateFormat.format(date)+" "+ch, "-!- " + nce.getOldNick() + I18N.get("connection.knownas") + nce.getNewNick(), Colors.channelColor);
+            else if(e.getType() == Type.NICK_CHANGE){
+            NickChangeEvent nce = (NickChangeEvent) e;
+            Iterator<Channel> i = e.getSession().getChannels().iterator();
+            String ch;
+            while (i.hasNext())   {                                // If the user that changed nick is in several channels
+                   ch = i.next().getName();
+                   channelTab.changedNick(nce.getOldNick(), nce.getNewNick(), ch);
+                   try {
+                          channelTab.updateTabScreen("\n"+dateFormat.format(date)+" "+ch, "-!- " + nce.getOldNick() + I18N.get("connection.knownas") + nce.getNewNick(), Colors.channelColor);
                         } catch (BadLocationException ex) {
                           }
                     }
                 }
                 
-                else if(e.getType() == Type.JOIN_COMPLETE){
-                    // Print topic for channel:
-                    JoinCompleteEvent jce = (JoinCompleteEvent) e;
-                    String ch = jce.getChannel().getName();
-                    String message = jce.getChannel().getTopic();
-                    try {
-                        channelTab.createNewTab(ch,SingleTab.CHANNEL, message);
+            else if(e.getType() == Type.JOIN_COMPLETE){
+                // Print topic for channel:
+                JoinCompleteEvent jce = (JoinCompleteEvent) e;
+                String ch = jce.getChannel().getName();
+                String message = jce.getChannel().getTopic();
+                try {
+                    channelTab.createNewTab(ch,SingleTab.CHANNEL, message);
                         
                     } catch (BadLocationException ex) {
                     }
 
                 }
-                else if(e.getType() == Type.NICK_LIST_EVENT){
-                    // List users in channel:
-                    NickListEvent nle = (NickListEvent) e;
-                    String ch = nle.getChannel().getName();
-                    List<String> message = nle.getNicks();
-                    channelTab.fetchUsers(ch, e.getSession().getChannel(ch));
-                    try {
-                        channelTab.updateTabScreen(ch, "\n"+dateFormat.format(date)+" "+I18N.get("connection.userl") + message, Colors.channelColor);
+            else if(e.getType() == Type.NICK_LIST_EVENT){
+                // List users in channel:
+                NickListEvent nle = (NickListEvent) e;
+                String ch = nle.getChannel().getName();
+                List<String> message = nle.getNicks();
+                channelTab.fetchUsers(ch, e.getSession().getChannel(ch));
+                try {
+                      channelTab.updateTabScreen(ch, "\n"+dateFormat.format(date)+" "+I18N.get("connection.userl") + message, Colors.channelColor);
                     } catch (BadLocationException ex) {
-                        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                      Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 
                 }
                 
-                else if (e.getType() == Type.NICK_IN_USE)   {
+            else if (e.getType() == Type.NICK_IN_USE)   {
                     NickInUseEvent niu = (NickInUseEvent) e;
-                        channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" -!- Nick "+niu.getInUseNick()+ I18N.get("connection.nickinuse"), Colors.statusColor);
+                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" -!- Nick "+niu.getInUseNick()+ I18N.get("connection.nickinuse"), Colors.statusColor);
                 }
                 
-                else if (e.getType() == Type.JOIN)   {
+            else if (e.getType() == Type.JOIN)   {
                     JoinEvent je = (JoinEvent) e;
                     String nick = je.getNick();
                     try {
                         channelTab.updateTabScreen(je.getChannelName(), "\n"+dateFormat.format(date)+" -!- " + nick + I18N.get("channel.userjoin"), Colors.channelColor);
-                    } catch (BadLocationException ex) {
-                        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }   catch (BadLocationException ex) {
+                    Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                            channelTab.userJoined(nick,je.getChannelName());
+                    channelTab.userJoined(nick,je.getChannelName());
                         }
                 
-                else if (e.getType() == Type.PART)   {
+            else if (e.getType() == Type.PART)   {
                     PartEvent pe = (PartEvent) e;
                     String nick = pe.getWho();
                     String myNick = event.getSession().getNick();
@@ -215,8 +217,8 @@ public class ConnectionHandler implements IRCEventListener {
                     }
                 }
 
-                else if(e.getType() == Type.MODE_EVENT){
-                    // Print mode-adjustments
+            else if(e.getType() == Type.MODE_EVENT){
+                // Print mode-adjustments
                     ModeEvent me = (ModeEvent) e;
                     ModeAdjustment m;
                     if (me.getChannel() != null)   {
@@ -224,11 +226,7 @@ public class ConnectionHandler implements IRCEventListener {
                         String message;
                         StringBuilder strModes = new StringBuilder("-!- mode [");
                         StringBuilder strNicks = new StringBuilder();
-                        /*try {
-                            channelTab.updateTabScreen(ch, "-!- " + e.getRawEventData());
-                        } catch (BadLocationException ex) {
-                            Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-                        }*/
+
                         if (me.getModeType() == ModeType.CHANNEL)   {                                   // Voice and Op are channel modes
                             List<ModeAdjustment> modes = me.getModeAdjustments();                       // Get list of adjustments
                             Iterator<ModeAdjustment> i = modes.iterator();
@@ -350,7 +348,13 @@ public class ConnectionHandler implements IRCEventListener {
             
         }
         
-        
+        /**
+         * Connects to the specified IRC-channel
+	 * @author Lars Erik Pedersen
+	 * @author Jon Arne Westgaard
+	 * @since 0.3
+	 * @param channel The channel to connect to
+	 */
         public void joinChannel (String channel) throws BadLocationException {
            // String tabTitle;
             
@@ -380,6 +384,11 @@ public class ConnectionHandler implements IRCEventListener {
            
         }
         
+	/**
+         *  Establishes a private chat
+	 *  @author Christer Vaskinn
+	 *  @param userName The nick we're establishing a private chat with
+	 */
         public void createPrivateChat(String userName){
         	if(connectedToServer()){
         		//event.getSession();
@@ -404,7 +413,13 @@ public class ConnectionHandler implements IRCEventListener {
         		channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.nochannel"), Colors.statusColor);
         	}
         }
-        
+
+        /**
+         * Checks if connected to server
+         * @author Hallvard Westman
+         * @return true/false
+         * @since 0.3
+         */
         public boolean connectedToServer(){
             
             if(event != null){
@@ -417,12 +432,14 @@ public class ConnectionHandler implements IRCEventListener {
             else
                 return false;
         }
-        /*
-         * sending string directly to server
-         */
-                
 
-        public void sayToServer(String inputString){
+
+        /**
+         * Sends a string directly to server
+	 * @author Christer Vaskinn
+	 * @param inputString The string to send directly to server
+         */
+         public void sayToServer(String inputString){
         	this.sayToServer(inputString, null);
         }
         /**
@@ -517,8 +534,12 @@ public class ConnectionHandler implements IRCEventListener {
         } 
                 
         }
-        /*
-         * sending string to channel
+        /**
+         * Sending a string to channel
+	 * @author Christer Vaskinn
+         * @param whatToSay The string to say
+         * @param channel  The channel to say it to
+         * @since 0.4
          */
         public void sayToChannel(String whatToSay,String channel) throws BadLocationException{
             
@@ -536,6 +557,12 @@ public class ConnectionHandler implements IRCEventListener {
             
         }
         
+	/**
+         * Sends text to a private chat
+	 * @author Lars Erik Pedersen, Hallvard Westman eller Christer Vaskinn
+	 * @param whatToSay String to say
+         * @param nickName Nickname to say it to
+	 */
         public void sayToPrivate(final String whatToSay, final String nickName){
         	try{
         		event.getSession().sayPrivate(nickName, whatToSay);
@@ -546,6 +573,11 @@ public class ConnectionHandler implements IRCEventListener {
         	}
         }
         
+	/**
+         * Closes the connection to the IRC-server
+	 * @author Nils
+         * @since 0.1
+	 */
         public void closeConnection(){
             manager.quit();
             channelTab.removeAllTabs();
@@ -565,6 +597,11 @@ public class ConnectionHandler implements IRCEventListener {
         		channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.notconnected"), Colors.statusColor);
         }
         
+	/**
+         * Disconnects from a given channel
+	 * @author Nils
+	 * @param channel The channel to disconnect from
+	 */
         public void disconnectFromChannel(String channel){
             
             //TODO Final event comes after part and creates exception because its routed to tab and not statusscreen
@@ -572,31 +609,32 @@ public class ConnectionHandler implements IRCEventListener {
             
         }
         
-       
+       /**
+	 * Returns the current session
+	 * @since 0.3
+	 */
         public Session getCurrentSession()   {
             return event.getSession();
         }
         
+	/**
+	 * Validates channel
+	 * @param ch The channel
+	 */
         public void validateChannel(String ch){
             
         }
         
-        /**public String reWriteChannel(String ch){
-            
-            List<Channel> l = event.getSession().getChannels();
-            Iterator<Channel> i = l.iterator();
-            String ls;
-            while(i.hasNext())   {
-                ls = i.next().getName();
-                if(ls.equalsIgnoreCase(ch))
-                    return ls;
-            }
-            return null;
-        }*/
-
-		public static ConnectionHandler getInstance() {
-			return conHandler;
-		}
+        
+	/**
+         * Returns the current connectionhandler
+	 * @author Nils
+	 * @since 0.5
+	 * @version 2
+	 */ 
+	public static ConnectionHandler getInstance() {
+            return conHandler;
+        }
             
         
         

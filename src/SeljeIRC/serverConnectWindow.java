@@ -45,9 +45,9 @@ public class serverConnectWindow extends JFrame{
     /**
      * 
      * Creates the connection window for the user
-     * 
+     * ConnectionHandler object provided by main menu
      * @since 0.1
-     * @param con ConnectionHandler object provided by main menu
+     * 
      */
     
     public serverConnectWindow(){

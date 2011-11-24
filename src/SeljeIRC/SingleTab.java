@@ -25,7 +25,7 @@ import jerklib.Channel;
 
 /**
  *
- * @author wbserver
+ * @author Hallvard Westman
  */
 public class SingleTab extends JPanel implements FocusListener {
 	
@@ -150,7 +150,6 @@ public class SingleTab extends JPanel implements FocusListener {
         /*
          * userlist
          */
-        //TODO set up the userlist model
         if(this.typeOfTab == SingleTab.CHANNEL){
         	listPanel = new ListOfUsers();
             listPanel.setBackground(new Color(215,221,229));
@@ -178,29 +177,21 @@ public class SingleTab extends JPanel implements FocusListener {
         
     }
     
-    
-    
+    /** Returns the type of the current tab
+     * @author Hallvard Westman
+     * @return typeOfTab The type of tab
+     */
     public int getType(){
         return typeOfTab;
     }
-    public void updateScreen(String update) throws BadLocationException{
-      SimpleAttributeSet color = new SimpleAttributeSet();
-      StyleConstants.setFontFamily(color, Colors.font);
-      StyleConstants.setForeground(color, Colors.statusColor);
-      screen.getDocument().insertString(screen.getDocument().getLength(),
-                    " " +update, color);
-      screen.setCaretPosition(screen.getDocument().getLength());
-    }
-    
-    public void updateScreen(List<String> update) throws BadLocationException{
-      SimpleAttributeSet color = new SimpleAttributeSet();
-      StyleConstants.setFontFamily(color, Colors.font);
-      StyleConstants.setForeground(color, Colors.statusColor);
-      screen.getDocument().insertString(screen.getDocument().getLength(),
-                    " " +update, color);
-      screen.setCaretPosition(screen.getDocument().getLength());
-    }
 
+    /**
+     * @author Hallvard Westman
+     * @author Jon Arne Westgaard
+     * @param update The text to print
+     * @param theColor Color of the text
+     * @throws BadLocationException
+     */
     void updateScreen(String update, Color theColor) throws BadLocationException {
       SimpleAttributeSet color = new SimpleAttributeSet();
       StyleConstants.setFontFamily(color, Colors.font);
@@ -211,6 +202,13 @@ public class SingleTab extends JPanel implements FocusListener {
 
     }
 
+    /**
+     * @author Hallvard Westman
+     * @author Jon Arne Westgaard
+     * @param update The text to print
+     * @param theColor Color of the text
+     * @throws BadLocationException
+     */
     void updateScreen(List<String> update, Color theColor) throws BadLocationException {
       SimpleAttributeSet color = new SimpleAttributeSet();
       StyleConstants.setFontFamily(color, Colors.font);
@@ -263,7 +261,7 @@ public class SingleTab extends JPanel implements FocusListener {
     }
     
     /**
-     * Refelcts a +v or -v mode change in the userlist
+     * Reflects a +v or -v mode change in the userlist
      * @param n Nick name of "victim"
      * @param mode  True = given voice, false = given devoice
      * @author Lars Erik Pedersen
@@ -298,7 +296,11 @@ public class SingleTab extends JPanel implements FocusListener {
     public void passFocusToField(){
        inputField.setFocusOnField(); 
     }
-    
+
+    /**
+     * Sets topic
+     * @param topic The topic to set
+     */
     public void setTopic(String topic){
         topicField.setText(topic);
     }

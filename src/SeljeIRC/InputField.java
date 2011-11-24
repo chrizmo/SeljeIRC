@@ -15,8 +15,9 @@ import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
 /**
- *
- * @author wbserver
+ * Creates and takes care of the input-field where the user writes text/commands
+ * @author Hallvard Westman
+ * @since 0.2
  */
 public class InputField extends JPanel {
     private JLabel label = new JLabel();
@@ -25,9 +26,14 @@ public class InputField extends JPanel {
     private int tabType;
     
     private static ConnectionHandler connection = SeljeIRC.connectionHandlerObj.getInstance();
-    
     private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+");
 
+    /**
+     * TRENG BESKRIVELSE
+     * @author Hallvard Westman
+     * @param cha
+     * @param TabType
+     */
     public InputField(String cha, int TabType){
         super();
         channel = cha;
@@ -37,19 +43,14 @@ public class InputField extends JPanel {
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
 
-        
-        
         label = new JLabel(cha);
-            
         add(label,BorderLayout.WEST);
         
         inputField = new JTextField();
-        
-        
+                
         add(inputField,BorderLayout.CENTER);
         JButton button = new JButton(I18N.get("inputfield.send"));
         add(button,BorderLayout.EAST);
-        
         
         button.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
@@ -58,8 +59,6 @@ public class InputField extends JPanel {
                  * sending input to approporiate screen
                  */
             	postTextToIRC(inputField);
-                
-                
             }
         });
         

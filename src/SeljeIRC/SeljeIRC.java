@@ -71,6 +71,7 @@ public class SeljeIRC extends JFrame{
         setVisible(true);
         pack();
         
+
         this.addWindowListener(new WindowAdapter()   {
             public void windowClosing(WindowEvent e)   {
         
@@ -86,27 +87,23 @@ public class SeljeIRC extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
     }
-    
-    
-    /**
-     * Returns a reference to the current connection
-     * @since 0.1
-     * @return ConnectionHandler object, currently handling our connection
-     */
-    public static ConnectionHandler returnConnection(){
-        return connectionHandlerObj;
-    }
-    
-    /**
-     * Set the marker in the text input field
-     * @since 0.1
-     */
-    public void setStatusFocus(){
-        SingleTab st = (SingleTab) channelTabObj.getComponent(1);
-        st.passFocusToField();
-    }
+
+
+        /**
+         * Returns current connectionHandlerObject
+         * @author Hallvard Westman
+         * @return connectionHandlerObj Returns current connection
+         */
+        public static ConnectionHandler returnConnection(){
+            return connectionHandlerObj;
+        }
+        public void setStatusFocus(){
+            SingleTab st = (SingleTab) channelTabObj.getComponent(1);
+            st.passFocusToField();
+        }
+
         
- 
+  
     public static void main(String[] args) throws BadLocationException {
     
         /*
