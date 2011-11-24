@@ -1,15 +1,22 @@
 package SeljeIRC;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -181,7 +188,30 @@ public class MainMenu extends JMenuBar {
         helpItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.halp"));
+
+    Font font = new Font("Serif", Font.PLAIN, 30);
+    setFont(font);
+    String labelText =
+      "<html>The Applied Physics Laboratory is a division " +
+      "of the Johns Hopkins University." +
+      "<P>" +
+      "Major JHU divisions include:" +
+      "<UL>" +
+      "  <LI>The Applied Physics Laboratory" +
+      "  <LI>The Krieger School of Arts and Sciences" +
+      "  <LI>The Whiting School of Engineering" +
+      "  <LI>The School of Medicine" +
+      "  <LI>The School of Public Health" +
+      "  <LI>The School of Nursing" +
+      "  <LI>The Peabody Institute" +
+      "  <LI>The Nitze School of Advanced International Studies" +
+      "</UL>";
+    
+    
+    
+    JOptionPane.showMessageDialog(channelTab, labelText);
+       
+                //JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.halp"));
             }
         });
 
