@@ -142,6 +142,7 @@ public class ConnectionHandler implements IRCEventListener {
                         channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+update, Colors.statusColor);
                          //TODO REMOVE
                         channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.errordata") + e.getRawEventData(), Colors.statusColor);
+                        
                 }
             
                 else if(e.getType() == Type.NICK_CHANGE){
@@ -341,6 +342,8 @@ public class ConnectionHandler implements IRCEventListener {
                     }
                     
                 }
+
+                
 
                 else    
 		{       // Prints data received from server

@@ -88,7 +88,7 @@ public class SingleTab extends JPanel implements FocusListener {
              
              
              topicField.setBackground(new Color(224,224,224));
-             //topicField.
+             topicField.setEditable(false);
              topicField.setVisible(true);
              //add(topicField,BorderLayout.NORTH);
              
