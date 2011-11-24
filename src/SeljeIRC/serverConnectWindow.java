@@ -53,9 +53,9 @@ public class serverConnectWindow extends JFrame{
     /**
      * 
      * Creates the connection window for the user
-     * 
+     * ConnectionHandler object provided by main menu
      * @since 0.1
-     * @param con ConnectionHandler object provided by main menu
+     * 
      */
     
     public serverConnectWindow(){
@@ -68,7 +68,7 @@ public class serverConnectWindow extends JFrame{
         try{
         	connectionPreferences = Preferences.userNodeForPackage(getClass());
         }catch(NullPointerException e){
-        	System.err.println("Error in preferences: " + e.getCause());
+        	System.err.println(I18N.get("serverconnectwindow.preferror") + e.getCause());
         }
         
         
@@ -157,7 +157,7 @@ public class serverConnectWindow extends JFrame{
             //addbutton
             
             JButton addSomething = new JButton(I18N.get("serverconnectwindow.add"));
-            addSomething.setName("ADD");
+            addSomething.setName(I18N.get("serverconnectwindow.add"));
             gbc.fill=GridBagConstraints.HORIZONTAL;
             gbc.gridx=0;
             gbc.gridy=0;
@@ -170,7 +170,6 @@ public class serverConnectWindow extends JFrame{
             addSomething.addActionListener(new ActionListener(){
             	public void actionPerformed(ActionEvent evt){
             		String serverName = new String();
-            		
             		serverName = JOptionPane.showInputDialog(serverConnectWindow.this,I18N.get("serverconnectwindow.addnewserver"));
             		serverNames.add(serverName);
             		Collections.sort(serverNames);															// Sorts elements after aditions
@@ -186,7 +185,7 @@ public class serverConnectWindow extends JFrame{
             //changbutton
             JButton changeSomething = new JButton(I18N.get("serverconnectwindow.change"));
             gbc.gridy=1;
-            changeSomething.setName("CHANGE");
+            changeSomething.setName(I18N.get("serverconnectwindow.change"));
             rightLayout.setConstraints(changeSomething,gbc);
             rightPanel.add(changeSomething);
             
@@ -205,14 +204,14 @@ public class serverConnectWindow extends JFrame{
             				subDropDown.setSelectedItem(newServerName);
             			}
             		}catch(Exception e){
-            			System.err.println("Error while adding: " + e.getMessage());
+            			System.err.println(I18N.get("serverconnectwindow.adderror") + e.getMessage());
             		}
             		
             	}
             });
             
             JButton deleteSomething = new JButton(I18N.get("serverconnectwindow.delete"));
-            deleteSomething.setName("REMOVE");
+            deleteSomething.setName(I18N.get("serverconnectwindow.change"));
             gbc.gridy=2;
             rightLayout.setConstraints(deleteSomething,gbc);
             rightPanel.add(deleteSomething);
@@ -230,7 +229,7 @@ public class serverConnectWindow extends JFrame{
             					subDropDown.setSelectedIndex(serverVectorPosition - 1);
             			}
             		}catch(Exception e){
-            			System.err.println("Error while deleting server: " + e.getMessage());
+            			System.err.println(I18N.get("serverconnectwindow.delerror") + e.getMessage());
             		}
             	}
             	
@@ -405,7 +404,7 @@ public class serverConnectWindow extends JFrame{
             
             helpButton.addActionListener(new ActionListener(){
             	public void actionPerformed(ActionEvent actEvt){
-            		JOptionPane.showMessageDialog(serverConnectWindow.this, "The buttons, they do NOTHING!");
+            		JOptionPane.showMessageDialog(serverConnectWindow.this, I18N.get("serverconnectwindow.buttons"));
             	}
             });
             
@@ -490,7 +489,7 @@ public class serverConnectWindow extends JFrame{
 			brReader.close();
 			return networkList;
 		}catch(IOException ioe){
-			System.err.println("Error while reading network: " + ioe.getMessage());
+			System.err.println(I18N.get("serverconnectwindow.neterror") + ioe.getMessage());
 			return null;
 		}
 		
@@ -522,7 +521,7 @@ public class serverConnectWindow extends JFrame{
 			brReader.close();
 			return serverList;
 		}catch(IOException ioe){
-			System.err.println("Error while reading network: " + ioe.getMessage());
+			System.err.println(I18N.get("serverconnectwindow.neterror") + ioe.getMessage());
 			return null;
 		}
 		
@@ -574,7 +573,7 @@ public class serverConnectWindow extends JFrame{
    				tempFile.renameTo(homeFldFile);				// Rename the old file to the new file
    			}
    		}catch(Exception ioe){								// Shit got real
-   			System.err.println("Error while chaning server in file: " + ioe.getMessage());
+   			System.err.println(I18N.get("serverconnectwindow.delfilerror") + ioe.getMessage());
    		}
    	}
    	
@@ -624,7 +623,7 @@ public class serverConnectWindow extends JFrame{
    			tempFile.renameTo(homeFldFile);				// Rename the old file to the new file
    			
    		}catch(Exception ioe){										// Why would you care?
-   			System.err.println("Error while deleting server from file" + ioe.getMessage());
+   			System.err.println(I18N.get("serverconnectwindow.delfilerror") + ioe.getMessage());
    		}
    	}
    	/**
@@ -653,8 +652,9 @@ public class serverConnectWindow extends JFrame{
    			brWriter.write(stringToWrite);												// Write the file to the file
    			brWriter.newLine();															// A new line for pretty prettyness about pretty ponies. I'm fucking bored
    			brWriter.close();															// Close the file 
-   		}catch(Exception e){
-   			System.err.println("Error while writing to file: " + e.getMessage());
+
+   		}catch(Exception e){													// This is not the hip place to be daddy'o
+   			System.err.println(I18N.get("serverconnectwindow.writeerror") + e.getMessage());
    		}
    		
    	}
@@ -694,17 +694,16 @@ public class serverConnectWindow extends JFrame{
     		BufferedReader brReader = null;					// The Reader object to return
     		try{
 
+
     			//File fileObj = new File(this.getClass().getResource("/resources/" + filename).toURI());			// The fileobject of the file to read
     				if(!homeFldFile.exists())
     					brReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/resources/" + filename)));
     				else
     					brReader = new BufferedReader(new FileReader(homeFldFile));
-    			/*}catch(FileNotFoundException fileException){	// Well why did this happen?
-    			System.err.println("Error opening file: " + fileException.getMessage());
-    			return null;*/
     		} catch(Exception e){
-				System.err.println("Exception while opening file: " + e.getMessage());
-			}
+    			System.err.println(I18N.get("serverconnectwindow.openerror") + e.getMessage());
+    		
+    		}
     	
     		return brReader;
     	}

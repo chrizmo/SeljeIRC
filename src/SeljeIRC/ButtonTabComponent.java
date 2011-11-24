@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Iterator;
+import jerklib.Channel;
  
 /**
  * Component to be used as tabComponent;
@@ -25,7 +27,7 @@ public class ButtonTabComponent extends JPanel {
        
         connection = con;
         if (pane == null) {
-            throw new NullPointerException("TabbedPane is null");
+            throw new NullPointerException(I18N.get("btc.null"));
         }
         this.pane = pane;
         setOpaque(false);
@@ -58,7 +60,7 @@ public class ButtonTabComponent extends JPanel {
         public TabButton() {
             int size = 17;
             setPreferredSize(new Dimension(size, size));
-            setToolTipText("close this tab");
+            setToolTipText(I18N.get("btc.closetab"));
             //Make the button looks the same for all Laf's
             setUI(new BasicButtonUI());
             //Make it transparent
@@ -82,10 +84,15 @@ public class ButtonTabComponent extends JPanel {
                 String channel = pane.getTitleAt(i);
                 //TODO check type!
                 
-                if( tabType == SingleTab.CHANNEL )
+                if( tabType == SingleTab.CHANNEL)   {
+                    Iterator<Channel> it = connection.getCurrentSession().getChannels().iterator();
+                    while(it.hasNext())
+                        System.out.println(it.next().getName());
                     connection.disconnectFromChannel(channel);
+                }
                
                 pane.remove(i);
+                //pane.setSelectedIndex(i-1);
                 
             }
         }

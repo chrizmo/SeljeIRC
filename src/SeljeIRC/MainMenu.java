@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 
 /**
- *
- * @author wbserver
+ * Set's ut the main-menu
+ * @author Hallvard Westman
  */
 public class MainMenu extends JMenuBar {
 
@@ -31,24 +31,33 @@ public class MainMenu extends JMenuBar {
         createFileMenu();
         createEditMenu();
         createHelpMenu();
+        file.setMnemonic('F');
+        edit.setMnemonic('E');
+        help.setMnemonic('H');
         add(file);
         add(edit);
         add(help);
     }
 
+    /**
+     * Creates the file-menu
+     */
     public void createFileMenu() {
     	
     	channelTab = SeljeIRC.channelTabObj.getInstance();
     	connection = SeljeIRC.connectionHandlerObj.getInstance();
-    	
-        JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"));
+
+        JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"), new ImageIcon("newserver.jpeg"));
+        newServer.setMnemonic('S');
         file.add(newServer);
         JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
+        newChannel.setMnemonic('C');
         file.add(newChannel);
 
 
         
         JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"));
+        exitProgram.setMnemonic('Q');
         file.add(exitProgram);
 
         //--------------Action listeners-----------------------------
@@ -73,7 +82,6 @@ public class MainMenu extends JMenuBar {
                
                if(connection.connectedToServer()){
                JOptionPane jop = new JOptionPane();
-               
                String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
                  
                     try {
@@ -83,7 +91,7 @@ public class MainMenu extends JMenuBar {
                     }
                }
                else
-                   channelTab.updateStatusScreen("Gotta connect to server first");
+                   channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
                  
            } 
         });
@@ -94,23 +102,26 @@ public class MainMenu extends JMenuBar {
                 try {
                     System.exit(0);
                 } catch (SecurityException secE) {
-                    System.err.println("Error during exit" + secE.getMessage());
+                    System.err.println(I18N.get("mainmenu.error") + secE.getMessage());
                 }
             }
         });
     }
 
+    /**
+     * Creates the edit-menu
+     */
     public void createEditMenu() {
 
 
-        JMenuItem settings = new JMenuItem("Settings");
-        JMenuItem getChannels = new JMenuItem("Get channel list");
-        JMenuItem colors = new JMenuItem("Colors");
-        JMenuItem changeNick = new JMenuItem("Change nick");
+        //JMenuItem settings = new JMenuItem("Settings");
+        JMenuItem getChannels = new JMenuItem(I18N.get("mainmenu.getchlist"));
+        JMenuItem colors = new JMenuItem(I18N.get("colors.andfonts"));
+        JMenuItem changeNick = new JMenuItem(I18N.get("mainmenu.changenick"));
         edit.add(getChannels);
         edit.add(colors);
         edit.add(changeNick);
-        edit.add(settings);
+        //edit.add(settings);
         
         //--------------Action listeners-----------------------------
 
@@ -118,20 +129,20 @@ public class MainMenu extends JMenuBar {
         	public void actionPerformed(ActionEvent evt){
                     
                     if(connection.connectedToServer()){
-        		if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION) //TODO: OVERSETT!
+        		if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION)
         			connection.getAllTheChannelsFromServer();
                      }
                    else
-                       channelTab.updateStatusScreen("Gotta connect to server first");
+                       channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
                }
         	
         });
         
-        settings.addActionListener(new ActionListener() {
+       /* settings.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent nils) {
                  JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);	// TODO: Oversett
             }
-        });
+        }); */
 
         colors.addActionListener(new ActionListener() {
             public void actionPerformed (ActionEvent letsMakeSomeColors) {
@@ -144,17 +155,20 @@ public class MainMenu extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if(connection.connectedToServer()){
-                String newNick = JOptionPane.showInputDialog("New nick");
+                String newNick = JOptionPane.showInputDialog(I18N.get("mainmenu.newnick"));
                 if (newNick != null)
                     connection.getCurrentSession().changeNick(newNick);
                 }
                 else
-                       channelTab.updateStatusScreen("Gotta connect to server first");
+                       channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
             }
         });
 
     }
 
+    /**
+     * Creates the help-menu
+     */
     public void createHelpMenu() {
         JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
         help.add(helpItem);
@@ -166,22 +180,15 @@ public class MainMenu extends JMenuBar {
         helpItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(channelTab, "Oh wait, you wanted"
-                        + " help? Well, maybe later...");
+                JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.halp"));
             }
         });
 
         aboutItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(channelTab, "SeljeIRC is an "
-                        + "IRC-client written in Java by:\n"
-                        + "Jon Arne Westgaard, Lars Erik Pedersen, "
-                        + "Christer Vaskinn and Hallvard Westman.\n\n"
-                        + "This program is made of 100% recycled bytes,\n"
-                        + "and contains no additives apart from unused imports"
-                        + " and a few nullpointer exceptions.",
-                        "About", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
+                        I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE);
 
             }
         });

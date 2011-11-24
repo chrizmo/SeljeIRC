@@ -63,7 +63,7 @@ public class UserListModel extends DefaultListModel {
             }
             fireContentsChanged(this, 0, size());           // Redraw table
         }
-        else System.out.println("User " + s + " not in list");  // For debugging, shall never occur!
+        else System.out.println(I18N.get("user.user") + s + I18N.get("user.notinlist"));  // For debugging, shall never occur!
         
     }
     
@@ -87,7 +87,7 @@ public class UserListModel extends DefaultListModel {
                 fireContentsChanged(this, 0, size());       // Redraw
             }
         }
-        else System.out.println("User " + s + " not in list");  // For debugging, shall never occur!
+        else System.out.println(I18N.get("user.user") + s + I18N.get("user.notinlist"));  // For debugging, shall never occur!
     }
     
     /**

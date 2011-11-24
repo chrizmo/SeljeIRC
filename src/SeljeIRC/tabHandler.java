@@ -27,7 +27,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     
     
     /**
-     * creates a tabhendler to handle all tabs in jtabbedpane
+     * creates a tabhandler to handle all tabs in jtabbedpane
      * default creates a statustab
      * @throws BadLocationException 
      */
@@ -102,7 +102,8 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      * 
      * The array containing all tabs contains a tabcontainer in index 0, and statustab in index 1 etc.
      * this makes it difficult to operate on correct tabs
-     * @param channel and message to be displayed
+     * @param ch The channel
+     * @param message The message to be displayed
      */
     
     public void updateTabScreen(String ch, String message) throws BadLocationException{
@@ -112,7 +113,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
          */
         
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
-        st.updateScreen(message);
+        st.updateScreen(message, Colors.statusColor);
         
         /*
          * checks to see if tab is selected, if not notify user by flagging 
@@ -212,7 +213,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     /**
       * use this instead of indexoftab when you want component returned
       * use getIndexOf for title and such
-      * @param channel
+      * @param ch The channel
       */
     
     public int getIndexOfTab(String ch){
@@ -231,7 +232,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         int tabIndex = this.indexOfTab(ch);
         System.out.printf("updatetab: "+tabIndex);
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
-        st.updateScreen(message);
+        st.updateScreen(message, Colors.statusColor);
 
     }
     
@@ -247,7 +248,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         try{
         	updateTabScreen(I18N.get("channeltab.status"),update);	// Bug med at den krasjer med 18N greien
     	}catch(Exception e){
-    		System.err.println("System error: " + e.getMessage());
+    		System.err.println(I18N.get("connection.systemerror") + e.getMessage());
     	}
     }
 
@@ -256,7 +257,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         try{
         	updateTabScreen(I18N.get("channeltab.status"),update, theColor);	// Bug med at den krasjer med 18N greien
     	}catch(Exception e){
-    		System.err.println("System error: " + e.getMessage());
+    		System.err.println(I18N.get("connection.systemerror") + e.getMessage());
     	}
     }
     
@@ -330,6 +331,16 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         st.changeNick(oldNick, newNick);
     }
     
+    boolean isOp(String nick, String ch)   {
+        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
+        return st.isOp(nick);
+    }
+    
+    boolean isVoice(String nick, String ch)   {
+        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
+        return st.isVoice(nick);
+    }
+    
     /**
      * Removes notification from tab when selected (focused)
      * sends focus down to inputfield
@@ -339,7 +350,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     @Override
     public void focusGained(FocusEvent fe) {
         int curSelected = this.getSelectedIndex();
-         this.setBackgroundAt(curSelected, new Color(250,250,250));
+        this.setBackgroundAt(curSelected, new Color(250,250,250));
          
         SingleTab st = (SingleTab) this.getComponent(curSelected+1);
         st.passFocusToField();

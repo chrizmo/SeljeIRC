@@ -17,74 +17,50 @@ import javax.swing.text.StyleConstants;
 
 
 /**
+ * Sets color, font and fontsize
  * @author Jon Arne Westgaard
  * @since 0.4
  * @version 1
- * Sets and returns font and color of text printed on screen
+ * 
  */
 
 public class Colors {
-// Initiate colors to black, and font and size:
-public static Color statusColor = new Color(0, 0, 0);
-public static Color nickColor = new Color(0, 0, 0);
-public static Color channelColor = new Color(0, 0, 0);
-public static Color highLightColor = new Color(0, 0, 0);
-public static String font = "Serif";
-public static int fontSize = 12;
+public static Color statusColor;
+public static Color nickColor;
+public static Color channelColor;
+public static Color highLightColor;
+public static String font;
+public static int fontSize;
 
 public Colors () {
-// Empty constructor
-}
-/******************************************************************************/
-/* Return color and font: */
-
-static String getStatus( String args []) {
-    return font+statusColor;
-}
-// Return Nickcolor and font:
-static String getNick( String args []) {
-    return font+nickColor;
-}
-// Return Channelcolor and font:
-static String getChannel( String args []) {
-    return font+channelColor;
-}
-// Return hilightcolor and font:
-static String getHighlight( String args []) {
-    return font+highLightColor;
+/**
+ * Sets the color to black
+ * @author Jon Arne Westgaard
+ */
+statusColor = new Color(0, 0, 0);
+nickColor = new Color(0, 0, 0);
+channelColor = new Color(0, 0, 0);
+highLightColor = new Color(0, 0, 0);
+font = "Serif";
+fontSize = 12;
 }
 
-/******************************************************************************/
-/* Set colors: */
-
-static void setColors (String status, String nick, String channel, String highLight) {
-    //statusColor = status;
-    //nickColor = nick;
-    //channelColor = channel;
-    //highLightColor = highLight;
-}
-
-/******************************************************************************/
-/* Set fonts: */
-
-static void setFonts (String newFont) {
-    font = newFont;
-}
-
-/******************************************************************************/
-
-// Color-window
-
+/**
+ * Creates the window for choosing colors and font
+ * @author Jon Arne Westgaard
+ * @since 0.4
+ * @version 0.8
+ */
 static void colorWindow () {
     // Set up layout for window
     final GridBagLayout colorLayout = new GridBagLayout();
-    final JFrame colorBoxShit = new JFrame("Colors");
+    final JFrame colorBoxShit = new JFrame(I18N.get("colors.andfonts"));
     colorBoxShit.setPreferredSize(new Dimension(400,250));
     colorBoxShit.setLayout(colorLayout);
     final GridBagConstraints gbc = new GridBagConstraints();
 
-    // Buttons
-    JButton statusColorButton = new JButton("Status Color");
+    // Statuscolor-button:
+    JButton statusColorButton = new JButton(I18N.get("colors.status"));
     gbc.gridx = 0;
     gbc.gridy = 0;
     gbc.gridwidth = 1;
@@ -92,7 +68,8 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(statusColorButton, gbc);
 
-    JButton nickColorButton = new JButton("Nick Color");
+    // Nickcolor-button:
+    JButton nickColorButton = new JButton(I18N.get("colors.nickcolor"));
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.gridwidth = 1;
@@ -100,7 +77,8 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(nickColorButton, gbc);
 
-    JButton channelColorButton = new JButton("Channel Color");
+    // Channelcolor-button:
+    JButton channelColorButton = new JButton(I18N.get("colors.channelcolor"));
     gbc.gridx = 0;
     gbc.gridy = 2;
     gbc.gridwidth = 1;
@@ -108,7 +86,8 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(channelColorButton, gbc);
 
-    JButton highLightColorButton = new JButton("Highlight Color");
+    // Highlightcolor-button:
+    JButton highLightColorButton = new JButton(I18N.get("colors.highlight"));
     gbc.gridx = 0;
     gbc.gridy = 3;
     gbc.gridwidth = 1;
@@ -116,7 +95,8 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(highLightColorButton, gbc);
 
-    JLabel fontLabel = new JLabel("Fonts");
+    // Fontlabel:
+    JLabel fontLabel = new JLabel(I18N.get("colors.fonts"));
     gbc.insets=new Insets(2,2,2,2);
     gbc.gridx = 1;
     gbc.gridy = 0;
@@ -128,8 +108,9 @@ static void colorWindow () {
     // Get the local graphics environment
     GraphicsEnvironment graphicsEvn = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
-    // Get all the available fonts
+    // Get all the available fonts at this computer:
     final String availFonts[] = graphicsEvn.getAvailableFontFamilyNames();
+    // Add all the available fonts to a JCombobox:
     final JComboBox fontList = new JComboBox(availFonts);
     
     gbc.insets=new Insets(2,2,2,2);
@@ -140,7 +121,8 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(fontList, gbc);
 
-    final JLabel fontSizeLabel = new JLabel("Font size");
+    // Fontsize-label:
+    final JLabel fontSizeLabel = new JLabel(I18N.get("colors.fontsize"));
     gbc.insets = new Insets(2,2,2,2);
     gbc.gridx = 1;
     gbc.gridy = 2;
@@ -149,8 +131,9 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.BOTH;
     colorLayout.setConstraints(fontSizeLabel, gbc);
 
-    final String fontZize[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9",
-    "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
+    // Simply use a string with the fontsizes the user can choose:
+    final String fontZize[] = {"8", "9","10", "11", "12", "13", "14", "15", "16",
+                               "17", "18", "19", "20"};
     final JComboBox setFontSize = new JComboBox(fontZize);
     setFontSize.setSelectedIndex(11);
     gbc.gridx = 1;
@@ -158,8 +141,8 @@ static void colorWindow () {
     colorLayout.setConstraints(setFontSize, gbc);
     
     
-
-    JButton OK = new JButton("OK");
+    // OK-button:
+    JButton OK = new JButton(I18N.get("colors.OK"));
     gbc.insets = new Insets(4,4,4,4);
     gbc.gridx = 0;
     gbc.gridy = 6;
@@ -168,16 +151,14 @@ static void colorWindow () {
     gbc.fill = GridBagConstraints.NONE;
     colorLayout.setConstraints(OK, gbc);
 
-    JButton cancel = new JButton("Cancel");
+    // Cancel-button:
+    JButton cancel = new JButton(I18N.get("colors.cancel"));
     gbc.gridx = 1;
     gbc.gridy = 6;
     gbc.gridwidth = 1;
     gbc.gridheight = 2;
     gbc.fill = GridBagConstraints.NONE;
     colorLayout.setConstraints(cancel, gbc);
-
-
-
 
     // Add 'em:
     colorBoxShit.add(OK);
@@ -193,14 +174,14 @@ static void colorWindow () {
     colorBoxShit.pack();
     colorBoxShit.setVisible(true);
 
-    // OK:
+    // OK-actionlistener:
             OK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent faenEgETrott) {
            colorBoxShit.setVisible(false);
             }
         });
 
-     // Cancel:
+     // Cancel-actionlistener:
            cancel.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent BareGlemDet) {
            colorBoxShit.setVisible(false);

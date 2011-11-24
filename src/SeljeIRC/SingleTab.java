@@ -25,7 +25,7 @@ import jerklib.Channel;
 
 /**
  *
- * @author wbserver
+ * @author Hallvard Westman
  */
 public class SingleTab extends JPanel implements FocusListener {
 	
@@ -83,23 +83,23 @@ public class SingleTab extends JPanel implements FocusListener {
              if(topic != null)
              topicField.setText(topic);
              else
-             topicField.setText("No topic set for this channel, press over here to set one!");
+             topicField.setText(I18N.get("singletab.settopic"));
              topicField.setSize(1,1);
              
              
              topicField.setBackground(new Color(224,224,224));
-             //topicField.
+             topicField.setEditable(false);
              topicField.setVisible(true);
              //add(topicField,BorderLayout.NORTH);
              
-             setTopicButton = new JButton("Set Topic");
+             setTopicButton = new JButton(I18N.get("singletab.topic"));
              
              setTopicButton.addActionListener(new ActionListener() {
                 JOptionPane jop = new JOptionPane();
                 public void actionPerformed(ActionEvent ae) {
                     
-                    String topic = jop.showInputDialog("what the topic is?");
-                    channelTab.updateStatusScreen("updating topic");
+                    String topic = jop.showInputDialog(I18N.get("singletab.whattopic"));
+                    channelTab.updateStatusScreen(I18N.get("singletab.updatetopic"));
                     connection.setChannelTopic(channel,topic);
 
                 }
@@ -133,13 +133,13 @@ public class SingleTab extends JPanel implements FocusListener {
             // Print welcome-message in black:
             try{
             	screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "Welcome to SeljeIRC\n", color);
+                    I18N.get("singletab.welcome"), color);
             // Print message in gray
             	StyleConstants.setForeground(color, Color.gray);
             	screen.getDocument().insertString(screen.getDocument().getLength(),
-                    "This application could be interpreted as an IRC-client ", color);
+                    I18N.get("singletab.couldbeirc"), color);
             }catch(BadLocationException ex){
-            	System.err.println("System error: " + ex.getMessage());
+            	System.err.println(I18N.get("connection.systemerror") + ex.getMessage());
             }
         }    
             
@@ -150,7 +150,6 @@ public class SingleTab extends JPanel implements FocusListener {
         /*
          * userlist
          */
-        //TODO set up the userlist model
         if(this.typeOfTab == SingleTab.CHANNEL){
         	listPanel = new ListOfUsers();
             listPanel.setBackground(new Color(215,221,229));
@@ -178,29 +177,21 @@ public class SingleTab extends JPanel implements FocusListener {
         
     }
     
-    
-    
+    /** Returns the type of the current tab
+     * @author Hallvard Westman
+     * @return typeOfTab The type of tab
+     */
     public int getType(){
         return typeOfTab;
     }
-    public void updateScreen(String update) throws BadLocationException{
-      SimpleAttributeSet color = new SimpleAttributeSet();
-      StyleConstants.setFontFamily(color, Colors.font);
-      StyleConstants.setForeground(color, Colors.statusColor);
-      screen.getDocument().insertString(screen.getDocument().getLength(),
-                    " " +update, color);
-      screen.setCaretPosition(screen.getDocument().getLength());
-    }
-    
-    public void updateScreen(List<String> update) throws BadLocationException{
-      SimpleAttributeSet color = new SimpleAttributeSet();
-      StyleConstants.setFontFamily(color, Colors.font);
-      StyleConstants.setForeground(color, Colors.statusColor);
-      screen.getDocument().insertString(screen.getDocument().getLength(),
-                    " " +update, color);
-      screen.setCaretPosition(screen.getDocument().getLength());
-    }
 
+    /**
+     * @author Hallvard Westman
+     * @author Jon Arne Westgaard
+     * @param update The text to print
+     * @param theColor Color of the text
+     * @throws BadLocationException
+     */
     void updateScreen(String update, Color theColor) throws BadLocationException {
       SimpleAttributeSet color = new SimpleAttributeSet();
       StyleConstants.setFontFamily(color, Colors.font);
@@ -211,6 +202,13 @@ public class SingleTab extends JPanel implements FocusListener {
 
     }
 
+    /**
+     * @author Hallvard Westman
+     * @author Jon Arne Westgaard
+     * @param update The text to print
+     * @param theColor Color of the text
+     * @throws BadLocationException
+     */
     void updateScreen(List<String> update, Color theColor) throws BadLocationException {
       SimpleAttributeSet color = new SimpleAttributeSet();
       StyleConstants.setFontFamily(color, Colors.font);
@@ -263,7 +261,7 @@ public class SingleTab extends JPanel implements FocusListener {
     }
     
     /**
-     * Refelcts a +v or -v mode change in the userlist
+     * Reflects a +v or -v mode change in the userlist
      * @param n Nick name of "victim"
      * @param mode  True = given voice, false = given devoice
      * @author Lars Erik Pedersen
@@ -283,6 +281,14 @@ public class SingleTab extends JPanel implements FocusListener {
     void changeNick(String oldNick, String newNick)   {
         listPanel.getListModel().changeNick(oldNick, newNick);
     }
+    
+    boolean isOp(String nick)   {
+        return listPanel.getListModel().isOp(nick);
+    }
+    
+    boolean isVoice(String nick)   {
+        return listPanel.getListModel().isVoice(nick);
+    }
 
     
     
@@ -298,7 +304,11 @@ public class SingleTab extends JPanel implements FocusListener {
     public void passFocusToField(){
        inputField.setFocusOnField(); 
     }
-    
+
+    /**
+     * Sets topic
+     * @param topic The topic to set
+     */
     public void setTopic(String topic){
         topicField.setText(topic);
     }
