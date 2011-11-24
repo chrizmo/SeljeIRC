@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -147,9 +150,12 @@ public class ListOfUsers extends JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 String action = I18N.get("user.slap.start")+getSelectedUser()+I18N.get("user.slap.end");        // /me action to send
+                String myNick = getMyNick();
+                Date date = new Date();
+                DateFormat df = new SimpleDateFormat("HH:mm");
                 chan.action(action);                                                                            // send it
                 try {
-                    tabObject.updateTabScreen(chan.getName(), "* "+connection.getCurrentSession().getNick()+ " "+action);   // print it in channel window
+                    tabObject.updateTabScreen(chan.getName(), "\n"+df.format(date)+" * "+myNick+ " "+action);   // print it in channel window
                 } catch (BadLocationException ex) {
                 }
             }
@@ -252,6 +258,10 @@ public class ListOfUsers extends JPanel {
         	tabObject.updateStatusScreen(I18N.get("user.notconnected")); //TODO: Legg til translation
     }
     
+    private String getMyNick()   {
+        return connection.getCurrentSession().getNick();
+    }
+    
     /**
      * Fetches the listmodel of the list
      * @return The list model
@@ -351,7 +361,7 @@ public class ListOfUsers extends JPanel {
         @Override
         public void actionPerformed(ActionEvent ae) {
             String user = getSelectedUser();
-            String myNick = connection.getCurrentSession().getNick();
+            String myNick = getMyNick();
             if (ae.getActionCommand().equals(I18N.get("user.kickwhy")))   {     // Get what menu item was clicked
                 JOptionPane jop = new JOptionPane();                            // Will tell why user is kicked
                 String why = jop.showInputDialog(I18N.get("user.whykick"));           //TODO I18N

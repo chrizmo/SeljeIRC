@@ -285,6 +285,14 @@ public class SingleTab extends JPanel implements FocusListener {
     void changeNick(String oldNick, String newNick)   {
         listPanel.getListModel().changeNick(oldNick, newNick);
     }
+    
+    boolean isOp(String nick)   {
+        return listPanel.getListModel().isOp(nick);
+    }
+    
+    boolean isVoice(String nick)   {
+        return listPanel.getListModel().isVoice(nick);
+    }
 
     
     
