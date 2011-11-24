@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 
 /**
- *
- * @author wbserver
+ * Set's ut the main-menu
+ * @author Hallvard Westman
  */
 public class MainMenu extends JMenuBar {
 
@@ -39,6 +39,9 @@ public class MainMenu extends JMenuBar {
         add(help);
     }
 
+    /**
+     * Creates the file-menu
+     */
     public void createFileMenu() {
     	
     	channelTab = SeljeIRC.channelTabObj.getInstance();
@@ -106,6 +109,9 @@ public class MainMenu extends JMenuBar {
         });
     }
 
+    /**
+     * Creates the edit-menu
+     */
     public void createEditMenu() {
 
 
@@ -161,6 +167,9 @@ public class MainMenu extends JMenuBar {
 
     }
 
+    /**
+     * Creates the help-menu
+     */
     public void createHelpMenu() {
         JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
         help.add(helpItem);

@@ -91,7 +91,7 @@ public class SeljeIRC extends JFrame{
         {
         public void windowClosing(WindowEvent e)
         {
-        // your stuf here
+        // your stuff here
            try{ 
            connectionHandlerObj.closeConnection(); 
            }catch(Exception ex){
@@ -106,6 +106,12 @@ public class SeljeIRC extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
     }
+
+        /**
+         * Returns current connectionHandlerObject
+         * @author Hallvard Westman
+         * @return connectionHandlerObj Returns current connection
+         */
         public static ConnectionHandler returnConnection(){
             return connectionHandlerObj;
         }
