@@ -16,7 +16,7 @@ import jerklib.ConnectionManager;
 import jerklib.Profile;
 import jerklib.Session;
 import jerklib.events.*;
-import jerklib.events.IRCEvent.Type;
+import jerklib.events.IRCEvent.*;
 import jerklib.events.modes.ModeAdjustment;
 import jerklib.events.modes.ModeAdjustment.Action;
 import jerklib.events.modes.ModeEvent;
@@ -85,7 +85,6 @@ public class ConnectionHandler implements IRCEventListener {
 		
             event = e;
             //channelTab.updateStatusScreen("Event :"+e.getType().toString());
-            
             if (e.getType() == Type.CONNECT_COMPLETE)
 		{   
 			
@@ -603,4 +602,3 @@ public class ConnectionHandler implements IRCEventListener {
         
 	
 } // End of public class ConnectionHandler	
-

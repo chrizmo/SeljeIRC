@@ -124,7 +124,7 @@ public class MainMenu extends JMenuBar {
         	public void actionPerformed(ActionEvent evt){
                     
                     if(connection.connectedToServer()){
-        		if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.thisisdumb") ,I18N.get("mainmenu.retarded"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION) //TODO: OVERSETT!
+        		if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION)
         			connection.getAllTheChannelsFromServer();
                      }
                    else
@@ -135,7 +135,7 @@ public class MainMenu extends JMenuBar {
         
        /* settings.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent nils) {
-                 JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);
+                 JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);	// TODO: Oversett
             }
         }); */
 
