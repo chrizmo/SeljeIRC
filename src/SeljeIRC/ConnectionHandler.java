@@ -131,7 +131,7 @@ public class ConnectionHandler implements IRCEventListener {
                     Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                       }
                 try {
-                 channelTab.updateTabScreen(stdOutputPrefix()+userNick, message);
+                 channelTab.updateTabScreen(stdOutputPrefix()+userNick, message, Colors.channelColor);
                     } catch (BadLocationException ex) {
                     Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
