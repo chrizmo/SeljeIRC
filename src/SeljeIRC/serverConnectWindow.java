@@ -7,12 +7,15 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
+import java.io.*;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.URISyntaxException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Vector;
 import java.util.prefs.Preferences;
@@ -32,15 +35,20 @@ import jerklib.Session;
  */
 //
 public class serverConnectWindow extends JFrame{
-    
+	
+	private static final String SERVERFILE = new String("mIRC.ini"); 								// Name of the Server file								// Constant with ini file
+	private static final char SEPERATOR = System.getProperty("file.separator").charAt(0);			// Seperator for file system	
+	private static final File homeFldFile = new File(System.getProperty("user.home") + SEPERATOR + "." + SERVERFILE);		// For file in home folder
+	
+	
     static int openFrameCount = 0;
     ConnectionHandler connection = SeljeIRC.connectionHandlerObj;
     private Preferences connectionPreferences;
     private int startOfServerLine = 0;							// Used at beginning if server line in ini file
-    private static String SERVERFILE = new String("mIRC.ini"); 	// Constant with ini file
     Vector<String> networkNames = new Vector<String>();			// List of networks in list
     Vector<String> serverNames = new Vector<String>();			// List of networks in list
     private Session ircSession; 
+    
     
     /**
      * 
@@ -52,7 +60,7 @@ public class serverConnectWindow extends JFrame{
     
     public serverConnectWindow(){
         super(I18N.get("serverconnectwindow.connect"));		// Set header title
-      
+      try{
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);	// How to close window
         
         connection = SeljeIRC.connectionHandlerObj;
@@ -227,40 +235,6 @@ public class serverConnectWindow extends JFrame{
             	}
             	
             });
-            /*
-            JButton sortSomething = new JButton(I18N.get("serverconnectwindow.sort"));
-            sortSomething.setName("SORT");
-            gbc.gridy=3;
-            rightLayout.setConstraints(sortSomething,gbc); // TODO: CHRISTER slett dette
-            rightPanel.add(sortSomething);
-            
-            sortSomething.addActionListener(new ActionListener(){
-            	public void actionPerformed(ActionEvent evt){
-            		try{
-            			if(serverNames.size() > 0){
-            				String selectedServer = subDropDown.getSelectedItem().toString();
-            				serverNames = sortServers(serverNames);
-            				subDropDown.setModel(new DefaultComboBoxModel(serverNames));
-            				subDropDown.setSelectedItem(selectedServer);
-            			}
-            		}catch(Exception e){
-            			System.err.println("Error while sorting" + e.getMessage());
-            		}
-            	}
-
-				private Vector<String> sortServers(Vector<String> serverNames) {
-					Vector<String> tVector = serverNames;
-					try{	 
-						Collections.sort(tVector);
-					
-					}catch(Exception e){
-						System.err.println("Error while sorting" + e.getMessage());
-					}
-					
-					return tVector;
-				}
-            });
-            */
         gbc.fill=GridBagConstraints.NONE;
         gbc.gridx=3;
         gbc.gridy=0;
@@ -471,6 +445,12 @@ public class serverConnectWindow extends JFrame{
         totalLayout.setConstraints(bottomButtons,gbc);
         add(bottomButtons);
         
+      }catch(Exception e){
+    	  System.err.println("Things went to shit: " + e.getMessage());
+    	  JLabel exeptionText = new JLabel("Sorry, something fucked up!");
+    	  add(exeptionText);
+      }
+        
     }
     /**
      * Connects to server
@@ -559,13 +539,22 @@ public class serverConnectWindow extends JFrame{
    	 * @param newServerName String with the new servername to be put in the list
    	 */
    	private void changeServer(String oldServerName, String newServerName){
-   		File tempFile = new File("TemporaryFile.ini");		// The fileobject for the NEW file
-   		File serverFile = new File(this.SERVERFILE);		// The fileobject of the OLD file
+   		File tempFile;		// The fileobject for the NEW file
+   		File serverFile;		// The fileobject of the OLD file
+   		char seper = System.getProperty("file.separator").charAt(0);
    		
    		BufferedReader brReader;							// The object to be read from the file 
    		BufferedWriter tmpFileWriter;						// The object to write to the new file
    		String lineFromFile;								// The file read from the old file
    		try{
+   			
+   			tempFile = File.createTempFile("TemporaryFile.ini", ".tmp");				// Fileobject for the new temporary file
+   	   		
+   			if(homeFldFile.exists())
+   	   			serverFile = homeFldFile;												// Fileobject of the old serverfile to b
+   	   		else
+   	   			serverFile = new File(getClass().getResource("/resources/" + this.SERVERFILE).toURI());				// Fileobject of the old serverfile to b
+   			
    			brReader = new BufferedReader(new FileReader(serverFile));
    			tmpFileWriter = new BufferedWriter(new FileWriter(tempFile));
    			
@@ -582,10 +571,10 @@ public class serverConnectWindow extends JFrame{
    				tmpFileWriter.close();
    			
    				serverFile.delete();						// Deletes the old file
-   				tempFile.renameTo(serverFile);				// Rename the old file to the new file
+   				tempFile.renameTo(homeFldFile);				// Rename the old file to the new file
    			}
    		}catch(Exception ioe){								// Shit got real
-   			System.err.println("Error while deleting server from file" + ioe.getMessage());
+   			System.err.println("Error while chaning server in file: " + ioe.getMessage());
    		}
    	}
    	
@@ -602,13 +591,22 @@ public class serverConnectWindow extends JFrame{
    	 */
    	
    	private void deleteServer(String serverName){
-   		File tempFile = new File("TemporaryFile.ini");				// Fileobject for the new temporary file
-   		File serverFile = new File(this.SERVERFILE);				// Fileobject of the old serverfile to be read from
+   		
+   		File tempFile;
+   		File serverFile;
+   		
+   		char seper = System.getProperty("file.separator").charAt(0);
    		
    		BufferedReader brReader;									// BufferedReader to write line for line
    		BufferedWriter tmpFileWriter;								// BufferedWriter to write to file
    		String lineFromFile;										// Line read from the old file
    		try{
+   			tempFile = File.createTempFile("TemporaryFile.ini", ".tmp");				// Fileobject for the new temporary file
+   	   		
+   			if(homeFldFile.exists())
+   				serverFile = homeFldFile;				// Fileobject of the old serverfile to b
+   			else
+   				serverFile = new File(getClass().getResource("/resources/" + this.SERVERFILE).toURI());		// Fileobject of the old serverfile to b
    			brReader = new BufferedReader(new FileReader(serverFile));
    			tmpFileWriter = new BufferedWriter(new FileWriter(tempFile));
    			
@@ -623,7 +621,7 @@ public class serverConnectWindow extends JFrame{
    			tmpFileWriter.close();
    				
    			serverFile.delete();									// Delete the old file
-   			tempFile.renameTo(serverFile);							// Rename new file to old filename
+   			tempFile.renameTo(homeFldFile);				// Rename the old file to the new file
    			
    		}catch(Exception ioe){										// Why would you care?
    			System.err.println("Error while deleting server from file" + ioe.getMessage());
@@ -643,19 +641,47 @@ public class serverConnectWindow extends JFrame{
    		
    		BufferedWriter brWriter;							// Buffered writerobject 
    		String stringToWrite;								// The string to append to file
+
+   		
+   		
+   		if(!homeFldFile.exists())
+   			copyIniFileToHome();
    		
    		try{
    			stringToWrite = "n" + ++this.startOfServerLine + "=Random serverSERVER:" + serverName.toLowerCase() + ":6660-6667GROUP:" + networkName; // Construct the string to write, increment n-number
-   			brWriter = new BufferedWriter(new FileWriter(this.SERVERFILE, true)); 		// Create the writing object		
+   			brWriter = new BufferedWriter(new FileWriter(homeFldFile, true)); 		// Create the writing object		
    			brWriter.write(stringToWrite);												// Write the file to the file
    			brWriter.newLine();															// A new line for pretty prettyness about pretty ponies. I'm fucking bored
    			brWriter.close();															// Close the file 
-   		}catch(IOException ioe){														// This is not the hip place to be daddy'o
-   			System.err.println("Error while writing to file: " + ioe.getMessage());
+   		}catch(Exception e){
+   			System.err.println("Error while writing to file: " + e.getMessage());
    		}
    		
    	}
+   	
+   	/**
+   	 * Copies the INI file from the JAR container to the users home folder.
+   	 * 
+   	 * @author Christer Vaskinn
+   	 * @since 0.1
+   	 */
     	
+		private void copyIniFileToHome() {
+			try{
+				InputStream is = getClass().getResourceAsStream("/resources/" + SERVERFILE);	// The file in the folder
+				OutputStream os = new FileOutputStream(homeFldFile);							// The output file
+				byte[] buffer = new byte[4096];													// Set the size of the buffer
+				int length;																		// Read size
+				while ((length = is.read(buffer)) > 0) {
+					os.write(buffer, 0, length);
+				}
+				os.close();
+				is.close();
+			}catch(Exception e){
+				System.err.println("Error while copying: " + e.getMessage());
+			}
+		
+	}
 		/**
     	 * Opens a file for reading purposes.
     	 * 
@@ -667,15 +693,22 @@ public class serverConnectWindow extends JFrame{
     	private BufferedReader openIniFile(String filename){
     		BufferedReader brReader = null;					// The Reader object to return
     		try{
-    			File fileObj = new File(filename);			// The fileobject of the file to read
-    			if(fileObj.exists())						// If the file exits, create bufferedReader
-    				brReader = new BufferedReader(new FileReader(fileObj));
-    			return brReader;							// Wee
-    		}catch(FileNotFoundException fileException){	// Well why did this happen?
+
+    			//File fileObj = new File(this.getClass().getResource("/resources/" + filename).toURI());			// The fileobject of the file to read
+    				if(!homeFldFile.exists())
+    					brReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/resources/" + filename)));
+    				else
+    					brReader = new BufferedReader(new FileReader(homeFldFile));
+    			/*}catch(FileNotFoundException fileException){	// Well why did this happen?
     			System.err.println("Error opening file: " + fileException.getMessage());
-    			return null;
-    		}
+    			return null;*/
+    		} catch(Exception e){
+				System.err.println("Exception while opening file: " + e.getMessage());
+			}
     	
+    		return brReader;
     	}
+    	
+    	
 
 }
