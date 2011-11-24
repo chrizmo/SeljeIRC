@@ -204,16 +204,14 @@ public class ConnectionHandler implements IRCEventListener {
                 else if (e.getType() == Type.PART)   {
                     PartEvent pe = (PartEvent) e;
                     String nick = pe.getWho();
+                    String myNick = event.getSession().getNick();
+                    if(!nick.equalsIgnoreCase(myNick)){
                     
-                    if(!nick.equalsIgnoreCase(event.getSession().getNick())){
-                    
-                    try {
-                        channelTab.updateTabScreen(pe.getChannelName(), "\n"+dateFormat.format(date)+" -!- " + nick + I18N.get("channel.userleft"), Colors.channelColor );
-                    } catch (BadLocationException ex) {
-                        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                            channelTab.userLeft(nick, pe.getChannelName());
-                        
+                        try {
+                            channelTab.updateTabScreen(pe.getChannelName(), "\n"+dateFormat.format(date)+" -!- " + nick + I18N.get("channel.userleft"), Colors.channelColor );
+                        } catch (BadLocationException ex) {
+                        }
+                        channelTab.userLeft(nick, pe.getChannelName());                        
                     }
                 }
 
@@ -293,9 +291,8 @@ public class ConnectionHandler implements IRCEventListener {
                     channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.ircname") + we.getRealName(), Colors.statusColor);
                     channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.channels") + we.getChannelNames(), Colors.statusColor);
                     channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.server") + we.whoisServer() + " [" + we.whoisServerInfo() + "]", Colors.statusColor);
-                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.endwhois"), Colors.statusColor);
                     if(we.isIdle()) channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.idle"), Colors.statusColor);
-                    else channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.notidle"), Colors.statusColor);
+                    channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.endwhois"), Colors.statusColor);                    
                 }
             
                 else if(e.getType() == Type.CHANNEL_LIST_EVENT)   {	// Lists all the channels from the servers with topics
@@ -366,14 +363,14 @@ public class ConnectionHandler implements IRCEventListener {
                             channel = stBuild.toString();
                     }
                 
-                if(channel  != ""){
+                if(!channel.equals((""))){
                     
-                        String ch = reWriteChannel(channel);
-                        if(ch == null){
+                        //String ch = reWriteChannel(channel);
+                        if(!channelTab.tabExists(channel)){
                             event.getSession().join(channel);
                         }
                         else{
-                            channelTab.setSelectedIndex(channelTab.indexOfTab(ch));
+                            channelTab.setSelectedIndex(channelTab.indexOfTab(channel));
                         }
                 }else
                   channelTab.updateStatusScreen("\n"+dateFormat.format(date)+" "+I18N.get("connection.writeplease"), Colors.statusColor);
@@ -584,7 +581,7 @@ public class ConnectionHandler implements IRCEventListener {
             
         }
         
-        public String reWriteChannel(String ch){
+        /**public String reWriteChannel(String ch){
             
             List<Channel> l = event.getSession().getChannels();
             Iterator<Channel> i = l.iterator();
@@ -595,7 +592,7 @@ public class ConnectionHandler implements IRCEventListener {
                     return ls;
             }
             return null;
-        }
+        }*/
 
 		public static ConnectionHandler getInstance() {
 			return conHandler;
