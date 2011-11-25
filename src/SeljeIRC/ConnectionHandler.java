@@ -123,7 +123,7 @@ public class ConnectionHandler implements IRCEventListener {
             else if(e.getType() == Type.PRIVATE_MESSAGE){
                 MessageEvent me = (MessageEvent) e;
                 String userNick = me.getNick();
-                String message = "<" + me.getNick() + ">" + " : " + me.getMessage();
+                String message = stdOutputPrefix()+"<" + me.getNick() + "> " + me.getMessage();
                 	
                 if(!channelTab.tabExists(userNick))
                     try {
@@ -132,7 +132,10 @@ public class ConnectionHandler implements IRCEventListener {
                         Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 try {
-                    channelTab.updateTabScreen(userNick, message, Colors.channelColor);
+
+                 channelTab.updateTabScreen(userNick, message, Colors.channelColor); //TODO could be this
+
+                 //channelTab.updateTabScreen(userNick, message); TODO could be this
                     } catch (BadLocationException ex) {
                     Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }

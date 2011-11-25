@@ -1,16 +1,24 @@
 package SeljeIRC;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -66,7 +74,9 @@ public class MainMenu extends JMenuBar {
         newServer.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
+
                 newConnection();
+
             }
 
             
@@ -74,7 +84,9 @@ public class MainMenu extends JMenuBar {
         
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
+
                 newChannel();
+
                  
         }
         });
@@ -156,7 +168,9 @@ public class MainMenu extends JMenuBar {
         helpItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
+
                 getHelp();
+
             }
 
             
@@ -218,7 +232,28 @@ public class MainMenu extends JMenuBar {
                        channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
             }
     public void getHelp() throws HeadlessException {
-                JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.halp"));
+                Font font = new Font("Serif", Font.PLAIN, 30);
+    setFont(font);
+    String labelText =
+      "<html>The Applied Physics Laboratory is a division " +
+      "of the Johns Hopkins University." +
+      "<P>" +
+      "Major JHU divisions include:" +
+      "<UL>" +
+      "  <LI>The Applied Physics Laboratory" +
+      "  <LI>The Krieger School of Arts and Sciences" +
+      "  <LI>The Whiting School of Engineering" +
+      "  <LI>The School of Medicine" +
+      "  <LI>The School of Public Health" +
+      "  <LI>The School of Nursing" +
+      "  <LI>The Peabody Institute" +
+      "  <LI>The Nitze School of Advanced International Studies" +
+      "</UL>";
+    
+    
+    
+    JOptionPane.showMessageDialog(channelTab, labelText);
+       
             }
     public void getAbout() throws HeadlessException {
                 JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
@@ -227,12 +262,15 @@ public class MainMenu extends JMenuBar {
     public void setTopic(){
         
         
-        
+        try{
         JOptionPane jop = new JOptionPane();
         String ch = channelTab.getTitleAt(channelTab.getSelectedIndex());
         String topic = jop.showInputDialog(I18N.get("singletab.whattopic"));
                     channelTab.updateStatusScreen(I18N.get("singletab.updatetopic"));
                     connection.setChannelTopic(ch,topic);
+        }catch(Exception e){
+            channelTab.updateStatusScreen("Cant set topic unless you are in a channel");
+        }
     }
         	
 }
