@@ -344,6 +344,16 @@ public class ConnectionHandler implements IRCEventListener {
                     }
                     
                 }
+                
+                else if (e.getType() == Type.DEFAULT)   {   // Removes a kicked user from userlist
+                    if (e.getRawEventData().matches(".*KICK.*") && conHandler.connectedToServer())   {
+                            channelTab.updateStatusScreen(stdOutputPrefix()+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
+                            String m = e.getRawEventData();
+                            String parts[] = m.split(" ");
+                            channelTab.userLeft(parts[3], parts[2]);
+                            
+                    }
+                }
 
                 
 
@@ -351,6 +361,7 @@ public class ConnectionHandler implements IRCEventListener {
 		{       // Prints data received from server
                         if(!e.getRawEventData().matches(".*(311|319|312|320|317|318|321|322|323).*")) //Do not print whois events marked as DEFAULT
                         	channelTab.updateStatusScreen(stdOutputPrefix()+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
+                        
 		}
             
         }
