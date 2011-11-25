@@ -330,13 +330,13 @@ public class ConnectionHandler implements IRCEventListener {
                 else if (e.getType() == Type.AWAY_EVENT)   {
                     AwayEvent aw = (AwayEvent) e;
                     String awayUser = aw.getNick();
-                    String message = "-!- "+awayUser+" "+ I18N.get("connection.isaway")+aw.getAwayMessage()+"]";
+                    String message = stdOutputPrefix()+"-!- "+awayUser+" "+ I18N.get("connection.isaway")+aw.getAwayMessage()+"]";
                     int privTabIdx = channelTab.getIndexOfTab(awayUser);
                     if (aw.getEventType() == AwayEvent.EventType.USER_IS_AWAY)   {
-                        channelTab.updateStatusScreen(stdOutputPrefix()+message, Colors.statusColor);
+                        channelTab.updateStatusScreen(message, Colors.statusColor);
                         if (privTabIdx > 0)   {
                             try {
-                                channelTab.updateTabScreen(stdOutputPrefix()+awayUser, message, Colors.statusColor);
+                                channelTab.updateTabScreen(awayUser, message, Colors.statusColor);
                             } catch (BadLocationException ex) {
                             }
                         }
