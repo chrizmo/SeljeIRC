@@ -23,7 +23,7 @@ import javax.swing.text.BadLocationException;
 public class SeljeIRC extends JFrame{
 
     private static final long serialVersionUID = 1L; //Serializeing        
-    MainMenu mainMenu;      //Standard Menu
+    public static MainMenu mainMenu;      //Standard Menu
     static InputField inputField;  //Standard Input field for each tab
     BorderLayout totalLayout; //TotalLayouts
     static Colors colorSettings; // Colorsettings
@@ -43,8 +43,10 @@ public class SeljeIRC extends JFrame{
          * Layout of main contentPane
          */
         totalLayout = new BorderLayout();
-            setLayout(totalLayout);
-
+        setLayout(totalLayout);
+        
+            
+        
         /*
          * JTabbedPane containging all tabs
          */
@@ -57,7 +59,14 @@ public class SeljeIRC extends JFrame{
          */
         mainMenu= new MainMenu();
             setJMenuBar(mainMenu);
-
+        
+        /*
+         * toolbar
+         */
+        
+        ToolBar tb = new ToolBar();
+        add(tb,BorderLayout.NORTH);
+        
         /*
          * Inputfield that should be taking all input
          */
@@ -110,32 +119,21 @@ public class SeljeIRC extends JFrame{
          * Setting up the mainframe, add only functionality related to .this
          *
         
-        *
-    
-         //NimRODTheme nt = new NimRODTheme();
-         
-         try{
-
-             UIManager.setLookAndFeel(new com.nilo.plaf.nimrod.NimRODLookAndFeel());
-
-             if(!System.getProperty("os.name").startsWith("Mac OS X"))	// Fuck you guys!
-            	 UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");	// Making the bitches ugly
-
-         }catch(Exception e){
-             System.err.println("I got big booty bitches: " + e.getMessage());
-         }
-   
     */
         try {
             UIManager.getSystemLookAndFeelClassName();
         } catch (Exception ex) {
             Logger.getLogger(SeljeIRC.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
+          Toolkit toolkit =  Toolkit.getDefaultToolkit ();
+          Dimension dim = toolkit.getScreenSize();
     
     
         SeljeIRC mainFrame = new SeljeIRC("SeljeIRC");    
         mainFrame.setVisible(false);
-        mainFrame.setBounds(0,0,1200, 800);
+        mainFrame.setBounds(0,0,dim.width, dim.height-100);
         mainFrame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 
         SplashScreen splashScreen = new SplashScreen("logo2.jpg");

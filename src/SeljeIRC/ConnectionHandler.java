@@ -21,6 +21,7 @@ import jerklib.events.modes.ModeAdjustment.Action;
 import jerklib.events.modes.ModeEvent;
 import jerklib.events.modes.ModeEvent.ModeType;
 import jerklib.listeners.IRCEventListener;
+import sun.jkernel.Bundle;
 
 
 /**
@@ -124,19 +125,19 @@ public class ConnectionHandler implements IRCEventListener {
                 String userNick = me.getNick();
                 String message = "<" + me.getNick() + ">" + " : " + me.getMessage();
                 	
-            if(!channelTab.tabExists(userNick))
-                try {
-                 channelTab.createNewTab(userNick, SingleTab.PRIVATE,null);
-                    } catch (BadLocationException ex) {
-                    Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
-                      }
-                try {
-                 channelTab.updateTabScreen(stdOutputPrefix()+userNick, message);
-                    } catch (BadLocationException ex) {
-                    Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
+                if(!channelTab.tabExists(userNick))
+                    try {
+                     channelTab.createNewTab(userNick, SingleTab.PRIVATE,null);
+                        } catch (BadLocationException ex) {
+                        Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                try {
+                    channelTab.updateTabScreen(userNick, message, Colors.channelColor);
+                    } catch (BadLocationException ex) {
+                    Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
+            }
             else if(e.getType() == Type.NOTICE){
             NoticeEvent no = (NoticeEvent) e;
                         
@@ -170,9 +171,10 @@ public class ConnectionHandler implements IRCEventListener {
                 // Print topic for channel:
                 JoinCompleteEvent jce = (JoinCompleteEvent) e;
                 String ch = jce.getChannel().getName();
-                String message = jce.getChannel().getTopic();
+                Channel chan = jce.getChannel();
+                
                 try {
-                    channelTab.createNewTab(ch,SingleTab.CHANNEL, message);
+                    channelTab.createNewTab(ch,SingleTab.CHANNEL,chan);
                         
                     } catch (BadLocationException ex) {
                     }
@@ -310,12 +312,13 @@ public class ConnectionHandler implements IRCEventListener {
                     String setBy = te.getSetBy();
                     String[] subSt = setBy.split("~");
                     Date setAt = te.getSetWhen();
-                    DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss zZ");
                     setBy = subSt[0];
+                    DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss zZ");
+                    
                     String topic = te.getTopic();
                     try {
                         
-                        channelTab.passTopic(chanName,topic+" "+ I18N.get("connection.setby")+" " +setBy+ " "+I18N.get("connection.at") +" "+df.format(setAt));
+                        channelTab.passTopic(chanName,te.getChannel());
                         channelTab.updateTabScreen(chanName, stdOutputPrefix()+"-!- " +" "+setBy+" " + I18N.get("connection.changedtopic") +" "+chanName +" "+ I18N.get("connection.to") +" "+ topic, Colors.statusColor);
                     } catch (BadLocationException ex) {
                     }

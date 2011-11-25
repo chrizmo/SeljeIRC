@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JTabbedPane;
 import javax.swing.text.BadLocationException;
 import jerklib.Channel;
+import jerklib.events.TopicEvent;
 
 
 /**
@@ -55,11 +56,11 @@ public class tabHandler extends JTabbedPane implements FocusListener {
      * Creates new channel-tab or private message-tab
      * @param tabName
      * @param tabType
-     * @param topic
+     * @param channelForTopic
      * @throws BadLocationException 
      */
     
-    public void createNewTab(String tabName, int tabType, String topic) throws BadLocationException{
+    public void createNewTab(String tabName, int tabType, Channel channelForTopic) throws BadLocationException{
         SingleTab st;
         
         /*
@@ -68,7 +69,7 @@ public class tabHandler extends JTabbedPane implements FocusListener {
          */
         
         if(tabType == SingleTab.CHANNEL){
-            st = new SingleTab(tabName,this,SingleTab.CHANNEL,topic);
+            st = new SingleTab(tabName,this,SingleTab.CHANNEL,channelForTopic);
         } else
             st = new SingleTab(tabName,this,SingleTab.PRIVATE,null);
         
@@ -203,10 +204,10 @@ public class tabHandler extends JTabbedPane implements FocusListener {
     /**
      * Sets the topic for the channel
      */
-    public void passTopic(String ch,String topic){
+    public void passTopic(String ch,Channel channelForTopic){
         
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
-        st.setTopic(topic);
+        st.setTopic(channelForTopic);
         
     }
     

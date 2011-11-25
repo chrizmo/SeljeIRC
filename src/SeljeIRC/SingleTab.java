@@ -5,16 +5,12 @@ import java.awt.Color;
 
 import java.awt.Dimension;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -47,7 +43,8 @@ public class SingleTab extends JPanel implements FocusListener {
     
     private InputField inputField;
     public JTextPane topicField;
-    private JButton setTopicButton;
+    public JLabel topicSetBy;
+    JLabel topicFieldHead;
     
     /**
      * Sets all data for this specific tab, aswell as layout.
@@ -57,7 +54,7 @@ public class SingleTab extends JPanel implements FocusListener {
      * @param tabType   //The type of tab 
      * @param topic     //Topic for the specific channel
      */
-    public SingleTab(String ch, tabHandler ct, int tabType,String topic){// throws BadLocationException {
+    public SingleTab(String ch, tabHandler ct, int tabType,Channel channelForTopic){// throws BadLocationException {
         super();
         
         /*
@@ -87,45 +84,44 @@ public class SingleTab extends JPanel implements FocusListener {
          * Checks if this is a channel, in that case it sets the topic
          */
         if(tabType == CHANNEL){
+            
+            
+            /*
+             * Setting topic
+             * TODO refactor
+             */      
              topicField = new JTextPane();
-             if(topic != null)
-             topicField.setText(topic);
-             else
-             topicField.setText(I18N.get("singletab.settopic"));
-             topicField.setSize(1,1);
+             topicSetBy = new JLabel();
+             topicFieldHead = new JLabel();
+             
+             
+             
+             try{
+                 setTopic(channelForTopic);
+             }catch(Exception e){
+                 
+                 topicField.setText(I18N.get("singletab.settopic"));
+             }
              
              /*
               * style
               */
+             topicField.setSize(1,1);
              topicField.setBackground(new Color(224,224,224));
              topicField.setEditable(false);
              topicField.setVisible(true);
-             //add(topicField,BorderLayout.NORTH);
              
-             setTopicButton = new JButton(I18N.get("singletab.topic"));
              
-             setTopicButton.addActionListener(new ActionListener() {
-                JOptionPane jop = new JOptionPane();
-                public void actionPerformed(ActionEvent ae) {
-                    
-                    String topic = jop.showInputDialog(I18N.get("singletab.whattopic"));
-                    channelTab.updateStatusScreen(I18N.get("singletab.updatetopic"));
-                    connection.setChannelTopic(channel,topic);
-
-                }
-             });
-             
-             /*
-              * setting topic
-              */
              
              JPanel topicPanel = new JPanel();
              BorderLayout tl = new BorderLayout();
              topicPanel.setLayout(tl);
              
+             //topicPanel.add(topicFieldHead,BorderLayout.NORTH); //a header that says topic in bold and special color
              topicPanel.add(topicField,BorderLayout.CENTER);
-             topicPanel.add(setTopicButton,BorderLayout.EAST);
+             topicPanel.add(topicSetBy,BorderLayout.EAST);
              add(topicPanel,BorderLayout.NORTH);
+             
              
              
              /*
@@ -313,8 +309,23 @@ public class SingleTab extends JPanel implements FocusListener {
      * Sets topic
      * @param topic The topic to set
      */
-    public void setTopic(String topic){
+    public void setTopic(Channel channelForTopic){
+                
+        String topic = channelForTopic.getTopic();
+        String setBy = channelForTopic.getTopicSetter();
+            String[] subSt = setBy.split("~");
+            setBy = subSt[0];
+        Date setAt = channelForTopic.getTopicSetTime();
+           
         topicField.setText(topic);
+        topicSetBy.setFont(new Font(Colors.font,Font.PLAIN,11));
+        //topicSetBy.setForeground(Color.lightGray);
+        
+        topicSetBy.setText("Topic was set by "+setBy+" at "+setAt.toString());
+        
+        //topicFieldHead.setText("Topic");
+             
+        
     }
     
     
