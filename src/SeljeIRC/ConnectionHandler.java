@@ -1,5 +1,6 @@
 package SeljeIRC;
  
+import java.awt.Color;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,7 +22,7 @@ import jerklib.events.modes.ModeAdjustment.Action;
 import jerklib.events.modes.ModeEvent;
 import jerklib.events.modes.ModeEvent.ModeType;
 import jerklib.listeners.IRCEventListener;
-import sun.jkernel.Bundle;
+//import sun.jkernel.Bundle;
 
 
 /**
@@ -350,6 +351,27 @@ public class ConnectionHandler implements IRCEventListener {
                     }
                     
                 }
+                
+                else if (e.getType() == Type.DEFAULT)   {   // Removes a kicked user from userlist
+                    if (e.getRawEventData().matches(".*KICK.*") && conHandler.connectedToServer())   {
+                            channelTab.updateStatusScreen(stdOutputPrefix()+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
+                            String m = e.getRawEventData();
+                            String parts[] = m.split(" ");
+                            String otherParts[] = m.split("!");
+                            String otherPartsThanTheOtherParts[]=m.split(":");
+                            String kickedBy = otherParts[0].substring(1);
+                            String who = parts[3];
+                            String ch = parts[2];
+                            String reason = otherPartsThanTheOtherParts[otherPartsThanTheOtherParts.length-1];
+                            channelTab.userLeft(who, ch);
+                            try {
+                                channelTab.updateTabScreen(ch, stdOutputPrefix()+"-!- "+who+" was kicked by "+kickedBy+" Reason: ["+reason+"]", Colors.channelColor);
+                            } catch (BadLocationException ex) {
+                            }                                                
+                    }
+                    else
+                        channelTab.updateStatusScreen(stdOutputPrefix()+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
+                }
 
                 
 
@@ -357,6 +379,7 @@ public class ConnectionHandler implements IRCEventListener {
 		{       // Prints data received from server
                         if(!e.getRawEventData().matches(".*(311|319|312|320|317|318|321|322|323).*")) //Do not print whois events marked as DEFAULT
                         	channelTab.updateStatusScreen(stdOutputPrefix()+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
+                        
 		}
             
         }
