@@ -159,9 +159,14 @@ public class tabHandler extends JTabbedPane implements FocusListener {
         /*
          * getting SingleTab from tabhandler to update screen
          */
-
+        try{
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.updateScreen(message, theColor);
+        }catch(Exception e){
+            //TODO PROPERTIES, FIX?
+            this.updateStatusScreen("couldnt update tabwindow, something awful was refrenced");
+        }
+        
 
         /*
          * checks to see if tab is selected, if not notify user by flagging
