@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -73,45 +74,21 @@ public class MainMenu extends JMenuBar {
         newServer.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
-                // Create and position connection window
-                serverConnectWindow scw = new serverConnectWindow();
-                scw.setSize(new Dimension(400, 300));
-                try {
-                   scw.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-                } finally {
-                   scw.setCursor(Cursor.getDefaultCursor());
-                }
-                scw.setLocationRelativeTo(channelTab);
-                scw.pack();
-                scw.setResizable(false);			// Makes sure user can't change size
-                scw.setVisible(true);
 
+                newConnection();
 
             }
+
+            
         });
         
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
-               
-               if(connection.connectedToServer()){
-               JOptionPane jop = new JOptionPane();
-               try {
-                   jop.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-               } finally {
-                   jop.setCursor(Cursor.getDefaultCursor());
-               }
-               String channel = jop.showInputDialog(channelTab, I18N.get("mainmenu.whichchannel"));
+
+                newChannel();
+
                  
-                    try {
-                        connection.joinChannel(channel);
-                    } catch (BadLocationException ex) {
-                        Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-               }
-               else
-                   channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
-                 
-           } 
+        }
         });
 
         exitProgram.addActionListener(new ActionListener() { // Closes the program
@@ -145,15 +122,10 @@ public class MainMenu extends JMenuBar {
 
         getChannels.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent evt){
-                    
-                    if(connection.connectedToServer()){
-        		if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION)
-        			connection.getAllTheChannelsFromServer();
-                     }
-                   else
-                       channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
+                getChannels();
                }
-        	
+
+            
         });
         
        /* settings.addActionListener(new ActionListener() {
@@ -164,22 +136,20 @@ public class MainMenu extends JMenuBar {
 
         colors.addActionListener(new ActionListener() {
             public void actionPerformed (ActionEvent letsMakeSomeColors) {
-                Colors.colorWindow();
+                getColorChoices();
             }
+
+            
         });
         
         changeNick.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if(connection.connectedToServer()){
-                String newNick = JOptionPane.showInputDialog(I18N.get("mainmenu.newnick"));
-                if (newNick != null)
-                    connection.getCurrentSession().changeNick(newNick);
-                }
-                else
-                       channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
+                changeNick();
             }
+
+            
         });
 
     }
@@ -199,7 +169,70 @@ public class MainMenu extends JMenuBar {
 
             public void actionPerformed(ActionEvent ae) {
 
-    Font font = new Font("Serif", Font.PLAIN, 30);
+                getHelp();
+
+            }
+
+            
+        });
+
+        aboutItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                getAbout();
+
+            }
+
+            
+        });
+
+    } // End of createHelpMenu
+    
+    public void newChannel() throws HeadlessException {
+        if(connection.connectedToServer()){
+        JOptionPane jop = new JOptionPane();
+        String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
+
+             try {
+                 connection.joinChannel(channel);
+             } catch (BadLocationException ex) {
+                 Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+             }
+        }
+        else
+            channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
+    }
+    public void newConnection() {
+                // Create and position connection window
+                serverConnectWindow scw = new serverConnectWindow();
+                scw.setSize(new Dimension(400, 300));
+                scw.setLocationRelativeTo(null);
+                scw.pack();
+                scw.setResizable(false);			// Makes sure user can't change size
+                scw.setVisible(true);
+    }
+    public void getChannels() throws HeadlessException {
+                if(connection.connectedToServer()){
+                    if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION)
+                            connection.getAllTheChannelsFromServer();
+                 }
+               else
+                   channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
+            }
+    public void getColorChoices() {
+                Colors.colorWindow();
+            }
+    public void changeNick() throws HeadlessException {
+                if(connection.connectedToServer()){
+                String newNick = JOptionPane.showInputDialog(I18N.get("mainmenu.newnick"));
+                if (newNick != null)
+                    connection.getCurrentSession().changeNick(newNick);
+                }
+                else
+                       channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
+            }
+    public void getHelp() throws HeadlessException {
+                Font font = new Font("Serif", Font.PLAIN, 30);
     setFont(font);
     String labelText =
       "<html>The Applied Physics Laboratory is a division " +
@@ -221,18 +254,23 @@ public class MainMenu extends JMenuBar {
     
     JOptionPane.showMessageDialog(channelTab, labelText);
        
-                //JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.halp"));
             }
-        });
-
-        aboutItem.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent ae) {
+    public void getAbout() throws HeadlessException {
                 JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
                         I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE);
-
             }
-        });
-
-    } // End of createHelpMenu
+    public void setTopic(){
+        
+        
+        try{
+        JOptionPane jop = new JOptionPane();
+        String ch = channelTab.getTitleAt(channelTab.getSelectedIndex());
+        String topic = jop.showInputDialog(I18N.get("singletab.whattopic"));
+                    channelTab.updateStatusScreen(I18N.get("singletab.updatetopic"));
+                    connection.setChannelTopic(ch,topic);
+        }catch(Exception e){
+            channelTab.updateStatusScreen("Cant set topic unless you are in a channel");
+        }
+    }
+        	
 }
