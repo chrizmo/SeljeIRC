@@ -29,10 +29,10 @@ public class InputField extends JPanel {
     private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+");
 
     /**
-     * Constructor for å opprette felt for å få tekst fra brukeren. 
+     * Constructor for aa opprette felt for aa faa tekst fra brukeren. 
      * 
      * 
-     * Feltet opprettes basert på kanalnavn og typen tab den skal være i. Den vil derfra ta teksten som blir puttet inn og sende det til servern.  
+     * Feltet opprettes basert paa kanalnavn og typen tab den skal vaare i. Den vil derfra ta teksten som blir puttet inn og sende det til servern.  
      * @author Hallvard Westman
      * @param tabName
      * @param TabType
