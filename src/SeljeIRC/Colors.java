@@ -132,8 +132,8 @@ static void colorWindow () {
     colorLayout.setConstraints(fontSizeLabel, gbc);
 
     // Simply use a string with the fontsizes the user can choose:
-    final String fontZize[] = {"8", "9","10", "11", "12", "13", "14", "15", "16",
-                               "17", "18", "19", "20"};
+    final String fontZize[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9","10",
+    "11", "12", "13", "14", "15", "16","17", "18", "19", "20"};
     final JComboBox setFontSize = new JComboBox(fontZize);
     setFontSize.setSelectedIndex(11);
     gbc.gridx = 1;
@@ -227,8 +227,8 @@ static void colorWindow () {
     // Choose fontsize:
     setFontSize.addActionListener(new ActionListener() {
           public void actionPerformed (ActionEvent setTheFontSize) {
-          int snr = setFontSize.getSelectedIndex();
-          fontSize = snr;
+          fontSize = setFontSize.getSelectedIndex();
+          
           }
         });
 }

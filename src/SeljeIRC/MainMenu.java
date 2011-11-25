@@ -2,12 +2,15 @@ package SeljeIRC;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.help.CSH;
 import javax.help.HelpBroker;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -70,45 +73,21 @@ public class MainMenu extends JMenuBar {
         newServer.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
-                // Create and position connection window
-                serverConnectWindow scw = new serverConnectWindow();
-                scw.setSize(new Dimension(400, 300));
-                try {
-                   scw.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-                } finally {
-                   scw.setCursor(Cursor.getDefaultCursor());
-                }
-                scw.setLocationRelativeTo(channelTab);
-                scw.pack();
-                scw.setResizable(false);			// Makes sure user can't change size
-                scw.setVisible(true);
 
+                newConnection();
 
             }
+
+            
         });
         
         newChannel.addActionListener(new ActionListener()   {
            public void actionPerformed (ActionEvent ae)   {
-               
-               if(connection.connectedToServer()){
-               JOptionPane jop = new JOptionPane();
-               try {
-                   jop.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-               } finally {
-                   jop.setCursor(Cursor.getDefaultCursor());
-               }
-               String channel = jop.showInputDialog(channelTab, I18N.get("mainmenu.whichchannel"));
+
+                newChannel();
+
                  
-                    try {
-                        connection.joinChannel(channel);
-                    } catch (BadLocationException ex) {
-                        Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-               }
-               else
-                   channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
-                 
-           } 
+        }
         });
 
         exitProgram.addActionListener(new ActionListener() { // Closes the program
@@ -128,55 +107,40 @@ public class MainMenu extends JMenuBar {
      */
     public void createEditMenu() {
 
-
-        //JMenuItem settings = new JMenuItem("Settings");
         JMenuItem getChannels = new JMenuItem(I18N.get("mainmenu.getchlist"));
         JMenuItem colors = new JMenuItem(I18N.get("colors.andfonts"));
         JMenuItem changeNick = new JMenuItem(I18N.get("mainmenu.changenick"));
         edit.add(getChannels);
         edit.add(colors);
         edit.add(changeNick);
-        //edit.add(settings);
         
         //--------------Action listeners-----------------------------
 
         getChannels.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent evt){
-                    
-                    if(connection.connectedToServer()){
-        		if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION)
-        			connection.getAllTheChannelsFromServer();
-                     }
-                   else
-                       channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
+                getChannels();
                }
-        	
+
+            
         });
         
-       /* settings.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent nils) {
-                 JOptionPane.showMessageDialog(channelTab, "Settings!", "Settings", JOptionPane.PLAIN_MESSAGE);	// TODO: Oversett
-            }
-        }); */
 
         colors.addActionListener(new ActionListener() {
             public void actionPerformed (ActionEvent letsMakeSomeColors) {
-                Colors.colorWindow();
+                getColorChoices();
             }
+
+            
         });
         
         changeNick.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if(connection.connectedToServer()){
-                String newNick = JOptionPane.showInputDialog(I18N.get("mainmenu.newnick"));
-                if (newNick != null)
-                    connection.getCurrentSession().changeNick(newNick);
-                }
-                else
-                       channelTab.updateStatusScreen(I18N.get("connection.connectfirst"));
+                changeNick();
             }
+
+            
         });
 
     }
@@ -185,28 +149,108 @@ public class MainMenu extends JMenuBar {
      * Creates the help-menu
      */
     public void createHelpMenu() {
-        JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
+        final JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
+        
         help.add(helpItem);
         JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"));
         help.add(aboutItem);
+        CSH.setHelpIDString(helpItem, "top");
+            HelpSet hs = getHelpSet("../src/helpfiles/sample.hs");
+            HelpBroker hb = hs.createHelpBroker();
+            new CSH.DisplayHelpFromSource(hb);
 
         //--------------Action listeners-----------------------------
-
-        helpItem.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent ae) {
- 
-            }
-        });
+     
+           helpItem.addActionListener(new CSH.DisplayHelpFromSource(hb));
+       //    getHelp();
 
         aboutItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
-                        I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE);
-
+                getAbout();
             }
         });
 
     } // End of createHelpMenu
+    
+    public void newChannel() throws HeadlessException {
+        if(connection.connectedToServer()){
+        JOptionPane jop = new JOptionPane();
+        String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
+
+             try {
+                 connection.joinChannel(channel);
+             } catch (BadLocationException ex) {
+                 Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+             }
+        }
+        else
+            channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"));
+    }
+    public void newConnection() {
+                // Create and position connection window
+                serverConnectWindow scw = new serverConnectWindow();
+                scw.setSize(new Dimension(400, 300));
+                scw.setLocationRelativeTo(null);
+                scw.pack();
+                scw.setResizable(false);			// Makes sure user can't change size
+                scw.setVisible(true);
+    }
+    public void getChannels() throws HeadlessException {
+                if(connection.connectedToServer()){
+                    if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION)
+                            connection.getAllTheChannelsFromServer();
+                 }
+               else
+                   channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"));
+            }
+    public void getColorChoices() {
+                Colors.colorWindow();
+            }
+    public void changeNick() throws HeadlessException {
+                if(connection.connectedToServer()){
+                String newNick = JOptionPane.showInputDialog(I18N.get("mainmenu.newnick"));
+                if (newNick != null)
+                    connection.getCurrentSession().changeNick(newNick);
+                }
+                else
+                       channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"));
+            }
+    public void getHelp() throws HeadlessException {
+
+ JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
+ I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE, new ImageIcon("src/images/icons/SeiljeIRC_minimal_about.png"));
+    
+            }
+    public void getAbout() throws HeadlessException {
+                JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
+                        I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE);
+            }
+    public void setTopic(){
+        
+        
+        try{
+        JOptionPane jop = new JOptionPane();
+        String ch = channelTab.getTitleAt(channelTab.getSelectedIndex());
+        String topic = jop.showInputDialog(I18N.get("singletab.whattopic"));
+                    channelTab.updateStatusScreen(I18N.get("singletab.updatetopic"));
+                    connection.setChannelTopic(ch,topic);
+        }catch(Exception e){
+            channelTab.updateStatusScreen("Cant set topic unless you are in a channel");
+        }
+    }
+
+     public HelpSet getHelpSet(String helpsetfile) {
+      HelpSet hs = null;
+      ClassLoader cl = this.getClass().getClassLoader();
+      try {
+        URL hsURL = HelpSet.findHelpSet(cl, helpsetfile);
+        hs = new HelpSet(null, hsURL);
+      } catch(Exception ee) {
+        System.out.println("HelpSet: "+ee.getMessage());
+        System.out.println("HelpSet: "+ helpsetfile + " not found");
+      }
+      return hs;
+   }
+        	
 }

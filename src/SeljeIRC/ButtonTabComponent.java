@@ -65,10 +65,12 @@ public class ButtonTabComponent extends JPanel {
             setUI(new BasicButtonUI());
             //Make it transparent
             setContentAreaFilled(false);
+            setIcon(new ImageIcon("src/images/SeljeIRC-icons/8x8/delete.png"));
+            
             //No need to be focusable
             setFocusable(false);
-            setBorder(BorderFactory.createEtchedBorder());
-            setBorderPainted(false);
+            setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+            //setBorderPainted(false);
             //Making nice rollover effect
             //we use the same listener for all buttons
             addMouseListener(buttonMouseListener);
@@ -102,23 +104,7 @@ public class ButtonTabComponent extends JPanel {
         }
  
         //paint the cross
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g.create();
-            //shift the image for pressed buttons
-            if (getModel().isPressed()) {
-                g2.translate(1, 1);
-            }
-            g2.setStroke(new BasicStroke(2));
-            g2.setColor(new Color(100,100,100));
-            if (getModel().isRollover()) {
-                g2.setColor(new Color(50,50,50));
-            }
-            int delta = 6;
-            g2.drawLine(delta, delta, getWidth() - delta - 1, getHeight() - delta - 1);
-            g2.drawLine(getWidth() - delta - 1, delta, delta, getHeight() - delta - 1);
-            g2.dispose();
-        }
+       
     }
  
     private final static MouseListener buttonMouseListener = new MouseAdapter() {
@@ -139,8 +125,4 @@ public class ButtonTabComponent extends JPanel {
         }
         
     };
-    public void notification(){
-            Icon icon = new ImageIcon("src/Images/attention-icon.png");
-            label.setIcon(icon);
-        }
 }
