@@ -29,21 +29,22 @@ public class InputField extends JPanel {
     private Pattern inputCommandFinderPattern = Pattern.compile("^/\\w+");
 
     /**
-     * TRENG BESKRIVELSE
+     * Constructor for å opprette felt for å få tekst fra brukeren. 
+     * 
+     * 
+     * Feltet opprettes basert på kanalnavn og typen tab den skal være i. Den vil derfra ta teksten som blir puttet inn og sende det til servern.  
      * @author Hallvard Westman
-     * @param cha
+     * @param tabName
      * @param TabType
      */
-    public InputField(String cha, int TabType){
-        super();
-        channel = cha;
-        //connection = con;				// Removed
-        this.tabType = TabType;					// Sets the tabtype to int provided from constructor
-        //FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
+    public InputField(String tabName, int TabType){
+        super();											// Ingenting blir sendt til parent
+        channel = tabName;
+        this.tabType = TabType;								// Sets the tabtype to int provided from constructor
         BorderLayout layout = new BorderLayout();
-        setLayout(layout);
+        setLayout(layout);									// Set layout of field
 
-        label = new JLabel(cha);
+        label = new JLabel(tabName);						// Name provided from statustabe
         add(label,BorderLayout.WEST);
         
         inputField = new JTextField();
@@ -62,14 +63,14 @@ public class InputField extends JPanel {
             }
         });
         
-        inputField.addActionListener(new ActionListener(){
+        inputField.addActionListener(new ActionListener(){		// Hvis en bruker trykker knapp eller enter
 
             public void actionPerformed(ActionEvent ae){
                 
                 /*
                  * sending input to approporiate screen
                  */
-            	postTextToIRC(inputField);
+            	postTextToIRC(inputField);						// Post to function
             	
                 
                 
@@ -79,37 +80,40 @@ public class InputField extends JPanel {
 
     }
     /**
-     * Types the text to the server, and resets the text in the textboks
+     * Types the text to the server, and resets the text in the input field
+     * 
+     * Checks the type of the tab and if text contains /commands. Takes actions approrpiatly.
+     * 
+     * @author Christer Vaskinn
+     * @since 0.1
      * @param txtInputField InputField with text to send
      */
     
     private void postTextToIRC(JTextField txtInputField){
-    	int typeOfMessage = tabType;
-    	String textToPost = txtInputField.getText();
+    	int typeOfMessage = tabType;								// Type of field  or where to post message
+    	String textToPost = txtInputField.getText();				// Get text from inputfield provided
     	
     	Matcher inputCommandFinder = inputCommandFinderPattern.matcher(textToPost);
     	
-        if(inputCommandFinder.find())
+        if(inputCommandFinder.find())									// Checks if text contains /commands
         	typeOfMessage = SingleTab.STATUS;
-    														// TODO: Make it purty
+    														
         if(this.connection == null)							// Checks if the object got initiated correctly
     		this.connection = SeljeIRC.connectionHandlerObj.getInstance();			// IT didn't
         
         try{
         	switch(typeOfMessage){
-    			case SingleTab.PRIVATE: connection.sayToPrivate(textToPost, channel); break;
-    			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break; 
-    			default: 
-                            
-                            System.out.print(I18N.get("inputfield.default"));
-    				if(tabType == SingleTab.CHANNEL)
+    			case SingleTab.PRIVATE: connection.sayToPrivate(textToPost, channel); break;	// Send it to private
+    			case SingleTab.CHANNEL: connection.sayToChannel(textToPost, channel); break; 	// Send ut to private
+    			default: 									
+    				if(tabType == SingleTab.CHANNEL)											// Send text server
     					connection.sayToServer(textToPost,channel);
     				else
     					connection.sayToServer(textToPost,null);
     				break;
 
         	}
-        }catch(BadLocationException e){
+        }catch(BadLocationException e){												// Something awful
         	System.err.println(I18N.get("connection.systemerror") + e.getMessage());
         }catch(NullPointerException ex){
         	System.err.println(I18N.get("inputfield.majorfuckup") + ex.getMessage());
