@@ -232,8 +232,4 @@ static void colorWindow () {
           }
         });
 }
-
-   public static void main (String args[]) {
-    Colors colorsAndFontsAndShit = new Colors ();
-    }
 }
