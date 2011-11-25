@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE index
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 1.0//EN"
+         "http://java.sun.com/javase/technologies/desktop/javahelp/index_1_0.dtd">
+
+<index version="1.0">
+ 
+   <indexitem text="Connecting to an IRC-server" expand="false">
+      <indexitem text="Choosing channel" target="connect"/>
+      <indexitem text="Setting nicname" target="connect"/>
+      <indexitem text="Joining a channel" target="connect"/>
+   </indexitem>
+   
+   <indexitem text="Colors and fonts" expand="false">
+      <indexitem text="Choose color" target="colors"/>
+      <indexitem text="Choose font" target="colors"/>
+      <indexitem text="Choose fontsize" target="colors"/>
+   </indexitem>
+   
+   <indexitem text="Commands" expand="false">
+	<indexitem text="/join" target="commands"/>
+   </indexitem>
+   
+</index>
