@@ -1,5 +1,6 @@
 package SeljeIRC;
  
+import java.awt.Color;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,7 +22,7 @@ import jerklib.events.modes.ModeAdjustment.Action;
 import jerklib.events.modes.ModeEvent;
 import jerklib.events.modes.ModeEvent.ModeType;
 import jerklib.listeners.IRCEventListener;
-import sun.jkernel.Bundle;
+//import sun.jkernel.Bundle;
 
 
 /**
@@ -356,9 +357,20 @@ public class ConnectionHandler implements IRCEventListener {
                             channelTab.updateStatusScreen(stdOutputPrefix()+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
                             String m = e.getRawEventData();
                             String parts[] = m.split(" ");
-                            channelTab.userLeft(parts[3], parts[2]);
-                            
+                            String otherParts[] = m.split("!");
+                            String otherPartsThanTheOtherParts[]=m.split(":");
+                            String kickedBy = otherParts[0].substring(1);
+                            String who = parts[3];
+                            String ch = parts[2];
+                            String reason = otherPartsThanTheOtherParts[otherPartsThanTheOtherParts.length-1];
+                            channelTab.userLeft(who, ch);
+                            try {
+                                channelTab.updateTabScreen(ch, stdOutputPrefix()+"-!- "+who+" was kicked by "+kickedBy+" Reason: ["+reason+"]", Colors.channelColor);
+                            } catch (BadLocationException ex) {
+                            }                                                
                     }
+                    else
+                        channelTab.updateStatusScreen(stdOutputPrefix()+e.getType() + " " + e.getRawEventData(), Colors.statusColor);
                 }
 
                 
