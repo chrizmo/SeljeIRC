@@ -37,9 +37,9 @@ public Colors () {
  * Sets the color to black
  * @author Jon Arne Westgaard
  */
-statusColor = new Color(0, 0, 0);
-nickColor = new Color(0, 0, 0);
-channelColor = new Color(0, 0, 0);
+statusColor = new Color(153, 153, 153);
+nickColor = new Color(2, 2, 73);
+channelColor = new Color(54, 1, 47);
 highLightColor = new Color(0, 0, 0);
 font = "Serif";
 fontSize = 12;

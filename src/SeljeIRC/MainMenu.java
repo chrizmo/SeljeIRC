@@ -105,11 +105,11 @@ public class MainMenu extends JMenuBar {
      */
     public void createEditMenu() {
 
-        JMenuItem getChannels = new JMenuItem(I18N.get("mainmenu.getchlist"));
+        JMenuItem getChannels = new JMenuItem(I18N.get("mainmenu.getchlist"), new ImageIcon("src/images/SeljeIRC-icons/16x16/notebook.png"));
         getChannels.setMnemonic(I18N.get("mainmenu.listchannelsm").charAt(0));
-        JMenuItem colors = new JMenuItem(I18N.get("colors.andfonts"));
+        JMenuItem colors = new JMenuItem(I18N.get("colors.andfonts"),new ImageIcon("src/images/SeljeIRC-icons/16x16/paint_brush.png"));
         colors.setMnemonic(I18N.get("mainmenu.colorm").charAt(0));
-        JMenuItem changeNick = new JMenuItem(I18N.get("mainmenu.changenick"));
+        JMenuItem changeNick = new JMenuItem(I18N.get("mainmenu.changenick"),new ImageIcon("src/images/SeljeIRC-icons/16x16/user.png"));
         changeNick.setMnemonic(I18N.get("mainmenu.nickm").charAt(0));
         edit.add(getChannels);
         edit.add(colors);
@@ -151,7 +151,7 @@ public class MainMenu extends JMenuBar {
      */
     public void createHelpMenu() {
 
-        final JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
+        final JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"), new ImageIcon("src/images/SeljeIRC-icons/16x16/help.png"));
         helpItem.setMnemonic(I18N.get("mainmenu.helpm").charAt(0));
         help.add(helpItem);
         JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"),new ImageIcon("src/images/SeljeIRC-icons/16x16/heart.png"));

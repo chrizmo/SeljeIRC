@@ -6,19 +6,16 @@
 <index version="1.0">
  
    <indexitem text="Connecting to an IRC-server" expand="false">
-      <indexitem text="Choosing channel" target="connect"/>
-      <indexitem text="Setting nicname" target="connect"/>
-      <indexitem text="Joining a channel" target="connect"/>
+      <indexitem text="Connecting to server" target="connect"/>
+      <indexitem text="Change server" target="Change server"/>
    </indexitem>
    
    <indexitem text="Colors and fonts" expand="false">
-      <indexitem text="Choose color" target="colors"/>
-      <indexitem text="Choose font" target="colors"/>
-      <indexitem text="Choose fontsize" target="colors"/>
+      <indexitem text="Choose color, font and fontsize" target="colors"/>
    </indexitem>
    
    <indexitem text="Commands" expand="false">
-	<indexitem text="/join" target="commands"/>
+	<indexitem text="Commands" target="commands"/>
    </indexitem>
    
 </index>
