@@ -3,6 +3,7 @@ package SeljeIRC;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -75,7 +76,12 @@ public class MainMenu extends JMenuBar {
                 // Create and position connection window
                 serverConnectWindow scw = new serverConnectWindow();
                 scw.setSize(new Dimension(400, 300));
-                scw.setLocationRelativeTo(null);
+                try {
+                   scw.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+                } finally {
+                   scw.setCursor(Cursor.getDefaultCursor());
+                }
+                scw.setLocationRelativeTo(channelTab);
                 scw.pack();
                 scw.setResizable(false);			// Makes sure user can't change size
                 scw.setVisible(true);
@@ -89,7 +95,12 @@ public class MainMenu extends JMenuBar {
                
                if(connection.connectedToServer()){
                JOptionPane jop = new JOptionPane();
-               String channel = jop.showInputDialog(I18N.get("mainmenu.whichchannel"));
+               try {
+                   jop.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+               } finally {
+                   jop.setCursor(Cursor.getDefaultCursor());
+               }
+               String channel = jop.showInputDialog(channelTab, I18N.get("mainmenu.whichchannel"));
                  
                     try {
                         connection.joinChannel(channel);
