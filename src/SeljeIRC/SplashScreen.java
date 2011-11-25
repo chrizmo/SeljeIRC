@@ -5,6 +5,13 @@ import java.net.URL;
 import java.awt.image.ImageObserver;
 
 /**
+ * 
+ * THIS CODE HAS BEEN ADAPTED FROM http://www.javapractices.com/topic/TopicAction.do?Id=149
+ * AND IS NOT WRITTEN BY ANYONE IN THE SELJEIRC-TEAM
+ * 
+ * 
+ * 
+ * 
 * Present a simple graphic to the user upon launch of the application, to 
 * provide a faster initial response than is possible with the main window.
 * 

@@ -146,7 +146,9 @@ public class tabHandler extends JTabbedPane{
         try{
             if(thisIndex != curSelected && thisIndex != 0){
                 System.out.print("indexoftab= "+" "+ thisIndex +"curSelected = "+curSelected);
-
+                /*
+                 * dispatches new thread for setting color, takes time in certain OS
+                 */
                 class PrimeThread extends Thread {
                      long minPrime;
                      PrimeThread(long minPrime) {
@@ -170,7 +172,9 @@ public class tabHandler extends JTabbedPane{
     }
     
     /**
-     * Sets the topic for the channel
+     * Passes topic to the right tab
+     * @param ch
+     * @param channelForTopic 
      */
     public void passTopic(String ch,Channel channelForTopic){
         
@@ -204,7 +208,11 @@ public class tabHandler extends JTabbedPane{
         st.updateScreen(message, Colors.statusColor);
 
     }
-
+    /**
+     * updates the general tab
+     * @param update
+     * @param theColor 
+     */
     public void updateStatusScreen(String update, Color theColor){
 
         try{
@@ -226,11 +234,9 @@ public class tabHandler extends JTabbedPane{
     }
     
     /**
-     * Cycles through all tabs except from statustab and removes from jtabbedpane
+     * removes all tabs channels (not statustab)
      * 
-     * theTabProblem is affected here
      */
-    
     public void removeAllTabs(){
         
         for(int i = 2; i <= this.getTabCount(); i++){
@@ -240,66 +246,99 @@ public class tabHandler extends JTabbedPane{
         }
     }
 
-    // Checks if a certain tab exists
+    /**
+     * Checks that a certain tab exits
+     * @param ch
+     * @return 
+     */
     public boolean tabExists(String ch){
        
     	return((this.indexOfTab(ch) >= 0) ? true : false); //TODO Sjekk om koden kan forberedres
     	
     }
-    
+    /**
+     * Fetches userlist on entering the channel
+     * @param ch
+     * @param c 
+     */
     public void fetchUsers(String ch, Channel c)   {
        
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.updateUserList(c);
     }
-
+    /**
+     * When user joins it updates the list
+     * @param nick
+     * @param ch 
+     */
     void userJoined(String nick, String ch) {
     
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.newUserJoined(nick);
     }
 
-    
+    /**
+     * Updates list after user leaves
+     * @param nick
+     * @param ch 
+     */
     void userLeft(String nick, String ch)   {
         
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.userLeft(nick);
     }
-    
+    /**
+     * Updates list with user that recieves OP
+     * @param nick
+     * @param mode
+     * @param ch 
+     */
+     
     void op(String nick, boolean mode, String ch)   {
 
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.op(nick, mode);
     }
-    
+    /**
+     * Updates list with user that recieves VOICE
+     * @param nick
+     * @param mode
+     * @param ch 
+     */
     void voice(String nick, boolean mode, String ch)   {
       
        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.voice(nick, mode);
     }
-    
+    /**
+     * changes the users nickname
+     * @param oldNick
+     * @param newNick
+     * @param ch 
+     */
     void changedNick(String oldNick, String newNick, String ch)   {
    
        SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         st.changeNick(oldNick, newNick);
     }
-    
+    /**
+     * Checks if user is OP or not
+     * @param nick
+     * @param ch
+     * @return 
+     */
     boolean isOp(String nick, String ch)   {
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         return st.isOp(nick);
     }
-    
+    /**
+     * Checks if user is VOICE or not
+     * @param nick
+     * @param ch
+     * @return 
+     */
     boolean isVoice(String nick, String ch)   {
         SingleTab st = (SingleTab) this.getComponent(this.getIndexOfTab(ch));
         return st.isVoice(nick);
-    }
-    
-    /**
-     * Removes notification from tab when selected (focused)
-     * sends focus down to inputfield
-     * @param fe 
-     */
-  
-
-    
+    } 
 }

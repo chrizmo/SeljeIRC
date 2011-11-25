@@ -19,7 +19,12 @@ public class ButtonTabComponent extends JPanel {
     private ConnectionHandler connection;
     int tabType;
     JLabel label;
- 
+    /**
+     * Sets up button
+     * @param pane
+     * @param con
+     * @param tt 
+     */
     public ButtonTabComponent(final tabHandler pane, ConnectionHandler con, int tt) {
         //unset default FlowLayout' gaps
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -55,7 +60,9 @@ public class ButtonTabComponent extends JPanel {
         //add more space to the top of the component
         setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
     }
- 
+    /**
+     * BUTTON in tab
+     */
     private class TabButton extends JButton implements ActionListener {
         public TabButton() {
             int size = 17;
@@ -78,7 +85,10 @@ public class ButtonTabComponent extends JPanel {
             //Close the proper tab by clicking the button
             addActionListener(this);
         }
- 
+        /**
+         * removes the selected tab from jtabbedpane
+         * @param e 
+         */
         public void actionPerformed(ActionEvent e) {
             int i = pane.indexOfTabComponent(ButtonTabComponent.this);
             if (i != -1) {
@@ -98,15 +108,10 @@ public class ButtonTabComponent extends JPanel {
                 
             }
         }
- 
-        //we don't want to update UI for this button
-        public void updateUI() {
-        }
- 
-        //paint the cross
-       
     }
- 
+    /**
+     * mouselistener for hover effects, graphic to be implemented
+     */
     private final static MouseListener buttonMouseListener = new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
             Component component = e.getComponent();
@@ -115,7 +120,9 @@ public class ButtonTabComponent extends JPanel {
                 button.setBorderPainted(true);
             }
         }
- 
+        /**
+         * what state to return to after hover
+         */
         public void mouseExited(MouseEvent e) {
             Component component = e.getComponent();
             if (component instanceof AbstractButton) {

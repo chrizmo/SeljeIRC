@@ -15,7 +15,7 @@ import javax.swing.text.BadLocationException;
 
 
 /**
- * 
+ * This is the main program, setting up for all the fun
  * @author Hallvard Westman
  * 
  */
@@ -30,7 +30,11 @@ public class SeljeIRC extends JFrame{
     public static tabHandler channelTabObj; //JTabbedPane containing all tabs        
     public static ConnectionHandler connectionHandlerObj;    
     boolean isConnected;
-
+    /**
+     * constructor
+     * @param title
+     * @throws BadLocationException 
+     */
     public SeljeIRC(String title) throws BadLocationException{
         super(title);
 
@@ -67,13 +71,7 @@ public class SeljeIRC extends JFrame{
         ToolBar tb = new ToolBar();
         add(tb,BorderLayout.NORTH);
         
-        /*
-         * Inputfield that should be taking all input
-         */
-        //TODO pass channelTab-object
-                
-   
-                
+        
         /*
          * Basic operations on main contentPane
          */
@@ -81,8 +79,11 @@ public class SeljeIRC extends JFrame{
         setVisible(true);
         
         
-
+        
         this.addWindowListener(new WindowAdapter()   {
+            /**
+             * onclose listener
+             */
             public void windowClosing(WindowEvent e)   {
         
                 try{ 
@@ -107,6 +108,9 @@ public class SeljeIRC extends JFrame{
         public static ConnectionHandler returnConnection(){
             return connectionHandlerObj;
         }
+        /**
+         * setting focus on statustab on start
+         */
         public void setStatusFocus(){
             SingleTab st = (SingleTab) channelTabObj.getComponent(1);
             st.passFocusToField();
@@ -119,15 +123,16 @@ public class SeljeIRC extends JFrame{
         /*
          * Setting up the mainframe, add only functionality related to .this
          *
-        
-    */
+         */
         try {
             UIManager.getSystemLookAndFeelClassName();
         } catch (Exception ex) {
             Logger.getLogger(SeljeIRC.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
+        /**
+         * getting dimensions
+         */
           Toolkit toolkit =  Toolkit.getDefaultToolkit ();
           Dimension dim = toolkit.getScreenSize();
     
@@ -136,18 +141,25 @@ public class SeljeIRC extends JFrame{
         mainFrame.setVisible(false);
         mainFrame.setBounds(0,0,dim.width, dim.height-100);
         mainFrame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
-
+        
+        /**
+         * setting up welcome screen
+         */
         SplashScreen splashScreen = new SplashScreen("logo2.jpg");
         splashScreen.splash();
         
         try {
-              Thread.sleep(1000); //TODO: CHANGE BACK TO 3000
+              Thread.sleep(3000); //TODO: CHANGE BACK TO 3000
             }
             catch(InterruptedException ex) {
               System.out.println(ex);
             }
         splashScreen.setVisible(false)  ;
         mainFrame.setVisible(true);
+        /**
+         * needs for everything to set up before setting focus
+         * TODO find dynamice method
+         */
         try {
               Thread.sleep(100); //gotta wait to set focus
             }

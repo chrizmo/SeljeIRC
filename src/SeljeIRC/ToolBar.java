@@ -15,13 +15,9 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
- * Creates the toolbar in the main window
- * @author Christoffer V. Hallstensen
- * @version 0.1
- * @since 0.1
+ * The toolbar for application, takes care of GUI
+ * @author hallvardwestman
  */
-
-
 public class ToolBar extends JToolBar {
     
     private MainMenu mainMenu = SeljeIRC.mainMenu;
@@ -31,8 +27,6 @@ public class ToolBar extends JToolBar {
             new ImageIcon("src/images/SeljeIRC-icons/32x32/link.png"));
     private ToolbarButton newChannelButton = new ToolbarButton(
             new ImageIcon("src/images/SeljeIRC-icons/32x32/add.png"));
-    //private ToolbarButton quitButton = new ToolbarButton(
-      //      new ImageIcon("src/images/SeljeIRC-icons/32x32/notebook.png"));
     private ToolbarButton getChannelButton = new ToolbarButton(
             new ImageIcon("src/images/SeljeIRC-icons/32x32/notebook.png"));
     private ToolbarButton colorsFontButton = new ToolbarButton(
@@ -49,10 +43,7 @@ public class ToolBar extends JToolBar {
    
     
     /**
-     * @author Christoffer Hallstensen
-     * @since 0.1
-     * @param CTM Tablemodel to fetch functions from
-     * @param t table, for manipulating
+     * INITIATES toolbar
      */
     public ToolBar(){
         super();
@@ -62,7 +53,7 @@ public class ToolBar extends JToolBar {
     }
 
     /**
-     * initTB - Initiate ToolBar and sets the options for the toolbar
+     * sets GUI-settings
      */
     private void initTB () {
         setFloatable(false);   /* Removes floatable toolbar*/
@@ -99,16 +90,6 @@ public class ToolBar extends JToolBar {
         add(newChannelButton);
         addSeparator();
         
-        /*
-        quitButton.setMnemonic('Q');
-        quitButton.setToolTipText(I18N.get("mainmenu.close"));
-        quitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae)   {
-      
-            }
-        });
-        add(quitButton);
-        */
         getChannelButton.setMnemonic('G');
         getChannelButton.setToolTipText(I18N.get("mainmenu.getchlist"));
         getChannelButton.addActionListener(new ActionListener() {
@@ -160,7 +141,9 @@ public class ToolBar extends JToolBar {
         
         
     } 
-    
+    /**
+     * Disables standar GUI for a button so that its just a color
+     */
     private class ToolbarButton extends JButton{
         ToolbarButton(ImageIcon ic){
             super(ic);

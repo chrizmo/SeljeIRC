@@ -6,8 +6,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import java.awt.Font;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JLabel;
@@ -25,7 +23,7 @@ import jerklib.Channel;
  * @author Hallvard Westman
  * 
  */
-public class SingleTab extends JPanel implements FocusListener {
+public class SingleTab extends JPanel{
 	
 	final static public int STATUS = 0;
 	final static public int CHANNEL = 1;
@@ -88,7 +86,7 @@ public class SingleTab extends JPanel implements FocusListener {
             
             /*
              * Setting topic
-             * TODO refactor
+             * TODO refactor out, this is GUI!
              */      
              topicField = new JTextPane();
              topicSetBy = new JLabel();
@@ -281,28 +279,26 @@ public class SingleTab extends JPanel implements FocusListener {
     void changeNick(String oldNick, String newNick)   {
         listPanel.getListModel().changeNick(oldNick, newNick);
     }
-    
+    /**
+     * returns if user is OP
+     * @param nick
+     * @return 
+     */
     boolean isOp(String nick)   {
         return listPanel.getListModel().isOp(nick);
     }
-    
+    /**
+     * returns if user is VOICE
+     * @param nick
+     * @return 
+     */
     boolean isVoice(String nick)   {
         return listPanel.getListModel().isVoice(nick);
     }
 
-    
-    
-    @Override
-    public void focusGained(FocusEvent fe) {
-       
-        System.out.print("mongosingle");
-        //inputField.setFocusOnField();
-    }
-
-    @Override
-    public void focusLost(FocusEvent fe) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-    }
+    /**
+     * sets focus on inputfield
+     */
     public void passFocusToField(){
        inputField.setFocusOnField(); 
     }
@@ -321,11 +317,11 @@ public class SingleTab extends JPanel implements FocusListener {
            
         topicField.setText(topic);
         topicSetBy.setFont(new Font(Colors.font,Font.PLAIN,11));
-        //topicSetBy.setForeground(Color.lightGray);
+        //topicSetBy.setForeground(Color.lightGray); //TODO IMPLEMENT
         
         topicSetBy.setText("Topic was set by "+setBy+" at "+setAt.toString());
         
-        //topicFieldHead.setText("Topic");
+        //topicFieldHead.setText("Topic"); //TODO IMPLEMENT
              
         
     }
