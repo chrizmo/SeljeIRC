@@ -70,7 +70,7 @@ public class InputField extends JPanel {
                 /*
                  * sending input to approporiate screen
                  */
-            	postTextToIRC(inputField);						// Post to function
+            	postTextToIRC(inputField);						// Post to function	
             	
                 
                 

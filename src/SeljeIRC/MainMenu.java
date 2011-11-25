@@ -56,16 +56,16 @@ public class MainMenu extends JMenuBar {
     	channelTab = SeljeIRC.channelTabObj.getInstance();
     	connection = SeljeIRC.connectionHandlerObj.getInstance();
 
-        JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"), new ImageIcon("newserver.jpeg"));
+        JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"), new ImageIcon("src/images/SeljeIRC-icons/16x16/link.png"));
         newServer.setMnemonic('S');
         file.add(newServer);
-        JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"));
+        JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"),new ImageIcon("src/images/SeljeIRC-icons/16x16/add.png"));
         newChannel.setMnemonic('C');
         file.add(newChannel);
 
 
         
-        JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"));
+        JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"),new ImageIcon("src/images/SeljeIRC-icons/16x16/delete.png"));
         exitProgram.setMnemonic('Q');
         file.add(exitProgram);
 
@@ -158,9 +158,9 @@ public class MainMenu extends JMenuBar {
      * Creates the help-menu
      */
     public void createHelpMenu() {
-        JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"));
+        JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"),new ImageIcon("src/images/SeljeIRC-icons/16x16/help.png"));
         help.add(helpItem);
-        JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"));
+        JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"),new ImageIcon("src/images/SeljeIRC-icons/16x16/heart.png"));
         help.add(aboutItem);
 
         //--------------Action listeners-----------------------------
@@ -257,7 +257,7 @@ public class MainMenu extends JMenuBar {
             }
     public void getAbout() throws HeadlessException {
                 JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
-                        I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE);
+                        I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE, new ImageIcon("src/images/icons/SeiljeIRC_minimal_about.png"));
             }
     public void setTopic(){
         
