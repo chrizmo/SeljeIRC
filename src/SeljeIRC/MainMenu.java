@@ -1,9 +1,7 @@
 package SeljeIRC;
 
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -190,7 +188,7 @@ public class MainMenu extends JMenuBar {
              }
         }
         else
-            channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"));
+            channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"),Colors.statusColor);
     }
     public void newConnection() {
                 // Create and position connection window
@@ -207,7 +205,7 @@ public class MainMenu extends JMenuBar {
                             connection.getAllTheChannelsFromServer();
                  }
                else
-                   channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"));
+                   channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"),Colors.statusColor);
             }
     public void getColorChoices() {
                 Colors.colorWindow();
@@ -219,7 +217,7 @@ public class MainMenu extends JMenuBar {
                     connection.getCurrentSession().changeNick(newNick);
                 }
                 else
-                       channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"));
+                       channelTab.updateStatusScreen("\n"+I18N.get("connection.connectfirst"),Colors.statusColor);
             }
     public void getHelp() throws HeadlessException {
 
@@ -238,10 +236,10 @@ public class MainMenu extends JMenuBar {
         JOptionPane jop = new JOptionPane();
         String ch = channelTab.getTitleAt(channelTab.getSelectedIndex());
         String topic = jop.showInputDialog(I18N.get("singletab.whattopic"));
-                    channelTab.updateStatusScreen(I18N.get("singletab.updatetopic"));
+                    channelTab.updateStatusScreen(I18N.get("singletab.updatetopic"),Colors.statusColor);
                     connection.setChannelTopic(ch,topic);
         }catch(Exception e){
-            channelTab.updateStatusScreen("Cant set topic unless you are in a channel");
+            channelTab.updateStatusScreen("Cant set topic unless you are in a channel",Colors.statusColor);
         }
     }
 

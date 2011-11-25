@@ -1,6 +1,5 @@
 package SeljeIRC;
  
-import java.awt.Color;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -120,7 +119,9 @@ public class ConnectionHandler implements IRCEventListener {
                 Logger.getLogger(ConnectionHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
                 }
-            
+            /*
+             * Event for private message
+             */
             else if(e.getType() == Type.PRIVATE_MESSAGE){
                 MessageEvent me = (MessageEvent) e;
                 String userNick = me.getNick();
@@ -289,7 +290,7 @@ public class ConnectionHandler implements IRCEventListener {
                     }
                     else if (ce.getCtcpString().contains("ACTION"))   {
                         try {
-                            channelTab.updateTabScreen(ce.getChannel().getName(), "* "+ce.getNick()+ce.getMessage().substring(7), Colors.channelColor);
+                            channelTab.updateTabScreen(ce.getChannel().getName(), stdOutputPrefix()+"* "+ce.getNick()+ce.getMessage().substring(7), Colors.channelColor);
                         } catch (BadLocationException ex) {
                         }
                     }

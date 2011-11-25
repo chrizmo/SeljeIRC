@@ -294,7 +294,9 @@ public class SingleTab extends JPanel implements FocusListener {
     
     @Override
     public void focusGained(FocusEvent fe) {
-       inputField.setFocusOnField();
+       
+        System.out.print("mongosingle");
+        //inputField.setFocusOnField();
     }
 
     @Override

@@ -155,7 +155,7 @@ public class ListOfUsers extends JPanel {
                 DateFormat df = new SimpleDateFormat("HH:mm");
                 chan.action(action);                                                                            // send it
                 try {
-                    tabObject.updateTabScreen(chan.getName(), "\n"+df.format(date)+" * "+myNick+ " "+action);   // print it in channel window
+                    tabObject.updateTabScreen(chan.getName(), "\n"+df.format(date)+" * "+myNick+ " "+action,Colors.channelColor);   // print it in channel window
                 } catch (BadLocationException ex) {
                 }
             }
@@ -255,7 +255,7 @@ public class ListOfUsers extends JPanel {
            else
                tabObject.setSelectedIndex(tabObject.indexOfTab(userName));
         }else
-        	tabObject.updateStatusScreen(I18N.get("user.notconnected")); //TODO: Legg til translation
+        	tabObject.updateStatusScreen(I18N.get("user.notconnected"),Colors.statusColor);
     }
     
     private String getMyNick()   {
