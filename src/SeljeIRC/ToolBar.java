@@ -36,7 +36,7 @@ public class ToolBar extends JToolBar {
     private ToolbarButton setTopic = new ToolbarButton(
             new ImageIcon("src/images/SeljeIRC-icons/32x32/comment.png"));
     private ToolbarButton helpButton = new ToolbarButton(
-            new ImageIcon("src/images/SeljeIRC-icons/32x32/help.png"));
+            new ImageIcon("src/images/SeljeIRC-icons/32x32/heart.png"));
     
     private Component frame;
     
