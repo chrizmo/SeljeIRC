@@ -41,7 +41,7 @@ public class UserListRenderer extends JLabel implements ListCellRenderer  {
             }
             String nick = ((UserListModel.User)o).toString();               // Gets the nickname from the User object
             setText(nick);                                                  // Put it in the label
-            this.setIcon(new ImageIcon("src/images/SeljeIRC-icons/16x16/user.png"));
+            this.setIcon(new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/user.png")));
             
             Border paddingBorder = BorderFactory.createEmptyBorder(10,10,10,10);
             Border compound = BorderFactory.createCompoundBorder();

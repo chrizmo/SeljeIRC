@@ -24,19 +24,19 @@ public class ToolBar extends JToolBar {
     
     // Creates buttons with icons
     private ToolbarButton newConnectionButton = new ToolbarButton(
-            new ImageIcon("src/images/SeljeIRC-icons/32x32/link.png"));
+            new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/32x32/link.png")));
     private ToolbarButton newChannelButton = new ToolbarButton(
-            new ImageIcon("src/images/SeljeIRC-icons/32x32/add.png"));
+            new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/32x32/add.png")));
     private ToolbarButton getChannelButton = new ToolbarButton(
-            new ImageIcon("src/images/SeljeIRC-icons/32x32/notebook.png"));
+            new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/32x32/notebook.png")));
     private ToolbarButton colorsFontButton = new ToolbarButton(
-            new ImageIcon("src/images/SeljeIRC-icons/32x32/paint_brush.png"));
+            new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/32x32/paint_brush.png")));
     private ToolbarButton changeNickButton = new ToolbarButton(
-            new ImageIcon("src/images/SeljeIRC-icons/32x32/user.png"));
+            new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/32x32/user.png")));
     private ToolbarButton setTopic = new ToolbarButton(
-            new ImageIcon("src/images/SeljeIRC-icons/32x32/comment.png"));
+            new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/32x32/comment.png")));
     private ToolbarButton helpButton = new ToolbarButton(
-            new ImageIcon("src/images/SeljeIRC-icons/32x32/heart.png"));
+            new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/32x32/heart.png")));
     
     private Component frame;
     

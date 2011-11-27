@@ -53,16 +53,16 @@ public class MainMenu extends JMenuBar {
     	channelTab = SeljeIRC.channelTabObj.getInstance();
     	connection = SeljeIRC.connectionHandlerObj.getInstance();
 
-        JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"), new ImageIcon("src/images/SeljeIRC-icons/16x16/link.png"));
+        JMenuItem newServer = new JMenuItem(I18N.get("mainmenu.newserver"), new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/link.png")));
         newServer.setMnemonic(I18N.get("mainmenu.newserverm").charAt(0));
         file.add(newServer);
-        JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"),new ImageIcon("src/images/SeljeIRC-icons/16x16/add.png"));
+        JMenuItem newChannel = new JMenuItem(I18N.get("mainmenu.newchannel"),new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/add.png")));
         newChannel.setMnemonic(I18N.get("mainmenu.newchannelm").charAt(0));
         file.add(newChannel);
 
 
         
-        JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"),new ImageIcon("src/images/SeljeIRC-icons/16x16/delete.png"));
+        JMenuItem exitProgram = new JMenuItem(I18N.get("mainmenu.close"),new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/delete.png")));
         exitProgram.setMnemonic(I18N.get("mainmenu.exitm").charAt(0));
         file.add(exitProgram);
 
@@ -105,11 +105,11 @@ public class MainMenu extends JMenuBar {
      */
     public void createEditMenu() {
 
-        JMenuItem getChannels = new JMenuItem(I18N.get("mainmenu.getchlist"), new ImageIcon("src/images/SeljeIRC-icons/16x16/notebook.png"));
+        JMenuItem getChannels = new JMenuItem(I18N.get("mainmenu.getchlist"), new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/notebook.png")));
         getChannels.setMnemonic(I18N.get("mainmenu.listchannelsm").charAt(0));
-        JMenuItem colors = new JMenuItem(I18N.get("colors.andfonts"),new ImageIcon("src/images/SeljeIRC-icons/16x16/paint_brush.png"));
+        JMenuItem colors = new JMenuItem(I18N.get("colors.andfonts"),new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/paint_brush.png")));
         colors.setMnemonic(I18N.get("mainmenu.colorm").charAt(0));
-        JMenuItem changeNick = new JMenuItem(I18N.get("mainmenu.changenick"),new ImageIcon("src/images/SeljeIRC-icons/16x16/user.png"));
+        JMenuItem changeNick = new JMenuItem(I18N.get("mainmenu.changenick"),new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/user.png")));
         changeNick.setMnemonic(I18N.get("mainmenu.nickm").charAt(0));
         edit.add(getChannels);
         edit.add(colors);
@@ -149,23 +149,27 @@ public class MainMenu extends JMenuBar {
     /**
      * Creates the help-menu
      */
-    public void createHelpMenu() {
+    public void createHelpMenu()  {
 
-        final JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"), new ImageIcon("src/images/SeljeIRC-icons/16x16/help.png"));
+        final JMenuItem helpItem = new JMenuItem(I18N.get("mainmenu.help"), new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/help.png")));
         helpItem.setMnemonic(I18N.get("mainmenu.helpm").charAt(0));
         help.add(helpItem);
-        JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"),new ImageIcon("src/images/SeljeIRC-icons/16x16/heart.png"));
+        JMenuItem aboutItem = new JMenuItem(I18N.get("mainmenu.about"),new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/16x16/heart.png")));
         aboutItem.setMnemonic(I18N.get("mainmenu.aboutm").charAt(0));
         help.add(aboutItem);
         CSH.setHelpIDString(helpItem, "top");
-            HelpSet hs = getHelpSet("../src/helpfiles/sample.hs");
+        /**
+         * KOMMENTER BORT DISSE Å BYGG PROSJEKTET FOR HJELP FUNKSJONALITET
+         */
+        
+            HelpSet hs = getHelpSet("/helpfiles/sample.hs");
             HelpBroker hb = hs.createHelpBroker();
             new CSH.DisplayHelpFromSource(hb);
 
         //--------------Action listeners-----------------------------
      
            helpItem.addActionListener(new CSH.DisplayHelpFromSource(hb));
-       //    getHelp();
+       
 
         aboutItem.addActionListener(new ActionListener() {
 
@@ -201,7 +205,7 @@ public class MainMenu extends JMenuBar {
     }
     public void getChannels() throws HeadlessException {
                 if(connection.connectedToServer()){
-                    if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon("src/Images/GetAllTheChannels_icon.jpeg")) == JOptionPane.YES_OPTION)
+                    if(JOptionPane.showConfirmDialog(MainMenu.this, I18N.get("mainmenu.getallchannels") ,I18N.get("mainmenu.getallchannelsheader"),JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,new ImageIcon(getClass().getResource("/images/GetAllTheChannels_icon.jpeg"))) == JOptionPane.YES_OPTION)
                             connection.getAllTheChannelsFromServer();
                  }
                else
@@ -222,12 +226,12 @@ public class MainMenu extends JMenuBar {
     public void getHelp() throws HeadlessException {
 
  JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
- I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE, new ImageIcon("src/images/icons/SeiljeIRC_minimal_about.png"));
+ I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE, new ImageIcon(getClass().getResource("/images/icons/SeiljeIRC_minimal_about.png")));
     
             }
     public void getAbout() throws HeadlessException {
                 JOptionPane.showMessageDialog(channelTab, I18N.get("mainmenu.aboutseljeirc"),
-                        I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE, new ImageIcon("src/images/icons/SeiljeIRC_minimal_about.png"));
+                        I18N.get("mainmenu.about"), JOptionPane.PLAIN_MESSAGE, new ImageIcon(getClass().getResource("/images/icons/SeiljeIRC_minimal_about.png")));
             }
     public void setTopic(){
         
@@ -245,10 +249,14 @@ public class MainMenu extends JMenuBar {
 
      public HelpSet getHelpSet(String helpsetfile) {
       HelpSet hs = null;
+      
+      
+      
       ClassLoader cl = this.getClass().getClassLoader();
       try {
-        URL hsURL = HelpSet.findHelpSet(cl, helpsetfile);
-        hs = new HelpSet(null, hsURL);
+        //URL hsURL = HelpSet.findHelpSet(cl, helpsetfile);
+        URL hsURL = getClass().getResource(helpsetfile);
+        hs = new HelpSet(cl, hsURL);
       } catch(Exception ee) {
         System.out.println("HelpSet: "+ee.getMessage());
         System.out.println("HelpSet: "+ helpsetfile + " not found");
