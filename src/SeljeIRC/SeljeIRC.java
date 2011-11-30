@@ -1,7 +1,5 @@
 package SeljeIRC;
 
-import com.nilo.plaf.nimrod.NimRODLookAndFeel;
-import com.nilo.plaf.nimrod.NimRODTheme;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

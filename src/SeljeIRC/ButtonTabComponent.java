@@ -72,7 +72,7 @@ public class ButtonTabComponent extends JPanel {
             setUI(new BasicButtonUI());
             //Make it transparent
             setContentAreaFilled(false);
-            setIcon(new ImageIcon("src/images/SeljeIRC-icons/8x8/delete.png"));
+            setIcon(new ImageIcon(getClass().getResource("/images/SeljeIRC-icons/8x8/delete.png")));
             
             //No need to be focusable
             setFocusable(false);
